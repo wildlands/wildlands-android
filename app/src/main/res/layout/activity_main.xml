@@ -1,0 +1,130 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/map2"
+    tools:context=".MainActivity"
+    android:padding="15dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="10dp"
+        android:background="#80ffffff"
+
+        >
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight=".25"
+
+            android:background="@null"
+            >
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/scroll">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/duck2"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        />
+
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Eeen heeelelelel lange vraag over allerlei dingen en onderdelen die er toe doen? Nou, hier is hoor. Geen het goede antwoord!"
+        android:id="@+id/textView"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_below="@+id/imageView"
+        />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Antwoord A"
+                android:id="@+id/button"
+                android:layout_below="@id/textView"
+                />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Antwoord B"
+                android:id="@+id/button2"
+                android:layout_below="@+id/button"
+                android:layout_centerHorizontal="true"
+                />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Antwoord C"
+                android:id="@+id/button3"
+                android:layout_below="@+id/button2"
+                android:layout_centerHorizontal="true"
+                />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Antwoord D"
+                android:id="@+id/button4"
+                android:layout_below="@+id/button3"
+                android:layout_centerHorizontal="true"
+                />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Antwoord E"
+                android:id="@+id/button5"
+                android:layout_below="@+id/button4"
+                android:layout_centerHorizontal="true"
+                />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Antwoord F"
+                android:id="@+id/button6"
+                android:layout_below="@+id/button5"
+                android:layout_centerHorizontal="true"
+                />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Antwoord G"
+                android:id="@+id/button7"
+                android:layout_below="@+id/button6"
+                android:layout_centerHorizontal="true"
+                />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Antwoord H"
+                android:id="@+id/button8"
+                android:layout_below="@+id/button7"
+                android:layout_centerHorizontal="true"
+                />
+
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
+
+
+</RelativeLayout>

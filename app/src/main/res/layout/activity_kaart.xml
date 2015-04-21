@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:gesture-image="http://schemas.polites.com/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/kaartScreen"
+    tools:context="nl.wildlands.wildlandseducation.Kaart">
+
+
+    <nl.wildlands.wildlandseducation.GestureImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="center"
+        android:id="@+id/imageView2"
+        android:src="@drawable/kaart_view"
+        gesture-image:min-scale="1.60"
+        gesture-image:max-scale="3.0"
+        />
+
+
+
+
+</RelativeLayout>
