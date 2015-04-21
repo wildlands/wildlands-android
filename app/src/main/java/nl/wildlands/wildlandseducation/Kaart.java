@@ -41,7 +41,7 @@ public class Kaart extends ActionBarActivity implements OnClickListener {
     private GestureImageView map;
     ArrayList<HashMap<String, String>> mQuestionList;
 
-    private static final String GET_PINPOINT_URL= "http://doornbosagrait.no-ip.org/wildlandsBackend/api/api.php?c=GetAllPinpoints";
+    private static final String GET_PINPOINT_URL= "http://wildlands.doornbosagrait.tk/api/api.php?c=GetAllPinpoints";
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_XPOS = "xPos";
@@ -68,7 +68,7 @@ public class Kaart extends ActionBarActivity implements OnClickListener {
         map = (GestureImageView)findViewById(R.id.imageView2);
        // map.addImageButton(pin1);
         pinpoints = new ArrayList<Pinpoint>();
-      //  new Search().execute();
+        new Search().execute();
     }
 
     public void startPopUp()
@@ -116,8 +116,8 @@ public class Kaart extends ActionBarActivity implements OnClickListener {
 
     public void displayPoints()
     {
-        int x = pinpoints.get(2).getXPos();
-        int y = pinpoints.get(2).getYPos();
+        int x = pinpoints.get(0).getXPos();
+        int y = pinpoints.get(0).getYPos();
         map.addButton(x,y);
 //        pin1.setTranslationX(x);
 //        pin1.setTranslationY(y);
