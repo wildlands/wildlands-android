@@ -68,7 +68,7 @@ public class Kaart extends ActionBarActivity implements OnClickListener {
         map = (GestureImageView)findViewById(R.id.imageView2);
        // map.addImageButton(pin1);
         pinpoints = new ArrayList<Pinpoint>();
-        new Search().execute();
+      //  new Search().execute();
     }
 
     public void startPopUp()

@@ -425,8 +425,9 @@ public class GestureImageView extends ImageView{
 				}
 
 				drawable.draw(canvas);
-                tempCanvas = canvas;
+
                 if(imageBtn != null) {
+                    imageBtn.draw(canvas);
                   //  new ZoomScale().execute();
                 }
 				canvas.restore();
@@ -861,9 +862,10 @@ public class GestureImageView extends ImageView{
 
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
-            imageBtn.setTranslationX(tempX);
-            imageBtn.setTranslationY(tempY);
-
+            if(imageBtn != null) {
+                imageBtn.setTranslationX(tempX);
+                imageBtn.setTranslationY(tempY);
+            }
         }
 
         @Override
