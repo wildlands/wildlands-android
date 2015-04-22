@@ -46,6 +46,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -114,7 +115,7 @@ public class GestureImageView extends ImageView{
 	private OnClickListener onClickListener;
 
     private ButtonHandler btnHandler;
-    private ImageButton imageBtn;
+    private ArrayList<ImageButton> imageButtons;
     private PopupWindow popupWindow;
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
@@ -123,12 +124,8 @@ public class GestureImageView extends ImageView{
 	public GestureImageView(Context context, AttributeSet attrs, int defStyle) {
 		this(context, attrs);
         thread=Thread.currentThread().getId();
-        imageBtn = new ImageButton(context);
-        imageBtn.setImageResource(R.drawable.pin);
-        imageBtn.setLayoutParams(lp);
         this.context = context;
         RelativeLayout kaart = (RelativeLayout)findViewById(R.id.kaartScreen);
-        kaart.addView(imageBtn);
        // imageBtn.setTranslationX(400);
 	}
 
@@ -169,13 +166,8 @@ public class GestureImageView extends ImageView{
 		setScaleType(ScaleType.CENTER_INSIDE);
         thread=Thread.currentThread().getId();
 		initImage();
-        imageBtn = new ImageButton(context);
-
-        imageBtn.setImageResource(R.drawable.pin);
-        imageBtn.setLayoutParams(lp);
 
         RelativeLayout kaart = (RelativeLayout)findViewById(R.id.kaartScreen);
-        kaart.addView(imageBtn);
 
 
 	}
@@ -306,7 +298,8 @@ public class GestureImageView extends ImageView{
 
     public void addButton(int x, int y)
     {
-        imageBtn = new ImageButton(context);
+
+        ImageButton imageBtn = new ImageButton(context);
 
         imageBtn.setId(i+100);
         imageBtn.setImageResource(R.drawable.pin);
@@ -315,9 +308,10 @@ public class GestureImageView extends ImageView{
         imageBtn.setTranslationX(x);
         imageBtn.setTranslationY(y);
         Log.d("imgid", String.valueOf(imageBtn.getId()));
-
+        imageButtons.add(imageBtn);
         RelativeLayout kaart = (RelativeLayout)getRootView().findViewById(R.id.kaartScreen);
         kaart.addView(imageBtn);
+        i++;
     }
 
 
@@ -426,10 +420,7 @@ public class GestureImageView extends ImageView{
 
 				drawable.draw(canvas);
 
-                if(imageBtn != null) {
-                    imageBtn.draw(canvas);
-                  //  new ZoomScale().execute();
-                }
+
 				canvas.restore();
 			}
 
@@ -541,17 +532,18 @@ public class GestureImageView extends ImageView{
 		return 0;
 	}
 
-    public void addImageButton(ImageButton imgBtn)
-    {
-        this.imageBtn = imgBtn;
-    }
+    //public void addImageButton(ImageButton imgBtn)
+   // {
+   //     this.imageBtn = imgBtn;
+    //}
 
 	public void moveBy(float x, float y) {
 		this.x += x;
 		this.y += y;
-
-        imageBtn.setTranslationY(y);
-        imageBtn.setTranslationX(x);
+        for(ImageButton imageButton: imageButtons) {
+            imageButton.setTranslationY(y);
+            imageButton.setTranslationX(x);
+        }
 	}
 
 	public void setPosition(float x, float y) {
@@ -862,9 +854,10 @@ public class GestureImageView extends ImageView{
 
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
-            if(imageBtn != null) {
-                imageBtn.setTranslationX(tempX);
-                imageBtn.setTranslationY(tempY);
+            for(ImageButton imageButton: imageButtons)
+            {
+                imageButton.setTranslationX(tempX);
+                imageButton.setTranslationY(tempY);
             }
         }
 
@@ -892,7 +885,7 @@ public class GestureImageView extends ImageView{
 
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
-            imageBtn.draw(tempCanvas);
+           // imageBtn.draw(tempCanvas);
 
 
         }
