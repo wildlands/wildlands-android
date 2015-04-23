@@ -148,7 +148,7 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 			@Override
 			public void onMove(float x, float y) {
 				image.setPosition(x, y);
-				image.redraw();
+				//image.redraw();
 			}
 		});
 		

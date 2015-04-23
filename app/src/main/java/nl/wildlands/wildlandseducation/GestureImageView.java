@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
@@ -296,13 +297,11 @@ public class GestureImageView extends ImageView{
 		fitScaleVertical = (float) measuredHeight / (float) imageHeight;
 	}
 
-    public void addButton(int x, int y)
+    public void addButton(int x, int y, int id)
     {
 
         ImageButton imageBtn = new ImageButton(context);
-
-        imageBtn.setId(i+100);
-        imageBtn.setImageResource(R.drawable.pin);
+        imageBtn.setId(i+id);
         imageBtn.setLayoutParams(lp);
         imageBtn.setOnClickListener(btnHandler);
         imageBtn.setTranslationX(x);
@@ -333,7 +332,7 @@ public class GestureImageView extends ImageView{
         closeButton.setTranslationX(630);
         closeButton.setLayoutParams(lp);
         closeButton.setOnClickListener(btnHandler);
-        rlTotal.addView(closeButton);
+
         ImageView img = new ImageView(context);
         img.setImageResource(R.drawable.duck2);
         img.setTranslationY(-250);
@@ -345,6 +344,7 @@ public class GestureImageView extends ImageView{
         rlTotal.setBackgroundResource(R.drawable.background);
      //   sc.addView(imgView);
         rlTotal.addView(sc);
+        rlTotal.addView(closeButton);
         popupWindow = new PopupWindow(rlTotal, 900, 1600);
         //popupWindow.setContentView(layoutOfPopup);
         popupWindow.showAtLocation(this, Gravity.NO_GRAVITY, 100, 200);
@@ -540,7 +540,7 @@ public class GestureImageView extends ImageView{
 	public void moveBy(float x, float y) {
 		this.x += x;
 		this.y += y;
-        for(ImageButton imageButton: imageButtons) {
+        for(ImageView imageButton: imageButtons) {
             imageButton.setTranslationY(y);
             imageButton.setTranslationX(x);
         }
@@ -610,6 +610,7 @@ public class GestureImageView extends ImageView{
 	public void reset() {
 		x = centerX;
 		y = centerY;
+
 		scaleAdjust = startingScale;
 		if (gestureImageViewTouchListener != null) {
 		    gestureImageViewTouchListener.reset();
@@ -859,6 +860,7 @@ public class GestureImageView extends ImageView{
                 imageButton.setTranslationX(tempX);
                 imageButton.setTranslationY(tempY);
             }
+            redraw();
         }
 
         @Override
