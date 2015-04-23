@@ -13,7 +13,7 @@
         android:scaleType="center"
         android:id="@+id/imageView2"
         android:src="@drawable/kaart_view"
-        gesture-image:min-scale="1.60"
+        gesture-image:min-scale="1.80"
         gesture-image:max-scale="3.0"
         />
 

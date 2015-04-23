@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class Kaart extends ActionBarActivity implements OnClickListener {
+public class Kaart extends Activity implements OnClickListener {
 
     JSONParser jsonParser = new JSONParser();
 
@@ -120,7 +120,9 @@ public class Kaart extends ActionBarActivity implements OnClickListener {
             Log.d("Grootte", String.valueOf(pinpoints.size()));
             int x = pinpoint.getXPos();
             int y = pinpoint.getYPos();
-            //map.addButton(x, y, buttonId);
+            int id = pinpoint.getId();
+            Log.d(String.valueOf(x), String.valueOf(y));
+            map.addButton(x, y, id);
             buttonId++;
         }
         map.redraw();

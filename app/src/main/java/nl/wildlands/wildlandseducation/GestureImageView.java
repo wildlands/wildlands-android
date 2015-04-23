@@ -160,6 +160,7 @@ public class GestureImageView extends ImageView{
         this.context = context;
         btnHandler = new ButtonHandler();
         layoutOfPopup = new LinearLayout(context);
+        imageButtons = new ArrayList<ImageButton>();
 	}
 
 	public GestureImageView(Context context) {
@@ -302,6 +303,8 @@ public class GestureImageView extends ImageView{
 
         ImageButton imageBtn = new ImageButton(context);
         imageBtn.setId(i+id);
+        imageBtn.setImageResource(R.drawable.pin);
+        imageBtn.setBackground(null);
         imageBtn.setLayoutParams(lp);
         imageBtn.setOnClickListener(btnHandler);
         imageBtn.setTranslationX(x);
@@ -310,7 +313,7 @@ public class GestureImageView extends ImageView{
         imageButtons.add(imageBtn);
         RelativeLayout kaart = (RelativeLayout)getRootView().findViewById(R.id.kaartScreen);
         kaart.addView(imageBtn);
-        i++;
+
     }
 
 
@@ -857,8 +860,14 @@ public class GestureImageView extends ImageView{
             // dismiss the dialog once product deleted
             for(ImageButton imageButton: imageButtons)
             {
-                imageButton.setTranslationX(tempX);
-                imageButton.setTranslationY(tempY);
+                Log.d("Before adding", String.valueOf(tempX) + String.valueOf(tempY));
+                Log.d(String.valueOf(imageButton.getX()), String.valueOf(imageButton.getY()));
+                float x = imageButton.getX();
+                float y = imageButton.getY();
+                imageButton.setTranslationX(tempX - x);
+                imageButton.setTranslationY(tempY - y);
+                Log.d("After", "translation");
+                Log.d(String.valueOf(imageButton.getX()), String.valueOf(imageButton.getY()));
             }
             redraw();
         }
@@ -906,9 +915,14 @@ public class GestureImageView extends ImageView{
         }
         @Override
         public void onClick(View v) {
+
             switch(v.getId())
             {
+                case 1:
+                    startPopUp();
+                    break;
                 case 100:
+
                     startPopUp();
                     break;
                 case 101:
