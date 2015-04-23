@@ -36,7 +36,7 @@ public class Kaart extends ActionBarActivity implements OnClickListener {
     private JSONArray questionArray;
     private JSONArray jsonArray;
 
-    private ImageButton pin1;
+   // private ImageButton pin1;
     private RelativeLayout rl;
     private GestureImageView map;
     ArrayList<HashMap<String, String>> mQuestionList;
@@ -49,8 +49,7 @@ public class Kaart extends ActionBarActivity implements OnClickListener {
 
     private ArrayList<Pinpoint> pinpoints;
 
-
-
+    int buttonId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,9 +115,14 @@ public class Kaart extends ActionBarActivity implements OnClickListener {
 
     public void displayPoints()
     {
-        int x = pinpoints.get(0).getXPos();
-        int y = pinpoints.get(0).getYPos();
-        map.addButton(x,y);
+        for(Pinpoint pinpoint: pinpoints) {
+            Log.d("Grootte", String.valueOf(pinpoints.size()));
+            int x = pinpoint.getXPos();
+            int y = pinpoint.getYPos();
+            //map.addButton(x, y, buttonId);
+            buttonId++;
+        }
+        map.redraw();
 //        pin1.setTranslationX(x);
 //        pin1.setTranslationY(y);
 
