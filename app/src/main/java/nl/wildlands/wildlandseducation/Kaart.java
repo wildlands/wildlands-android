@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import org.apache.http.NameValuePair;
@@ -65,6 +66,7 @@ public class Kaart extends Activity implements OnClickListener {
     //    pin1 = (ImageButton)findViewById(R.id.imageButton);
        // pin1.setOnClickListener(this);
         map = (GestureImageView)findViewById(R.id.imageView2);
+
        // map.addImageButton(pin1);
         pinpoints = new ArrayList<Pinpoint>();
         new Search().execute();
@@ -76,6 +78,7 @@ public class Kaart extends Activity implements OnClickListener {
     }
 
     public void updateJSONdata() {
+        map.addUnderbar();
        // map.addButton();
         mQuestionList = new ArrayList<HashMap<String, String>>();
 
@@ -186,6 +189,7 @@ public class Kaart extends Activity implements OnClickListener {
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
             updateJSONdata();
+
 
         }
 

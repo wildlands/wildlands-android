@@ -106,6 +106,7 @@ public class GestureImageView extends ImageView{
 	private int alpha = 255;
 	private ColorFilter colorFilter;
 
+
 	private int deviceOrientation = -1;
 	private int imageOrientation;
 
@@ -115,6 +116,9 @@ public class GestureImageView extends ImageView{
 	private OnTouchListener customOnTouchListener;
 	private OnClickListener onClickListener;
 
+    private float totalDiffX;
+    private float totalDiffY;
+    private ImageView underbar;
     private ButtonHandler btnHandler;
     private ArrayList<ImageButton> imageButtons;
     private PopupWindow popupWindow;
@@ -161,6 +165,8 @@ public class GestureImageView extends ImageView{
         btnHandler = new ButtonHandler();
         layoutOfPopup = new LinearLayout(context);
         imageButtons = new ArrayList<ImageButton>();
+        totalDiffX = 0;
+        totalDiffY = 0;
 	}
 
 	public GestureImageView(Context context) {
@@ -168,10 +174,6 @@ public class GestureImageView extends ImageView{
 		setScaleType(ScaleType.CENTER_INSIDE);
         thread=Thread.currentThread().getId();
 		initImage();
-
-        RelativeLayout kaart = (RelativeLayout)findViewById(R.id.kaartScreen);
-
-
 	}
 
 	@Override
@@ -314,6 +316,16 @@ public class GestureImageView extends ImageView{
         RelativeLayout kaart = (RelativeLayout)getRootView().findViewById(R.id.kaartScreen);
         kaart.addView(imageBtn);
 
+    }
+
+    public void addUnderbar()
+    {
+        underbar = new ImageView(context);
+        underbar.setLayoutParams(lp);
+        underbar.setImageResource(R.drawable.ice);
+        underbar.setTranslationY(1680);
+        RelativeLayout kaart = (RelativeLayout)getRootView().findViewById(R.id.kaartScreen);
+        kaart.addView(underbar);
     }
 
 
@@ -550,10 +562,21 @@ public class GestureImageView extends ImageView{
 	}
 
 	public void setPosition(float x, float y) {
+        float diff = this.x - x;
+        float diffY = this.y - y;
 		this.x = x;
 		this.y = y;
-        tempX = x;
-        tempY = y;
+        tempX = diff;
+        tempY = diffY;
+        totalDiffY += diffY;
+        totalDiffX += diff;
+        if(totalDiffX > 600)
+        {
+            new ChangeBar().execute();
+
+        }else if(totalDiffX < 600){
+            new ChangeBar().execute();
+        }
         new Move().execute();
 
       // new UISwitch(MyActivity.instance).execute();
@@ -852,7 +875,7 @@ public class GestureImageView extends ImageView{
         @Override
         protected String doInBackground(String... args) {
 
-           return "ja";
+            return "ja";
 
         }
 
@@ -860,16 +883,45 @@ public class GestureImageView extends ImageView{
             // dismiss the dialog once product deleted
             for(ImageButton imageButton: imageButtons)
             {
-                Log.d("Before adding", String.valueOf(tempX) + String.valueOf(tempY));
-                Log.d(String.valueOf(imageButton.getX()), String.valueOf(imageButton.getY()));
                 float x = imageButton.getX();
                 float y = imageButton.getY();
-                imageButton.setTranslationX(tempX - x);
-                imageButton.setTranslationY(tempY - y);
-                Log.d("After", "translation");
-                Log.d(String.valueOf(imageButton.getX()), String.valueOf(imageButton.getY()));
+                imageButton.setTranslationX(x - tempX);
+                imageButton.setTranslationY(y - tempY);
+                redraw();
             }
-            redraw();
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
+
+    class ChangeBar extends AsyncTask<String, String, String> implements View.OnClickListener {
+
+        boolean failure = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+
+            return "ja";
+
+        }
+
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once product deleted
+            if(totalDiffX > 600){
+                underbar.setImageResource(R.drawable.desert);
+            }
+            else if(totalDiffX < 600){
+                underbar.setImageResource(R.drawable.ice);
+            }
         }
 
         @Override
