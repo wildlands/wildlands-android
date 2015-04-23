@@ -90,7 +90,8 @@ public class Kaart extends ActionBarActivity implements OnClickListener {
                 String name = c.getString(TAG_NAME);
                 int xPos = c.getInt(TAG_XPOS);
                 int yPos = c.getInt(TAG_YPOS);
-                pinpoints.add(new Pinpoint(id,name,xPos, yPos));
+                PinpointType type = new PinpointType(1, "vuur", "kwH", "pin1");
+                pinpoints.add(new Pinpoint(id,name,type,xPos, yPos));
 
 
                 // creating new HashMap
