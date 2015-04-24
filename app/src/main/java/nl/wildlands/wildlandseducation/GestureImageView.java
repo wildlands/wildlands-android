@@ -31,13 +31,19 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -123,6 +129,9 @@ public class GestureImageView extends ImageView{
     private ButtonHandler btnHandler;
     private ArrayList<ImageButton> imageButtons;
     private PopupWindow popupWindow;
+    ViewPager mViewPager;
+    //TabsAdapter mTabsAdapter;
+
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
 
@@ -344,41 +353,58 @@ public class GestureImageView extends ImageView{
     {
         Log.d("popi=up", "gestart");
         RelativeLayout rlTotal = new RelativeLayout(context);
+        /*
+        HorizontalScrollView hScroll = new HorizontalScrollView(context);
+        RelativeLayout rlHor = new RelativeLayout(context);
+        hScroll.addView(rlHor);
 
-        ScrollView sc = new ScrollView(context);
-        sc.setTranslationY(100);
-        RelativeLayout rlScroll = new RelativeLayout(context);
-        sc.addView(rlScroll);
-        ImageButton closeButton = new ImageButton(context);
-        int i = 101;
-        closeButton.setId(i+0);
-        closeButton.setImageResource(R.drawable.closebtn);
-        closeButton.setBackground(null);
-        closeButton.setTranslationY(100);
-        closeButton.setTranslationX(630);
-        closeButton.setLayoutParams(lp);
-        closeButton.setOnClickListener( new OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                popupWindow.dismiss();
-                                            }
-                                        });
+        for(int i = 0; i < 2; i++) {
+            ScrollView sc = new ScrollView(context);
+            //sc.setTranslationY(650);
+            RelativeLayout rlScroll = new RelativeLayout(context);
+            sc.addView(rlScroll);
 
-        ImageView img = new ImageView(context);
-        img.setImageResource(R.drawable.duck2);
-        img.setTranslationY(-250);
-        rlScroll.addView(img);
-        TextView textView = new TextView(context);
-        textView.setText("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. ");
-        textView.setTranslationY(850);
-        rlScroll.addView(textView);
-        rlTotal.setBackgroundResource(R.drawable.background);
-     //   sc.addView(imgView);
-        rlTotal.addView(sc);
-        rlTotal.addView(closeButton);
+            ImageButton closeButton = new ImageButton(context);
+            int j = 101;
+            closeButton.setId(j + 0);
+            closeButton.setImageResource(R.drawable.closebtn);
+            closeButton.setBackground(null);
+            closeButton.setTranslationY(100);
+            closeButton.setTranslationX(650);
+            closeButton.setLayoutParams(lp);
+            closeButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupWindow.dismiss();
+                }
+            });
+
+
+            ImageView img = new ImageView(context);
+            img.setLayoutParams(lp);
+            img.setImageResource(R.drawable.duck2);
+            img.setTranslationY(50);
+
+
+            TextView textView = new TextView(context);
+            textView.setText("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. ");
+            textView.setTranslationY(650);
+            rlScroll.addView(textView);
+            rlTotal.setBackgroundResource(R.drawable.background);
+           // sc.addView(imgView);
+            rlScroll.addView(img);
+            rlHor.addView(sc);
+
+            rlHor.addView(closeButton);
+
+
+        }
+        rlTotal.addView(hScroll);
         popupWindow = new PopupWindow(rlTotal, 900, 1600);
         //popupWindow.setContentView(layoutOfPopup);
         popupWindow.showAtLocation(this, Gravity.NO_GRAVITY, 100, 50);
+        */
+
     }
 
 	protected void computeStartingScale(int imageWidth, int imageHeight, int measuredWidth, int measuredHeight) {
@@ -1003,5 +1029,16 @@ public class GestureImageView extends ImageView{
         }
     }
 
+    public class ScreenSlidePageFragment extends Fragment {
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            ViewGroup rootView = (ViewGroup) inflater.inflate(
+                    R.layout.fragment_pinpoint, container, false);
+
+            return rootView;
+        }
+    }
 
 }

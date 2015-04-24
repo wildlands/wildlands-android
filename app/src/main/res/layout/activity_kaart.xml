@@ -17,6 +17,11 @@
         gesture-image:max-scale="3.0"
         />
 
+    <fragment android:name="nl.wildlands.wildlandseducation.GestureImageView$ScreenSlidePageFragment"
+        android:id="@+id/list"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
 
 
 
