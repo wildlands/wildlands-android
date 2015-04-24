@@ -119,6 +119,7 @@ public class GestureImageView extends ImageView{
     private float totalDiffX;
     private float totalDiffY;
     private ImageView underbar;
+    private boolean switchBar;
     private ButtonHandler btnHandler;
     private ArrayList<ImageButton> imageButtons;
     private PopupWindow popupWindow;
@@ -167,6 +168,7 @@ public class GestureImageView extends ImageView{
         imageButtons = new ArrayList<ImageButton>();
         totalDiffX = 0;
         totalDiffY = 0;
+        switchBar = true;
 	}
 
 	public GestureImageView(Context context) {
@@ -308,9 +310,17 @@ public class GestureImageView extends ImageView{
         imageBtn.setImageResource(R.drawable.pin);
         imageBtn.setBackground(null);
         imageBtn.setLayoutParams(lp);
-        imageBtn.setOnClickListener(btnHandler);
         imageBtn.setTranslationX(x);
         imageBtn.setTranslationY(y);
+        imageBtn.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                startPopUp();
+
+
+            }
+        });
         Log.d("imgid", String.valueOf(imageBtn.getId()));
         imageButtons.add(imageBtn);
         RelativeLayout kaart = (RelativeLayout)getRootView().findViewById(R.id.kaartScreen);
@@ -343,10 +353,16 @@ public class GestureImageView extends ImageView{
         int i = 101;
         closeButton.setId(i+0);
         closeButton.setImageResource(R.drawable.closebtn);
+        closeButton.setBackground(null);
         closeButton.setTranslationY(100);
         closeButton.setTranslationX(630);
         closeButton.setLayoutParams(lp);
-        closeButton.setOnClickListener(btnHandler);
+        closeButton.setOnClickListener( new OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                popupWindow.dismiss();
+                                            }
+                                        });
 
         ImageView img = new ImageView(context);
         img.setImageResource(R.drawable.duck2);
@@ -362,7 +378,7 @@ public class GestureImageView extends ImageView{
         rlTotal.addView(closeButton);
         popupWindow = new PopupWindow(rlTotal, 900, 1600);
         //popupWindow.setContentView(layoutOfPopup);
-        popupWindow.showAtLocation(this, Gravity.NO_GRAVITY, 100, 200);
+        popupWindow.showAtLocation(this, Gravity.NO_GRAVITY, 100, 50);
     }
 
 	protected void computeStartingScale(int imageWidth, int imageHeight, int measuredWidth, int measuredHeight) {
@@ -570,11 +586,13 @@ public class GestureImageView extends ImageView{
         tempY = diffY;
         totalDiffY += diffY;
         totalDiffX += diff;
-        if(totalDiffX > 600)
+        if(totalDiffX > 600 && switchBar)
         {
+            switchBar = false;
             new ChangeBar().execute();
 
-        }else if(totalDiffX < 600){
+        }else if(totalDiffX < 600 && switchBar == false){
+            switchBar = true;
             new ChangeBar().execute();
         }
         new Move().execute();
