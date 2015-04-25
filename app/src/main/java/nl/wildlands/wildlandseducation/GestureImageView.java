@@ -18,6 +18,7 @@ package nl.wildlands.wildlandseducation;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -351,8 +352,10 @@ public class GestureImageView extends ImageView{
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void startPopUp()
     {
+        Intent h = new Intent(context, ScreenSlidePagerActivity.class);
+        context.startActivity(h);
         Log.d("popi=up", "gestart");
-        RelativeLayout rlTotal = new RelativeLayout(context);
+        //RelativeLayout rlTotal = new RelativeLayout(context);
         /*
         HorizontalScrollView hScroll = new HorizontalScrollView(context);
         RelativeLayout rlHor = new RelativeLayout(context);
@@ -1029,16 +1032,6 @@ public class GestureImageView extends ImageView{
         }
     }
 
-    public class ScreenSlidePageFragment extends Fragment {
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            ViewGroup rootView = (ViewGroup) inflater.inflate(
-                    R.layout.fragment_pinpoint, container, false);
-
-            return rootView;
-        }
-    }
 
 }

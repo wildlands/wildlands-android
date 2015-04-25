@@ -25,7 +25,14 @@
             </intent-filter>
 
 
+
         </activity>
+        <activity
+            android:name=".ScreenSlidePagerActivity"
+            android:label="Popup">
+
+        </activity>
+
         <activity
             android:name=".MultiTouch"
             android:label="@string/title_activity_kaart" >
