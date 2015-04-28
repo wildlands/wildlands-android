@@ -2,6 +2,8 @@ package nl.wildlands.wildlandseducation;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -17,6 +19,7 @@ import android.widget.ImageButton;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -30,6 +33,12 @@ import java.util.List;
 
 
 public class Kaart extends Activity implements OnClickListener {
+
+    // Stenden data // TODO Change to Wildlands data!
+    private final double gpsTop = 52.778749;
+    private final double gpsLeft = 6.910379;
+    private final double gpsBottom = 52.777664;
+    private final double gpsRight = 6.913659;
 
     JSONParser jsonParser = new JSONParser();
 
@@ -52,6 +61,8 @@ public class Kaart extends Activity implements OnClickListener {
 
     int buttonId = 0;
 
+    private GPSTracker gpsTracker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -66,6 +77,8 @@ public class Kaart extends Activity implements OnClickListener {
     //    pin1 = (ImageButton)findViewById(R.id.imageButton);
        // pin1.setOnClickListener(this);
         map = (GestureImageView)findViewById(R.id.imageView2);
+
+        startGPSTracker();
 
        // map.addImageButton(pin1);
         pinpoints = new ArrayList<Pinpoint>();
@@ -158,6 +171,40 @@ public class Kaart extends Activity implements OnClickListener {
 
              //   break;
 
+        }
+    }
+
+    private void startGPSTracker() {
+        gpsTracker = new GPSTracker(this, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                double x = ((location.getLongitude() - gpsLeft) / (gpsRight - gpsLeft)) * map.getWidth();
+                double y = ((location.getLatitude() - gpsTop) / (gpsBottom - gpsTop)) * map.getHeight();
+
+                // TODO Change position of 'spot' image.
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        });
+
+        try {
+            gpsTracker.startTracking();
+        } catch (GPSNotEnabledException e) {
+            Toast.makeText(this, "GPS/Wifi Location not enabled.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
