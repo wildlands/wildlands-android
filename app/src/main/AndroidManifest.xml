@@ -2,37 +2,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nl.wildlands.wildlandseducation"
     android:versionCode="1"
-    android:versionName="0.0.1">
+    android:versionName="0.0.1" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name=".Application"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Kaart"
             android:label="@string/title_activity_kaart" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-
 
         </activity>
         <activity
             android:name=".ScreenSlidePagerActivity"
-            android:label="Popup">
-
+            android:label="Popup" >
         </activity>
-
         <activity
             android:name=".MultiTouch"
             android:label="@string/title_activity_kaart" >
@@ -40,7 +34,14 @@
         <activity
             android:name=".TestSql"
             android:label="@string/title_activity_test_sql" >
-
+        </activity>
+        <activity
+            android:name=".SplashScreen"
+            android:label="@string/title_activity_splash_screen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

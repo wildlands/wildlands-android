@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.AsyncTask;
@@ -49,7 +50,7 @@ public class MainActivity extends Activity implements OnClickListener {
     public static final String MyPREFERENCES = "MyPrefs" ;              // String to get sharedprefs
 
     // Url to get JSON
-    private static final String GET_QUESTION_URL = "http://doornbosagrait.no-ip.org/wildlandsBackend/api/api.php?c=GetAllQuestions";
+    private static final String GET_QUESTION_URL = "http://wildlands.doornbosagrait.tk/api/api.php?c=GetAllQuestions";
 
     /*
     Tags om variabelen uit JSON te halen
@@ -216,7 +217,7 @@ public class MainActivity extends Activity implements OnClickListener {
         answer7.setVisibility(View.VISIBLE);
         answer8.setVisibility(View.VISIBLE);
         if(questions.size() <= i){
-            question.setText("Score is " + questionsCorrect + " van " + questionNumber);
+            question.setText("SCORE IS " + questionsCorrect + " VAN " + questionNumber);
             answer1.setVisibility(View.GONE);
             answer2.setVisibility(View.GONE);
             answer3.setVisibility(View.GONE);
@@ -259,7 +260,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 
         }
-
+        //Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/text.ttf");
+        //question.setTypeface(tf);
     }
 
     /**
@@ -490,7 +492,7 @@ public class MainActivity extends Activity implements OnClickListener {
         protected String doInBackground(String... args) {
 
 
-            JSONObject versionObj = jsonParser.getJSONObjFromUrl("http://doornbosagrait.no-ip.org/wildlandsBackend/api/api.php?c=GetDatabaseChecksum");
+            JSONObject versionObj = jsonParser.getJSONObjFromUrl("http://wildlands.doornbosagrait.tk//api/api.php?c=GetDatabaseChecksum");
             Log.d("Versionjson", versionObj.toString());
             try {
 

@@ -10,7 +10,7 @@ public class PinpointType {
     private String unit;
     private String image;
 
-    public PinpointType(int id, String name, String unit, String image)
+    public PinpointType(int id, String image, String unit, String name)
     {
         this.id = id;
         this.name = name;

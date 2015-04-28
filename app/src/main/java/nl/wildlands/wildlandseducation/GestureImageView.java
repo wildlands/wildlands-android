@@ -312,12 +312,28 @@ public class GestureImageView extends ImageView{
 		fitScaleVertical = (float) measuredHeight / (float) imageHeight;
 	}
 
-    public void addButton(int x, int y, int id)
+    public void addButton(int x, int y, int id, String soort)
     {
-
+        Log.d("soort die in kaart ", soort);
         ImageButton imageBtn = new ImageButton(context);
         imageBtn.setId(i+id);
-        imageBtn.setImageResource(R.drawable.pin);
+        if(soort.equals("Stroom")) {
+            imageBtn.setImageResource(R.drawable.pin);
+        }
+        else if(soort.equals("Water"))
+        {
+            imageBtn.setImageResource(R.drawable.pin_water);
+        }
+        else if(soort.equals("Bio"))
+        {
+            imageBtn.setImageResource(R.drawable.pin_bio);
+        }
+        else if(soort.equals("Warmte")){
+            imageBtn.setImageResource(R.drawable.pin_warmte);
+        }
+        else{
+            imageBtn.setImageResource(R.drawable.pin);
+        }
         imageBtn.setBackground(null);
         imageBtn.setLayoutParams(lp);
         imageBtn.setTranslationX(x);
