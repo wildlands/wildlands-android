@@ -89,11 +89,17 @@ public class Kaart extends Activity implements OnClickListener {
             // looping through all posts according to the json object returned
             for (int i = 0; i < questionArray.length(); i++) {
                 JSONObject c = questionArray.getJSONObject(i);
+                Log.d("C object", c.toString());
                 int id = c.getInt(TAG_ID);
                 String name = c.getString(TAG_NAME);
                 int xPos = c.getInt(TAG_XPOS);
                 int yPos = c.getInt(TAG_YPOS);
-                PinpointType type = new PinpointType(1, "vuur", "kwH", "pin1");
+                JSONObject typeJSON = c.getJSONObject("type");
+                int typeID = typeJSON.getInt("id");
+                String image = typeJSON.getString("image");
+                String unit = typeJSON.getString("unit");
+                String typeName = typeJSON.getString("name");
+                PinpointType type = new PinpointType(typeID, image, unit, typeName);
                 pinpoints.add(new Pinpoint(id,name,type,xPos, yPos));
 
 
@@ -125,7 +131,9 @@ public class Kaart extends Activity implements OnClickListener {
             int y = pinpoint.getYPos();
             int id = pinpoint.getId();
             Log.d(String.valueOf(x), String.valueOf(y));
-            map.addButton(x, y, id);
+            String soort = pinpoint.getType().getName();
+            Log.d("soort", soort);
+            map.addButton(x, y, id, soort);
             buttonId++;
         }
         map.redraw();
