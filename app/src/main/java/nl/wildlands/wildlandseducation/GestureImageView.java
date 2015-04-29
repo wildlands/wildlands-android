@@ -334,7 +334,7 @@ public class GestureImageView extends ImageView{
         else{
             imageBtn.setImageResource(R.drawable.pin);
         }
-        imageBtn.setBackground(null);
+        imageBtn.setBackgroundColor(Color.TRANSPARENT);
         imageBtn.setLayoutParams(lp);
         imageBtn.setTranslationX(x);
         imageBtn.setTranslationY(y);
@@ -369,7 +369,9 @@ public class GestureImageView extends ImageView{
     public void startPopUp()
     {
         Intent h = new Intent(context, ScreenSlidePagerActivity.class);
+        h.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(h);
+
         Log.d("popi=up", "gestart");
         //RelativeLayout rlTotal = new RelativeLayout(context);
         /*
