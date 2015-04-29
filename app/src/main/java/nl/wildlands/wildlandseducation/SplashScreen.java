@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 /*
 Splashscreen voor het begin van de app
@@ -19,6 +20,8 @@ public class SplashScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mHandler.sendEmptyMessageDelayed(DISPLAY_DATA, MSDELAY);
     }
 
@@ -38,7 +41,7 @@ public class SplashScreen extends Activity {
      */
     public void startKaart()
     {
-        Intent h = new Intent(this, Kaart.class);
+        Intent h = new Intent(this, Filtermenu.class);
         startActivity(h);
         this.finish();
     }
