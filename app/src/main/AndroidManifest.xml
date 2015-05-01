@@ -50,6 +50,10 @@
             android:name=".view_4"
             android:label="@string/title_activity_view_4" >
         </activity>
+        <activity
+            android:name=".view_5"
+            android:label="@string/title_activity_view_5" >
+        </activity>
     </application>
 
 </manifest>
