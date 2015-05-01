@@ -36,7 +36,6 @@
         <activity
             android:name=".SplashScreen"
             android:label="@string/title_activity_splash_screen" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,7 +45,10 @@
         <activity
             android:name=".Filtermenu"
             android:label="@string/title_activity_filtermenu" >
-
+        </activity>
+        <activity
+            android:name=".Home"
+            android:label="@string/title_activity_home" >
         </activity>
     </application>
 

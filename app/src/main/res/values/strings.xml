@@ -8,5 +8,6 @@
     <string name="title_activity_test_sql">TestSql</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="title_activity_filtermenu">Filter</string>
+    <string name="title_activity_home">Home</string>
 
 </resources>
