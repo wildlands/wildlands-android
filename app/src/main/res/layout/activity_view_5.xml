@@ -64,7 +64,7 @@
         android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"
         android:background="@drawable/btn_grey"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"/>
 
     <EditText
         android:layout_width="300dp"
