@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="nl.wildlands.wildlandseducation.view_6"
+    android:background="@drawable/element_13">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/element_02"
+        android:layout_marginTop="100dp"
+        android:id="@+id/imageView4" />
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="120dp"
+        android:background="@drawable/element_07"
+        android:id="@+id/imageView3"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="500dp"
+        android:background="#999999"
+        android:layout_marginTop="150dp"/>
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/element_10"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="110dp"/>
+    <TextView
+        android:layout_width="500dp"
+        android:layout_height="50dp"
+        android:text="De quiz begint zo!"
+        android:textColor="#ffffff"
+        android:textSize="40dp"
+        android:layout_marginTop="320dp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/textView2" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eventjes geduld A.U.B."
+        android:textColor="#ffffff"
+        android:textSize="30dp"
+        android:id="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="370dp"/>
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Sluit de app niet af"
+        android:textColor="#FF0000"
+        android:textSize="30dp"
+        android:id="@+id/textView4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="430dp"
+        android:layout_marginLeft="100dp"/>
+    <TextView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="tijdens de quiz!!!"
+        android:textColor="#FF0000"
+        android:textSize="30dp"
+        android:id="@+id/textView5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="460dp"
+        android:layout_marginLeft="140dp"/>
+
+</RelativeLayout>

@@ -47,8 +47,21 @@
             android:label="@string/title_activity_filtermenu" >
         </activity>
         <activity
+<<<<<<< HEAD
             android:name=".Home"
             android:label="@string/title_activity_home" >
+=======
+            android:name=".view_4"
+            android:label="@string/title_activity_view_4" >
+        </activity>
+        <activity
+            android:name=".view_5"
+            android:label="@string/title_activity_view_5" >
+        </activity>
+        <activity
+            android:name=".view_6"
+            android:label="@string/title_activity_view_6" >
+>>>>>>> 7c019c37c19d7083efe3acb8408973192fc09f6d
         </activity>
     </application>
 

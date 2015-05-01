@@ -7,6 +7,8 @@ import android.os.Message;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import java.util.logging.Filter;
+
 /*
 Splashscreen voor het begin van de app
 Weergave van een x aantal seconden
@@ -41,7 +43,7 @@ public class SplashScreen extends Activity {
      */
     public void startKaart()
     {
-        Intent h = new Intent(this, Filtermenu.class);
+        Intent h = new Intent(this, Home.class);
         startActivity(h);
         this.finish();
     }
