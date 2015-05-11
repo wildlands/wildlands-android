@@ -25,6 +25,7 @@ public class Filtermenu extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.gc();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtermenu);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -44,6 +45,7 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         btnEnergie.setOnClickListener(this);
         btnMaterialen.setOnClickListener(this);
         btnBio.setOnClickListener(this);
+
         animateFadeIn();
 
 
@@ -145,8 +147,8 @@ if(buttonNumber == 1){
 
     @Override
     public void onClick(View v) {
-
-        Intent i = new Intent(this, SplashScreen.class);
+        System.gc();
+        Intent i = new Intent(this, Home.class);
         switch(v.getId())
         {
             case R.id.backbutton:

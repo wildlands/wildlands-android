@@ -23,7 +23,7 @@ package nl.wildlands.wildlandseducation;
 public class Animator extends Thread {
 	
 	private GestureImageView view;
-	private Animation animation;
+	private GestureAnimation gestureAnimation;
 	private boolean running = false;
 	private boolean active = false;
 	private long lastTime = -1L;
@@ -40,9 +40,9 @@ public class Animator extends Thread {
 		
 		while(running) {
 				
-			while(active && animation != null) {
+			while(active && gestureAnimation != null) {
 				long time = System.currentTimeMillis();
-				active = animation.update(view, time - lastTime);
+				active = gestureAnimation.update(view, time - lastTime);
 				view.redraw();
 				lastTime = time;					
 				
@@ -75,11 +75,11 @@ public class Animator extends Thread {
 		notifyAll();
 	}
 
-	public void play(Animation transformer) {
+	public void play(GestureAnimation transformer) {
 		if(active) {
 			cancel();
 		}
- 		this.animation = transformer;
+ 		this.gestureAnimation = transformer;
  		
  		activate();
 	}

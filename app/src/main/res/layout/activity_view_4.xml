@@ -13,6 +13,7 @@
         android:layout_width="150dp"
         android:layout_height="120dp"
         android:background="@drawable/element_07"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="125dp"/>
     <ImageView
@@ -23,6 +24,7 @@
     <TextView
         android:layout_width="200dp"
         android:layout_height="100dp"
+        android:id="@+id/ikben"
         android:text="Ik ben..."
         android:textColor="#ffffff"
         android:textSize="40dp"
@@ -31,18 +33,29 @@
     <Button
         android:layout_width="250dp"
         android:layout_height="80dp"
+        android:id="@+id/leerling"
         android:background="@drawable/btn_green"
         android:layout_marginTop="250dp"
-        android:layout_marginLeft="70dp"
-        android:text="Leerling"
+        android:layout_centerHorizontal="true"
+        android:text="LEERLING"
         android:textColor="#ffffff"/>
     <Button
         android:layout_width="250dp"
         android:layout_height="80dp"
+        android:id="@+id/docent"
         android:background="@drawable/btn_green"
         android:layout_marginTop="350dp"
-        android:layout_marginLeft="70dp"
-        android:text="Docent"
+        android:layout_centerHorizontal="true"
+        android:text="DOCENT"
         android:textColor="#ffffff"/>
+    <ImageButton
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/backbutton"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/backarrow"
+        android:background="@null"
+        android:layout_below="@+id/docent"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

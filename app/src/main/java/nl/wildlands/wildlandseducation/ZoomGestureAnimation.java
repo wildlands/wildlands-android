@@ -22,7 +22,7 @@ import android.graphics.PointF;
  * @author Jason Polites
  *
  */
-public class ZoomAnimation implements Animation {
+public class ZoomGestureAnimation implements GestureAnimation {
 
 	private boolean firstFrame = true;
 	

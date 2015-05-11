@@ -19,7 +19,7 @@ package nl.wildlands.wildlandseducation;
  * @author Jason Polites
  *
  */
-public class FlingAnimation implements Animation {
+public class FlingGestureAnimation implements GestureAnimation {
 	
 	private float velocityX;
 	private float velocityY;

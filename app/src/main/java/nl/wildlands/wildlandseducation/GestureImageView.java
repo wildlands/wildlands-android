@@ -32,26 +32,18 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -527,9 +519,9 @@ public class GestureImageView extends ImageView{
 		super.onAttachedToWindow();
 	}
 
-	public void animationStart(Animation animation) {
+	public void animationStart(GestureAnimation gestureAnimation) {
 		if(animator != null) {
-			animator.play(animation);
+			animator.play(gestureAnimation);
 		}
 	}
 

@@ -19,7 +19,7 @@ package nl.wildlands.wildlandseducation;
  * @author Jason Polites
  *
  */
-public interface Animation {
+public interface GestureAnimation {
 	
 	/**
 	 * Transforms the view.

@@ -20,7 +20,7 @@ package nl.wildlands.wildlandseducation;
  * @author Jason Polites
  *
  */
-public class MoveAnimation implements Animation {
+public class MoveGestureAnimation implements GestureAnimation {
 
 	private boolean firstFrame = true;
 	

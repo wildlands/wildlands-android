@@ -24,8 +24,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 
-import java.util.ArrayList;
-
 public class GestureImageViewTouchListener implements OnTouchListener {
 	
 	private GestureImageView image;
@@ -76,9 +74,9 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 	private int imageHeight;
 	
 	private FlingListener flingListener;
-	private FlingAnimation flingAnimation;
-	private ZoomAnimation zoomAnimation;
-	private MoveAnimation moveAnimation;
+	private FlingGestureAnimation flingAnimation;
+	private ZoomGestureAnimation zoomAnimation;
+	private MoveGestureAnimation moveAnimation;
 	private GestureDetector tapDetector;
 	private GestureDetector flingDetector;
 	private GestureImageViewListener imageListener;
@@ -111,9 +109,9 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 		next.y = image.getImageY();
 		
 		flingListener = new FlingListener();
-		flingAnimation = new FlingAnimation();
-		zoomAnimation = new ZoomAnimation();
-		moveAnimation = new MoveAnimation();
+		flingAnimation = new FlingGestureAnimation();
+		zoomAnimation = new ZoomGestureAnimation();
+		moveAnimation = new MoveGestureAnimation();
 		
 		flingAnimation.setListener(new FlingAnimationListener() {
 			@Override
