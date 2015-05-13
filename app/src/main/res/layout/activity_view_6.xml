@@ -23,48 +23,56 @@
         android:background="#999999"
         android:layout_marginTop="150dp"/>
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="162dp"
+        android:layout_height="180dp"
         android:background="@drawable/element_10"
-        android:layout_marginTop="150dp"
-        android:layout_marginLeft="110dp"/>
+        android:id="@+id/klok"
+        android:layout_marginTop="180dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:scaleType="fitXY" />
     <TextView
-        android:layout_width="500dp"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:text="De quiz begint zo!"
+        android:layout_below="@+id/klok"
+        android:text="De quiz begint zo! "
+        android:id="@+id/quizStart"
         android:textColor="#ffffff"
-        android:textSize="40dp"
-        android:layout_marginTop="320dp"
-        android:layout_marginLeft="20dp"
-        android:id="@+id/textView2" />
+        android:textSize="35dp"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+       />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eventjes geduld A.U.B."
+        android:text="Eventjes geduld A.U.B. "
         android:textColor="#ffffff"
-        android:textSize="30dp"
-        android:id="@+id/textView3"
+        android:textSize="25dp"
+        android:id="@+id/geduld"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="370dp"/>
+        android:layout_below="@+id/quizStart"
+        android:layout_marginTop="5dp"/>
     <TextView
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sluit de app niet af"
+        android:text="Sluit de app niet af "
         android:textColor="#FF0000"
-        android:textSize="30dp"
-        android:id="@+id/textView4"
+        android:textSize="25dp"
+        android:id="@+id/afsluiten"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="430dp"
-        android:layout_marginLeft="100dp"/>
+        android:layout_below="@+id/geduld"
+        android:layout_marginTop="30dp"
+        />
     <TextView
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="tijdens de quiz!!!"
+        android:text="tijdens de quiz!!! "
         android:textColor="#FF0000"
-        android:textSize="30dp"
-        android:id="@+id/textView5"
+        android:textSize="25dp"
+        android:id="@+id/tijdensQuiz"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="460dp"
-        android:layout_marginLeft="140dp"/>
+        android:layout_below="@+id/afsluiten"
+        android:layout_marginTop="0dp"
+        />
 
 </RelativeLayout>

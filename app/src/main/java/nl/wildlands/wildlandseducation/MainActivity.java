@@ -26,6 +26,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.github.nkzawa.socketio.client.Socket;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -48,6 +50,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private ArrayList<Question> questions;                              // ArrayList to store all questions
     public static final String MyPREFERENCES = "MyPrefs" ;              // String to get sharedprefs
+    private Socket socket;
 
     // Url to get JSON
     private static final String GET_QUESTION_URL = "http://wildlands.doornbosagrait.tk/api/api.php?c=GetAllQuestions";
@@ -101,7 +104,7 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        socket = ((DefaultApplication)this.getApplication()).getSocket();
         // To use the full width and high of the screen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -123,6 +126,8 @@ public class MainActivity extends Activity implements OnClickListener {
         answer6 = (Button)findViewById(R.id.button6);
         answer7 = (Button)findViewById(R.id.button7);
         answer8 = (Button)findViewById(R.id.button8);
+
+
 
         /*
             Mogelijkheid tot klikken
@@ -158,7 +163,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
         try {
             questionArray = jsonArray;
-            String baseUrl = "http://doornbosagrait.no-ip.org/wildlandsBackend/app/images/";
+            String baseUrl = "http://wildlands.doornbosagrait.tk/app/images/";
 
             // looping through all posts according to the json object returned
             for (int i = 0; i < questionArray.length(); i++) {
@@ -319,27 +324,29 @@ public class MainActivity extends Activity implements OnClickListener {
      */
     public void checkAnswer(String answer)
     {
+        int code = ((DefaultApplication)this.getApplication()).getSocketcode();
+        String naam = ((DefaultApplication)this.getApplication()).getSocketnaam();
         Log.d("Ans en ques", answer + questionNumber);
         Log.d("Correct",  questions.get(questionNumber).getCorrectAnswer());
+        boolean correct = false;
         if(answer == questions.get(questionNumber).getCorrectAnswer())
         {
             questionsCorrect += 1;
+            correct = true;
         }
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        JSONObject message = new JSONObject();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        try {
+            message.put("naam", naam);
+            message.put("vraag", questionNumber);
+            message.put("goed", correct);
+            message.put("quizID",code );
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        return super.onOptionsItemSelected(item);
+        socket.emit("sendAnswer", message);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -510,6 +517,7 @@ public class MainActivity extends Activity implements OnClickListener {
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
 
+            /*
             if(appVersion == sharedpreferences.getLong("version", 0))
             {
                 Log.d("versie", "Versies komen overeen");
@@ -521,7 +529,8 @@ public class MainActivity extends Activity implements OnClickListener {
                 editor.commit();
                 Log.d("Check version", String.valueOf(appVersion));
                 new Search().execute();
-            }
+            }*/
+            new Search().execute();
 
 
         }

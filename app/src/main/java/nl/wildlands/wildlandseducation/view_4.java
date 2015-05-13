@@ -53,6 +53,10 @@ public class view_4 extends Activity implements View.OnClickListener {
                 break;
             case R.id.leerling:
                 // start some other activity
+                Intent l = new Intent(this, view_5.class);
+                startActivity(l);
+                this.finish();
+                System.gc();
                 break;
         }
     }

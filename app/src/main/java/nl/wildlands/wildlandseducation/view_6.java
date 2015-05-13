@@ -1,39 +1,67 @@
 package nl.wildlands.wildlandseducation;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.TextView;
+
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.Socket;
 
 
-public class view_6 extends ActionBarActivity {
+public class view_6 extends Activity {
 
-    @Override
+    private Socket mSocket = null;
+
+    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            view_6.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    startQuiz();
+                }
+            });
+        }
+    };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSocket = ((DefaultApplication)this.getApplication()).getSocket();
         setContentView(R.layout.activity_view_6);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        TextView tv = (TextView)findViewById(R.id.afsluiten);
+        TextView tv2 = (TextView)findViewById(R.id.geduld);
+        TextView tv3 = (TextView)findViewById(R.id.quizStart);
+        TextView tv4 = (TextView)findViewById(R.id.tijdensQuiz);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
+        tv.setTypeface(tf);
+        tv2.setTypeface(tf);
+        tv3.setTypeface(tf);
+        tv4.setTypeface(tf);
+        mSocket.on("startTheQuiz", onNewMessage);
+
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_6, menu);
-        return true;
+
+
+    /**
+     * Functie die de quiz start
+     */
+    public void startQuiz()
+    {
+        Intent h = new Intent(this, MainActivity.class);
+        startActivity(h);
+        this.finish();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
