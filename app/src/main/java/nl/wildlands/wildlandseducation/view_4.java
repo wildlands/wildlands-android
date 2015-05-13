@@ -50,11 +50,18 @@ public class view_4 extends Activity implements View.OnClickListener {
                 break;
             case R.id.docent:
                 // start some activity
+                Intent docent = new Intent(this, GenerateQuiz.class);
+                startActivity(docent);
+                this.finish();
+                System.gc();
+
                 break;
             case R.id.leerling:
                 // start some other activity
                 Intent l = new Intent(this, view_5.class);
                 startActivity(l);
+                //Intent test = new Intent(this, MainActivity.class);
+               // startActivity(test);
                 this.finish();
                 System.gc();
                 break;

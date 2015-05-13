@@ -47,15 +47,12 @@
             android:label="@string/title_activity_filtermenu" >
         </activity>
         <activity
-
             android:name=".Home"
             android:label="@string/title_activity_home" >
-
-
         </activity>
         <activity
-        android:name=".view_4"
-        android:label="@string/title_activity_view_4" ></activity>
+            android:name=".view_4"
+            android:label="@string/title_activity_view_4" />
         <activity
             android:name=".view_5"
             android:label="@string/title_activity_view_5" >
@@ -67,6 +64,10 @@
         <activity
             android:name=".view_11"
             android:label="@string/title_activity_view_11" >
+        </activity>
+        <activity
+            android:name=".GenerateQuiz"
+            android:label="@string/title_activity_generate_quiz" >
         </activity>
     </application>
 

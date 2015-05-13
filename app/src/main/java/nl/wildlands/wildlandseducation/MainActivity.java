@@ -222,7 +222,10 @@ public class MainActivity extends Activity implements OnClickListener {
         answer7.setVisibility(View.VISIBLE);
         answer8.setVisibility(View.VISIBLE);
         if(questions.size() <= i){
-            question.setText("SCORE IS " + questionsCorrect + " VAN " + questionNumber);
+            Intent quizEnd = new Intent(this, view_11.class);
+            startActivity(quizEnd);
+            socket.disconnect();
+            /*question.setText("SCORE IS " + questionsCorrect + " VAN " + questionNumber);
             answer1.setVisibility(View.GONE);
             answer2.setVisibility(View.GONE);
             answer3.setVisibility(View.GONE);
@@ -230,7 +233,7 @@ public class MainActivity extends Activity implements OnClickListener {
             answer5.setVisibility(View.GONE);
             answer6.setVisibility(View.GONE);
             answer7.setVisibility(View.GONE);
-            answer8.setVisibility(View.GONE);
+            answer8.setVisibility(View.GONE);*/
         }
         else {
             //if(datasource.getAllQuestions().get(i).getQuestion() != null){
