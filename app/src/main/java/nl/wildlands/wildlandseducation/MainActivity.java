@@ -144,7 +144,7 @@ public class MainActivity extends Activity implements OnClickListener {
         questionArray = new JSONArray();
         jsonArray = new JSONArray();
 
-        questions = new ArrayList<Question>();
+        questions = ((DefaultApplication)this.getApplication()).getQuestions();
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
@@ -153,7 +153,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
         ArrayList<Question> values = datasource.getAllQuestions();
 
-        new CheckVersion().execute();
+        display(questionNumber);
+
+       // new CheckVersion().execute();
 
     }
 
@@ -224,6 +226,7 @@ public class MainActivity extends Activity implements OnClickListener {
         if(questions.size() <= i){
             Intent quizEnd = new Intent(this, view_11.class);
             startActivity(quizEnd);
+            this.finish();
             socket.disconnect();
             /*question.setText("SCORE IS " + questionsCorrect + " VAN " + questionNumber);
             answer1.setVisibility(View.GONE);

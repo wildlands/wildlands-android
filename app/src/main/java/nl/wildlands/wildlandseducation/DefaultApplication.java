@@ -4,6 +4,7 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 public final class DefaultApplication extends android.app.Application {
     public Socket newSocket;
@@ -15,6 +16,7 @@ public final class DefaultApplication extends android.app.Application {
     }
     public int socketcode;
     public String socketnaam;
+    public ArrayList<Question> questions;
 
     @Override
     public void onCreate() {
@@ -23,6 +25,7 @@ public final class DefaultApplication extends android.app.Application {
         FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/text.ttf");
         FontsOverride.setDefaultFont(this, "SERIF", "fonts/text.ttf");
         FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/text.ttf");
+        questions = new ArrayList<Question>();
     }
 
     public Socket getSocket()
@@ -33,4 +36,14 @@ public final class DefaultApplication extends android.app.Application {
     public int getSocketcode() { return socketcode;}
     public void setSocketnaam(String socketnaam){this.socketnaam = socketnaam;}
     public String getSocketnaam() {return socketnaam;}
+
+    public void addQuestion(Question q)
+    {
+        questions.add(q);
+    }
+
+    public ArrayList<Question> getQuestions()
+    {
+        return questions;
+    }
 }
