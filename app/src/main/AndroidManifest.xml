@@ -64,6 +64,10 @@
             android:name=".view_6"
             android:label="@string/title_activity_view_6" >
         </activity>
+        <activity
+            android:name=".view_11"
+            android:label="@string/title_activity_view_11" >
+        </activity>
     </application>
 
 </manifest>
