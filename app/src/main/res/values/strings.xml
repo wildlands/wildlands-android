@@ -14,5 +14,6 @@
     <string name="title_activity_view_6">view_6</string>
     <string name="title_activity_view_11">view_11</string>
     <string name="title_activity_generate_quiz">GenerateQuiz</string>
+    <string name="title_activity_track_scores">TrackScores</string>
 
 </resources>

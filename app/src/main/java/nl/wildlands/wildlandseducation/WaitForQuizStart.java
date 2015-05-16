@@ -3,12 +3,7 @@ package nl.wildlands.wildlandseducation;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -16,14 +11,14 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 
 
-public class view_6 extends Activity {
+public class WaitForQuizStart extends Activity {
 
     private Socket mSocket = null;
 
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            view_6.this.runOnUiThread(new Runnable() {
+            WaitForQuizStart.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     startQuiz();
@@ -35,7 +30,7 @@ public class view_6 extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSocket = ((DefaultApplication)this.getApplication()).getSocket();
-        setContentView(R.layout.activity_view_6);
+        setContentView(R.layout.activity_wait_for_quiz_start);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         TextView tv = (TextView)findViewById(R.id.afsluiten);
@@ -59,7 +54,7 @@ public class view_6 extends Activity {
      */
     public void startQuiz()
     {
-        Intent h = new Intent(this, MainActivity.class);
+        Intent h = new Intent(this, Quiz.class);
         startActivity(h);
         this.finish();
     }

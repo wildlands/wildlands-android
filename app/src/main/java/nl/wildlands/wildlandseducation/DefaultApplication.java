@@ -17,6 +17,7 @@ public final class DefaultApplication extends android.app.Application {
     public int socketcode;
     public String socketnaam;
     public ArrayList<Question> questions;
+    public boolean loaded;
 
     @Override
     public void onCreate() {
@@ -26,6 +27,8 @@ public final class DefaultApplication extends android.app.Application {
         FontsOverride.setDefaultFont(this, "SERIF", "fonts/text.ttf");
         FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/text.ttf");
         questions = new ArrayList<Question>();
+        loaded = false;
+
     }
 
     public Socket getSocket()
@@ -36,9 +39,12 @@ public final class DefaultApplication extends android.app.Application {
     public int getSocketcode() { return socketcode;}
     public void setSocketnaam(String socketnaam){this.socketnaam = socketnaam;}
     public String getSocketnaam() {return socketnaam;}
+    public boolean isQuestionsLoaded(){return loaded;}
+    public void setQuestionsLoaded(boolean loaded){this.loaded = loaded;}
 
     public void addQuestion(Question q)
     {
+
         questions.add(q);
     }
 

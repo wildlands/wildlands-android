@@ -1,6 +1,7 @@
 package nl.wildlands.wildlandseducation;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,7 +21,7 @@ import org.w3c.dom.Text;
 
 public class GenerateQuiz extends Activity implements View.OnClickListener {
 
-    Button generateQuiz;
+    Button generateQuiz, startQuiz;
     TextView tv;
     Socket mSocket;
 
@@ -56,6 +57,9 @@ public class GenerateQuiz extends Activity implements View.OnClickListener {
         generateQuiz = (Button)findViewById(R.id.generateQuiz);
         generateQuiz.setOnClickListener(this);
 
+        startQuiz = (Button)findViewById(R.id.startQuiz);
+        startQuiz.setOnClickListener(this);
+
         mSocket = ((DefaultApplication)this.getApplicationContext()).getSocket();
         mSocket.connect();
     }
@@ -69,6 +73,21 @@ public class GenerateQuiz extends Activity implements View.OnClickListener {
             mSocket.emit("createQuiz","");
                 startListening();
                 break;
+            case R.id.startQuiz:
+                JSONObject quizData = new JSONObject();
+                int quizID = ((DefaultApplication)this.getApplication()).getSocketcode();
+                try {
+                    quizData.put("quizID", quizID);
+                    quizData.put("duration", 3);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                mSocket.emit("startQuiz", quizData);
+                Intent scoreScreen = new Intent(this, TrackScores.class);
+                startActivity(scoreScreen);
+                this.finish();
+
         }
     }
 
@@ -79,6 +98,8 @@ public class GenerateQuiz extends Activity implements View.OnClickListener {
 
     public void startNewActivity(String success, int quizID)
     {
-        tv.setText(String.valueOf(quizID));
+        tv.setText(String.valueOf(quizID)
+        );
+        ((DefaultApplication)this.getApplication()).setSocketcode(quizID);
     }
 }

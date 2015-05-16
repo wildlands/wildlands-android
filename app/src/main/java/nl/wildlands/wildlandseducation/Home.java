@@ -12,6 +12,8 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -26,6 +28,9 @@ import java.util.List;
 
 public class Home extends Activity implements View.OnClickListener {
     private Button btnVerkenning, btnQuiz;
+
+    private ProgressBar spinner;
+    private TextView loadingTxt;
     private ImageView logo;
     // Url to get JSON
     private static final String GET_QUESTION_URL = "http://wildlands.doornbosagrait.tk/api/api.php?c=GetAllQuestions";
@@ -66,8 +71,22 @@ public class Home extends Activity implements View.OnClickListener {
         questionArray = new JSONArray();
         jsonArray = new JSONArray();
 
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        loadingTxt = (TextView)findViewById(R.id.loading);
         questions = new ArrayList<Question>();
-        new Search().execute();
+        if(((DefaultApplication)this.getApplication()).isQuestionsLoaded() == false) {
+            spinner.setVisibility(View.VISIBLE);
+            loadingTxt.setVisibility(View.VISIBLE);
+            new Search().execute();
+        }
+        else{
+            //spinner.setVisibility(View.INVISIBLE);
+            //loadingTxt.setVisibility(View.INVISIBLE);
+            logo.setVisibility(View.VISIBLE);
+            btnVerkenning.setVisibility(View.VISIBLE);
+            btnQuiz.setVisibility(View.VISIBLE);
+            animateFadeIn();
+        }
     }
 
     public void animateFadeIn()
@@ -84,7 +103,7 @@ public class Home extends Activity implements View.OnClickListener {
     public void updateJSONdata(){
 
         mQuestionList = new ArrayList<HashMap<String, String>>();
-
+        ((DefaultApplication)this.getApplication()).setQuestionsLoaded(true);
         try {
             questionArray = jsonArray;
             String baseUrl = "http://wildlands.doornbosagrait.tk/app/images/";
@@ -127,6 +146,11 @@ public class Home extends Activity implements View.OnClickListener {
             e.printStackTrace();
         }
 
+        spinner.setVisibility(View.INVISIBLE);
+        loadingTxt.setVisibility(View.INVISIBLE);
+        logo.setVisibility(View.VISIBLE);
+        btnVerkenning.setVisibility(View.VISIBLE);
+        btnQuiz.setVisibility(View.VISIBLE);
         animateFadeIn();
 
 
@@ -144,7 +168,7 @@ public class Home extends Activity implements View.OnClickListener {
                 this.finish();
                 break;
             case R.id.quiz:
-                Intent i = new Intent(this, view_4.class);
+                Intent i = new Intent(this, ChooseQuizGroup.class);
                 startActivity(i);
                 this.finish();
                 break;

@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements OnClickListener {
+public class Quiz extends Activity implements OnClickListener {
 
     private ArrayList<Question> questions;                              // ArrayList to store all questions
     public static final String MyPREFERENCES = "MyPrefs" ;              // String to get sharedprefs
@@ -215,30 +215,22 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     public void display(int i){
-        answer1.setVisibility(View.VISIBLE);
-        answer2.setVisibility(View.VISIBLE);
-        answer3.setVisibility(View.VISIBLE);
-        answer4.setVisibility(View.VISIBLE);
-        answer5.setVisibility(View.VISIBLE);
-        answer6.setVisibility(View.VISIBLE);
-        answer7.setVisibility(View.VISIBLE);
-        answer8.setVisibility(View.VISIBLE);
+
         if(questions.size() <= i){
             Intent quizEnd = new Intent(this, view_11.class);
             startActivity(quizEnd);
             this.finish();
             socket.disconnect();
-            /*question.setText("SCORE IS " + questionsCorrect + " VAN " + questionNumber);
-            answer1.setVisibility(View.GONE);
-            answer2.setVisibility(View.GONE);
-            answer3.setVisibility(View.GONE);
-            answer4.setVisibility(View.GONE);
-            answer5.setVisibility(View.GONE);
-            answer6.setVisibility(View.GONE);
-            answer7.setVisibility(View.GONE);
-            answer8.setVisibility(View.GONE);*/
         }
         else {
+            answer1.setVisibility(View.VISIBLE);
+            answer2.setVisibility(View.VISIBLE);
+            answer3.setVisibility(View.VISIBLE);
+            answer4.setVisibility(View.VISIBLE);
+            answer5.setVisibility(View.VISIBLE);
+            answer6.setVisibility(View.VISIBLE);
+            answer7.setVisibility(View.VISIBLE);
+            answer8.setVisibility(View.VISIBLE);
             //if(datasource.getAllQuestions().get(i).getQuestion() != null){
            //     question.setText(datasource.getAllQuestions().get(i).getQuestion());
           //  }
@@ -271,8 +263,14 @@ public class MainActivity extends Activity implements OnClickListener {
 
 
         }
-        //Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/text.ttf");
-        //question.setTypeface(tf);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if(hasFocus == false)
+        {
+            socket.disconnect();
+        }
     }
 
     /**
