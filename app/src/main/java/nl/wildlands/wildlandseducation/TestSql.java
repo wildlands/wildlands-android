@@ -39,8 +39,8 @@ public class TestSql extends ListActivity {
                 String[] comments = new String[] { "Cool", "Very nice", "Hate it" };
                 int nextInt = new Random().nextInt(3);
                 // save the new comment to the database
-                comment = datasource.createQuestion(comments[nextInt]);
-                adapter.add(comment);
+           //     comment = datasource.createQuestion(comments[nextInt]);
+             //   adapter.add(comment);
                 break;
             case R.id.delete:
                 if (getListAdapter().getCount() > 0) {

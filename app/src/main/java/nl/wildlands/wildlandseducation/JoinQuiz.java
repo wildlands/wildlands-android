@@ -1,9 +1,14 @@
 package nl.wildlands.wildlandseducation;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -159,6 +164,7 @@ public class JoinQuiz extends Activity implements View.OnClickListener {
     {
         ((DefaultApplication)this.getApplication()).setSocketcode(code);            // Zet quizcode in global
         ((DefaultApplication)this.getApplication()).setSocketnaam(leerling);        // Zet leerlingnaam in global
+
 
         Intent h = new Intent(this, WaitForQuizStart.class);                        // Start wachtscherm
         startActivity(h);

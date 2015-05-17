@@ -1,7 +1,9 @@
 package nl.wildlands.wildlandseducation;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +34,10 @@ public class Home extends Activity implements View.OnClickListener {
     private ProgressBar spinner;
     private TextView loadingTxt;
     private ImageView logo;
+
+    public static final String MyPREFERENCES = "MyPrefs" ;              // String to get sharedprefs
+
+    SharedPreferences sharedpreferences;
     // Url to get JSON
     private static final String GET_QUESTION_URL = "http://wildlands.doornbosagrait.tk/api/api.php?c=GetAllQuestions";
 
@@ -48,6 +54,8 @@ public class Home extends Activity implements View.OnClickListener {
 
     private ArrayList<Question> questions;
 
+    private QuestionsDataSource datasource;
+
     private JSONArray questionArray;
     private JSONArray jsonArray;
 
@@ -63,6 +71,9 @@ public class Home extends Activity implements View.OnClickListener {
         setContentView(R.layout.home);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        datasource = new QuestionsDataSource(this.getApplicationContext());
+
         btnVerkenning = (Button)findViewById(R.id.verkenning);
         btnQuiz = (Button)findViewById(R.id.quiz);
         logo = (ImageView)findViewById(R.id.logo);
@@ -71,12 +82,17 @@ public class Home extends Activity implements View.OnClickListener {
         questionArray = new JSONArray();
         jsonArray = new JSONArray();
 
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         loadingTxt = (TextView)findViewById(R.id.loading);
         questions = new ArrayList<Question>();
-        if(((DefaultApplication)this.getApplication()).isQuestionsLoaded() == false) {
+
+        if(sharedpreferences.getBoolean("questionsadded", false) == false)
+        {
             spinner.setVisibility(View.VISIBLE);
             loadingTxt.setVisibility(View.VISIBLE);
+
             new Search().execute();
         }
         else{
@@ -116,8 +132,11 @@ public class Home extends Activity implements View.OnClickListener {
                 String urlString = baseUrl + bitImage;
                 Log.d("urlstring", urlString);
 
-                //datasource.createQuestion(c.getString(TAG_TEXT));
-                Question q = new Question(c.getString(TAG_TEXT), urlString);
+                datasource.open();
+                Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), urlString);
+
+
+                Question q = new Question(i,c.getString(TAG_TEXT), urlString);
 
                 //questions.add(q);
                 ((DefaultApplication)this.getApplication()).addQuestion(q);
@@ -126,8 +145,10 @@ public class Home extends Activity implements View.OnClickListener {
                     JSONObject ans = a.getJSONObject(j);
                     String answer = ans.getString(TAG_TEXT);
                     boolean good = ans.getBoolean(TAG_RIGHTWRONG);
-
-                    q.addAnswer(answer, good);
+                    Answer newAnswer = new Answer(1, addedQuestion.getId(), answer,good);
+                    Answer wut = datasource.createAnswer(newAnswer);
+                    Log.d("wut", wut.getAnswer());
+                    //q.addAnswer(answer, good);
 
                 }
                 // creating new HashMap
@@ -146,6 +167,9 @@ public class Home extends Activity implements View.OnClickListener {
             e.printStackTrace();
         }
 
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean("questionsadded", true);
+        editor.commit();
         spinner.setVisibility(View.INVISIBLE);
         loadingTxt.setVisibility(View.INVISIBLE);
         logo.setVisibility(View.VISIBLE);

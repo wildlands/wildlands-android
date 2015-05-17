@@ -1,6 +1,7 @@
 package nl.wildlands.wildlandseducation;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
@@ -49,6 +50,9 @@ import java.util.List;
 public class Quiz extends Activity implements OnClickListener {
 
     private ArrayList<Question> questions;                              // ArrayList to store all questions
+    private ArrayList<Answer> answers;
+
+    private Answer actualAnswer;
     public static final String MyPREFERENCES = "MyPrefs" ;              // String to get sharedprefs
     private Socket socket;
 
@@ -144,16 +148,23 @@ public class Quiz extends Activity implements OnClickListener {
         questionArray = new JSONArray();
         jsonArray = new JSONArray();
 
-        questions = ((DefaultApplication)this.getApplication()).getQuestions();
+       // questions = ((DefaultApplication)this.getApplication()).getQuestions();
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         datasource = new QuestionsDataSource(this);
         datasource.open();
 
+        questions = datasource.getAllQuestions();
+        answers = datasource.getAllAnswers();
+
         ArrayList<Question> values = datasource.getAllQuestions();
 
         display(questionNumber);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(0);
 
        // new CheckVersion().execute();
 
@@ -175,17 +186,17 @@ public class Quiz extends Activity implements OnClickListener {
                 String urlString = baseUrl + bitImage;
                 Log.d("urlstring", urlString);
 
-                datasource.createQuestion(c.getString(TAG_TEXT));
-                Question q = new Question(c.getString(TAG_TEXT), urlString);
+             //   datasource.createQuestion(c.getString(TAG_TEXT));
+              //  Question q = new Question(c.getString(TAG_TEXT), urlString);
 
-                questions.add(q);
+               // questions.add(q);
                 JSONArray a = c.getJSONArray(TAG_ANSWERS);
                 for(int j = 0; j < a.length(); j++){
                     JSONObject ans = a.getJSONObject(j);
                     String answer = ans.getString(TAG_TEXT);
                     boolean good = ans.getBoolean(TAG_RIGHTWRONG);
 
-                    q.addAnswer(answer, good);
+                  //  q.addAnswer(answer, good);
 
                 }
                 // creating new HashMap
@@ -215,6 +226,19 @@ public class Quiz extends Activity implements OnClickListener {
     }
 
     public void display(int i){
+        int searchId = i + 1;
+        ArrayList<Answer> answers1 = new ArrayList<Answer>();
+        for(Answer answer: answers)
+        {
+            if(answer.getVraagId() == searchId)
+            {
+                answers1.add(answer);
+                if(answer.isGood())
+                {
+                    actualAnswer = answer;
+                }
+            }
+        }
 
         if(questions.size() <= i){
             Intent quizEnd = new Intent(this, view_11.class);
@@ -242,24 +266,24 @@ public class Quiz extends Activity implements OnClickListener {
 
                 loadImageFromStorage(questions.get(i).getImagePath());
             }
-            if(questions.get(i).getAnswers().size() > 0) {
-                if (questions.get(i).getAnswers().size() == 3) {
-                    answer1.setText(questions.get(i).getAnswers().get(0).getAnswer());
-                    answer2.setText(questions.get(i).getAnswers().get(1).getAnswer());
-                    answer3.setText(questions.get(i).getAnswers().get(2).getAnswer());
+            if(answers1.size() > 0) {
+                if (answers1.size() == 3) {
+                    answer1.setText(answers1.get(0).getAnswer());
+                    answer2.setText(answers1.get(1).getAnswer());
+                    answer3.setText(answers1.get(2).getAnswer());
                 } else {
-                    answer1.setText(questions.get(i).getAnswers().get(0).getAnswer());
-                    answer2.setText(questions.get(i).getAnswers().get(1).getAnswer());
-                    answer3.setText(questions.get(i).getAnswers().get(2).getAnswer());
-                    answer4.setText(questions.get(i).getAnswers().get(3).getAnswer());
+                    answer1.setText(answers1.get(0).getAnswer());
+                    answer2.setText(answers1.get(1).getAnswer());
+                    answer3.setText(answers1.get(2).getAnswer());
+                    answer4.setText(answers1.get(3).getAnswer());
                 }
             }
-            if(questions.get(i).getAnswers().size() <= 7){answer8.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 6){answer7.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 5){answer6.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 4){answer5.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 3){answer4.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 2){answer3.setVisibility(View.GONE);}
+            if(answers1.size() <= 7){answer8.setVisibility(View.GONE);}
+            if(answers1.size() <= 6){answer7.setVisibility(View.GONE);}
+            if(answers1.size() <= 5){answer6.setVisibility(View.GONE);}
+            if(answers1.size() <= 4){answer5.setVisibility(View.GONE);}
+            if(answers1.size() <= 3){answer4.setVisibility(View.GONE);}
+            if(answers1.size() <= 2){answer3.setVisibility(View.GONE);}
 
 
         }
@@ -333,7 +357,7 @@ public class Quiz extends Activity implements OnClickListener {
         Log.d("Ans en ques", answer + questionNumber);
         Log.d("Correct",  questions.get(questionNumber).getCorrectAnswer());
         boolean correct = false;
-        if(answer == questions.get(questionNumber).getCorrectAnswer())
+        if(answer == actualAnswer.getAnswer())
         {
             questionsCorrect += 1;
             correct = true;
