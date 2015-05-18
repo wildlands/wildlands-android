@@ -58,35 +58,23 @@
         </activity>
         <activity
             android:name=".Home"
-<<<<<<< HEAD
             android:label="@string/title_activity_home" >
         </activity>
-        <activity
-            android:name=".view_4"
-            android:label="@string/title_activity_view_4" />
-=======
-            android:label="@string/title_activity_home"
-            android:screenOrientation="portrait">
-        </activity>
+
         <activity
             android:name=".ChooseQuizGroup"
             android:label="@string/title_activity_view_4"
             android:screenOrientation="portrait"/>
->>>>>>> 003947fe2d3cf2dc62e178f097ea4d52ac9cf5b5
+
         <activity
             android:name=".JoinQuiz"
             android:label="@string/title_activity_view_5"
             android:screenOrientation="portrait">
         </activity>
         <activity
-<<<<<<< HEAD
-            android:name=".view_6"
-            android:label="@string/title_activity_view_6" >
-=======
             android:name=".WaitForQuizStart"
             android:label="@string/title_activity_view_6"
             android:screenOrientation="portrait">
->>>>>>> 003947fe2d3cf2dc62e178f097ea4d52ac9cf5b5
         </activity>
         <activity
             android:name=".view_11"
@@ -106,6 +94,12 @@
         <activity
             android:name=".view_12"
             android:label="@string/title_activity_view_12" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
     </application>
 

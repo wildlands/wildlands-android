@@ -32,7 +32,6 @@ public class Answer
     public Answer(long id, long vraagId, String answer, boolean good)
     {
         this.id = id;
-
         this.vraagId = vraagId;
         this.answer = answer;
         this.good = good;

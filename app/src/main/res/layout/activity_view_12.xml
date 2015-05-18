@@ -64,4 +64,16 @@
         android:progressDrawable="@drawable/progress_green"
         android:thumb="@drawable/progress_thumb"/>
 
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_green"
+        android:text="GENEREER"
+        android:textColor="#ffffff"
+        android:id="@+id/generateQuiz"
+        android:layout_below="@+id/seekBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"/>
+
 </RelativeLayout>
