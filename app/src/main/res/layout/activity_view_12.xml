@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="nl.wildlands.wildlandseducation.view_12"
+    android:background="@drawable/element_13">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/element_02"
+        android:layout_marginTop="100dp"
+        android:id="@+id/imageView4" />
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="120dp"
+        android:background="@drawable/element_07"
+        android:id="@+id/imageView3"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="500dp"
+        android:background="#999999"
+        android:layout_marginTop="150dp"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:text="GENEREER QUIZ "
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:textSize="30dp"
+        android:layout_marginTop="150dp"
+        android:id="@+id/textView1"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:gravity="center"
+        android:text="TIJD: "
+        android:textColor="#ffffff"
+        android:textSize="30dp"
+        android:layout_marginTop="250dp"
+        android:id="@+id/textView2"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="75dp"
+        android:gravity="center"
+        android:text="0 MIN"
+        android:textColor="#00FF00"
+        android:textSize="30dp"
+        android:layout_marginTop="320dp"
+        android:id="@+id/textView3"
+        android:layout_centerHorizontal="true"/>
+
+    <SeekBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_marginTop="440dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="58dp"
+        android:max="60"
+        android:progressDrawable="@drawable/progress_green"
+        android:thumb="@drawable/progress_thumb"/>
+
+</RelativeLayout>
