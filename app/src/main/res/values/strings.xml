@@ -16,5 +16,12 @@
     <string name="title_activity_view_12">view_12</string>
     <string name="title_activity_generate_quiz">GenerateQuiz</string>
     <string name="title_activity_track_scores">TrackScores</string>
+<<<<<<< HEAD
+=======
+    <string name="title_activity_view_13">view_13</string>
+    <string name="title_activity_view_14">view_14</string>
+    <string name="title_activity_view_15">view_15</string>
+>>>>>>> 003947fe2d3cf2dc62e178f097ea4d52ac9cf5b5
+>>>>>>> 4530b034fab9e1c41775d6c00253306d608dd5f4
 
 </resources>

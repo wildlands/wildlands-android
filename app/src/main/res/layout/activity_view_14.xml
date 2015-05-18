@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="nl.wildlands.wildlandseducation.view_14"
+    android:background="@drawable/kaart_view">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height= "100dp"
+        android:layout_marginBottom="-25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:id="@+id/wildlogo"
+        android:src="@drawable/element_07"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wildlogo"
+        android:id="@+id/bush"
+        android:src="@drawable/element_01"
+        android:layout_marginTop="0dp"/>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/home_bg_color"
+        android:layout_marginTop="-25dp"
+        android:layout_below="@+id/bush">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/quizoverzicht"
+            android:layout_marginTop="20dp"
+            android:textColor="#FFE102"
+            android:textSize="35dp"
+            android:text=" QUIZ OVERZICHT "
+            android:gravity="center"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
