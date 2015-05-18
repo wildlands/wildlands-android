@@ -27,7 +27,7 @@ public class Filtermenu extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         System.gc();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_filtermenu);
+        setContentView(R.layout.filtermenu);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         btnWater = (Button)findViewById(R.id.btnWater);
@@ -75,80 +75,14 @@ public class Filtermenu extends Activity implements View.OnClickListener {
                 .setDuration(1000);
     }
 
-    public void animate(int buttonNumber)
-    {
-        ScaleAnimation sc = new ScaleAnimation(1, 1.25f, 1, 1.25f, Animation.RELATIVE_TO_SELF,0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        sc.setDuration(1000);
 
-if(buttonNumber == 1){
-    btnEnergie.startAnimation(sc);
-
-    /*btnEnergie.animate()
-            .scaleX(1.25f)
-            .scaleY(1.25f)
-            .setDuration(1000);*/
-
-}
-        if(buttonNumber == 2){
-            btnWater.animate()
-                    .scaleX(1.25f)
-                    .scaleY(1.25f)
-                    .setDuration(1000);
-        }
-        if(buttonNumber == 3){
-            btnMaterialen.animate()
-                    .scaleX(1.25f)
-                    .scaleY(1.25f)
-                    .setDuration(1000);
-        }
-        if(buttonNumber == 4){
-            btnBio.animate()
-                    .scaleX(1.25f)
-                    .scaleY(1.25f)
-                    .setDuration(1000);
-        }
-        if(buttonNumber != 1) {
-            if(buttonNumber == 3 || buttonNumber == 4) {
-                btnEnergie.animate()
-                        .translationX(1000)
-                        .setDuration(1000)
-                ;
-            }
-            else{
-                btnEnergie.animate()
-                        .translationY(2000)
-                        .setDuration(1000);
-            }
-        }
-        if(buttonNumber != 2) {
-            btnWater.animate()
-                   // .translationX(-1000)
-                    .translationY(2000)
-                    .setDuration(1000);
-        }
-        if(buttonNumber != 3) {
-            int xTrans = 1000;
-            if(buttonNumber == 4)
-            {
-                xTrans = -1000;
-            }
-            btnMaterialen.animate()
-                    .translationX(xTrans)
-                    .setDuration(1000);
-        }
-        if(buttonNumber != 4) {
-            btnBio.animate()
-                    .translationX(-1000)
-                    .setDuration(1000);
-        }
-
-    }
 
 
     @Override
     public void onClick(View v) {
         System.gc();
         Intent i = new Intent(this, Home.class);
+        Intent h = new Intent(this, Kaart.class);
         switch(v.getId())
         {
             case R.id.backbutton:
@@ -158,20 +92,20 @@ if(buttonNumber == 1){
                 break;
             case R.id.btnBio:
                 // make dis
-                animate(4);
-
+                h.putExtra("TYPE", "bio");
+                startActivity(h);
                 break;
             case R.id.btnEnergie:
-                // make dis
-                animate(1);
+                h.putExtra("TYPE", "energie");
+                startActivity(h);
                 break;
             case R.id.btnWater:
-                // make dis
-                animate(2);
+                h.putExtra("TYPE", "water");
+                startActivity(h);
                 break;
             case R.id.btnMaterialen:
-                // make dis
-                animate(3);
+                h.putExtra("TYPE", "materialen");
+                startActivity(h);
                 break;
         }
     }

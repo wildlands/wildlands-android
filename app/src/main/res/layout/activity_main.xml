@@ -1,16 +1,29 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/map2"
-    tools:context=".MainActivity"
-    android:padding="15dp"
-    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    android:background="@drawable/kaart_view"
+    tools:context=".MainActivity">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height= "100dp"
+        android:layout_marginBottom="-25dp"
+        android:layout_marginTop="25dp"
+        android:id="@+id/wildlogo"
+        android:src="@drawable/element_07"
+        android:layout_gravity="center_horizontal" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bush"
+        android:src="@drawable/element_04"
+        android:layout_marginTop="0dp"/>
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="10dp"
-        android:background="#80ffffff"
+        android:background="@drawable/quiz_gradient_oranje"
+        android:layout_marginTop="-25dp"
 
         >
 
@@ -32,7 +45,6 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/imageView"
         android:layout_alignParentTop="true"
-        android:src="@drawable/duck2"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         />
@@ -120,11 +132,9 @@
                 android:layout_below="@+id/button7"
                 android:layout_centerHorizontal="true"
                 />
-
-
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

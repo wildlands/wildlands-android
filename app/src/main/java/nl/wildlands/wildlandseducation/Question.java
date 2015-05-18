@@ -13,6 +13,7 @@ import java.util.ArrayList;
  */
 public class Question
 {
+    private long id;
     private ArrayList<Answer> answers;
     private String question;
     private String image;
@@ -31,8 +32,9 @@ public class Question
     /**
      * Constructor for objects of class Question
      */
-    public Question(String question, String image)
+    public Question(long id, String question, String image)
     {
+        this.id = id;
         answers = new ArrayList<Answer>();
         this.question = question;
         imagePath = "";
@@ -40,9 +42,9 @@ public class Question
 
     }
 
-    public void addAnswer(String answer, boolean good)
+   public void addAnswer(long id, long vraagid, String answer, boolean good)
     {
-        answers.add(new Answer(answer, good));
+        answers.add(new Answer(id, vraagid, answer, good));
     }
     
     public String getQuestion()
@@ -54,9 +56,18 @@ public class Question
     {
         return answers;
     }
-    
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getCorrectAnswer()
     {
+
         String answer = "";
         for(Answer selectedAnswer : answers)
         {

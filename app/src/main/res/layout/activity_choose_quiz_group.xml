@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nl.wildlands.wildlandseducation.view_4"
+    tools:context="nl.wildlands.wildlandseducation.ChooseQuizGroup"
     android:background="@drawable/element_13">
 
     <ImageView
@@ -25,26 +25,28 @@
         android:layout_width="200dp"
         android:layout_height="100dp"
         android:id="@+id/ikben"
-        android:text="Ik ben..."
+        android:text="Ik ben... "
         android:textColor="#ffffff"
         android:textSize="40dp"
         android:layout_marginTop="180dp"
         android:layout_marginLeft="120dp"/>
     <Button
         android:layout_width="250dp"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:id="@+id/leerling"
         android:background="@drawable/btn_green"
-        android:layout_marginTop="250dp"
+        android:layout_below="@+id/ikben"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:text="LEERLING"
         android:textColor="#ffffff"/>
     <Button
         android:layout_width="250dp"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:id="@+id/docent"
         android:background="@drawable/btn_green"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/leerling"
         android:layout_centerHorizontal="true"
         android:text="DOCENT"
         android:textColor="#ffffff"/>
@@ -52,7 +54,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/backbutton"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:src="@drawable/backarrow"
         android:background="@null"
         android:layout_below="@+id/docent"

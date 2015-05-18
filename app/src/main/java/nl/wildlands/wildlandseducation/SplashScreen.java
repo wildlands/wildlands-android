@@ -7,7 +7,6 @@ import android.os.Message;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-import java.util.logging.Filter;
 
 /*
 Splashscreen voor het begin van de app

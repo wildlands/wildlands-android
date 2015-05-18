@@ -1,6 +1,7 @@
 package nl.wildlands.wildlandseducation;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
@@ -26,6 +27,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.github.nkzawa.socketio.client.Socket;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -44,10 +47,14 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements OnClickListener {
+public class Quiz extends Activity implements OnClickListener {
 
     private ArrayList<Question> questions;                              // ArrayList to store all questions
+    private ArrayList<Answer> answers;
+
+    private Answer actualAnswer;
     public static final String MyPREFERENCES = "MyPrefs" ;              // String to get sharedprefs
+    private Socket socket;
 
     // Url to get JSON
     private static final String GET_QUESTION_URL = "http://wildlands.doornbosagrait.tk/api/api.php?c=GetAllQuestions";
@@ -101,7 +108,7 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        socket = ((DefaultApplication)this.getApplication()).getSocket();
         // To use the full width and high of the screen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -124,6 +131,8 @@ public class MainActivity extends Activity implements OnClickListener {
         answer7 = (Button)findViewById(R.id.button7);
         answer8 = (Button)findViewById(R.id.button8);
 
+
+
         /*
             Mogelijkheid tot klikken
          */
@@ -139,16 +148,25 @@ public class MainActivity extends Activity implements OnClickListener {
         questionArray = new JSONArray();
         jsonArray = new JSONArray();
 
-        questions = new ArrayList<Question>();
+       // questions = ((DefaultApplication)this.getApplication()).getQuestions();
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         datasource = new QuestionsDataSource(this);
         datasource.open();
 
+        questions = datasource.getAllQuestions();
+        answers = datasource.getAllAnswers();
+
         ArrayList<Question> values = datasource.getAllQuestions();
 
-        new CheckVersion().execute();
+        display(questionNumber);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(0);
+
+       // new CheckVersion().execute();
 
     }
 
@@ -158,7 +176,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
         try {
             questionArray = jsonArray;
-            String baseUrl = "http://doornbosagrait.no-ip.org/wildlandsBackend/app/images/";
+            String baseUrl = "http://wildlands.doornbosagrait.tk/app/images/";
 
             // looping through all posts according to the json object returned
             for (int i = 0; i < questionArray.length(); i++) {
@@ -168,17 +186,17 @@ public class MainActivity extends Activity implements OnClickListener {
                 String urlString = baseUrl + bitImage;
                 Log.d("urlstring", urlString);
 
-                datasource.createQuestion(c.getString(TAG_TEXT));
-                Question q = new Question(c.getString(TAG_TEXT), urlString);
+             //   datasource.createQuestion(c.getString(TAG_TEXT));
+              //  Question q = new Question(c.getString(TAG_TEXT), urlString);
 
-                questions.add(q);
+               // questions.add(q);
                 JSONArray a = c.getJSONArray(TAG_ANSWERS);
                 for(int j = 0; j < a.length(); j++){
                     JSONObject ans = a.getJSONObject(j);
                     String answer = ans.getString(TAG_TEXT);
                     boolean good = ans.getBoolean(TAG_RIGHTWRONG);
 
-                    q.addAnswer(answer, good);
+                  //  q.addAnswer(answer, good);
 
                 }
                 // creating new HashMap
@@ -208,26 +226,35 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     public void display(int i){
-        answer1.setVisibility(View.VISIBLE);
-        answer2.setVisibility(View.VISIBLE);
-        answer3.setVisibility(View.VISIBLE);
-        answer4.setVisibility(View.VISIBLE);
-        answer5.setVisibility(View.VISIBLE);
-        answer6.setVisibility(View.VISIBLE);
-        answer7.setVisibility(View.VISIBLE);
-        answer8.setVisibility(View.VISIBLE);
+        int searchId = i + 1;
+        ArrayList<Answer> answers1 = new ArrayList<Answer>();
+        for(Answer answer: answers)
+        {
+            if(answer.getVraagId() == searchId)
+            {
+                answers1.add(answer);
+                if(answer.isGood())
+                {
+                    actualAnswer = answer;
+                }
+            }
+        }
+
         if(questions.size() <= i){
-            question.setText("SCORE IS " + questionsCorrect + " VAN " + questionNumber);
-            answer1.setVisibility(View.GONE);
-            answer2.setVisibility(View.GONE);
-            answer3.setVisibility(View.GONE);
-            answer4.setVisibility(View.GONE);
-            answer5.setVisibility(View.GONE);
-            answer6.setVisibility(View.GONE);
-            answer7.setVisibility(View.GONE);
-            answer8.setVisibility(View.GONE);
+            Intent quizEnd = new Intent(this, view_11.class);
+            startActivity(quizEnd);
+            this.finish();
+            socket.disconnect();
         }
         else {
+            answer1.setVisibility(View.VISIBLE);
+            answer2.setVisibility(View.VISIBLE);
+            answer3.setVisibility(View.VISIBLE);
+            answer4.setVisibility(View.VISIBLE);
+            answer5.setVisibility(View.VISIBLE);
+            answer6.setVisibility(View.VISIBLE);
+            answer7.setVisibility(View.VISIBLE);
+            answer8.setVisibility(View.VISIBLE);
             //if(datasource.getAllQuestions().get(i).getQuestion() != null){
            //     question.setText(datasource.getAllQuestions().get(i).getQuestion());
           //  }
@@ -239,29 +266,35 @@ public class MainActivity extends Activity implements OnClickListener {
 
                 loadImageFromStorage(questions.get(i).getImagePath());
             }
-            if(questions.get(i).getAnswers().size() > 0) {
-                if (questions.get(i).getAnswers().size() == 3) {
-                    answer1.setText(questions.get(i).getAnswers().get(0).getAnswer());
-                    answer2.setText(questions.get(i).getAnswers().get(1).getAnswer());
-                    answer3.setText(questions.get(i).getAnswers().get(2).getAnswer());
+            if(answers1.size() > 0) {
+                if (answers1.size() == 3) {
+                    answer1.setText(answers1.get(0).getAnswer());
+                    answer2.setText(answers1.get(1).getAnswer());
+                    answer3.setText(answers1.get(2).getAnswer());
                 } else {
-                    answer1.setText(questions.get(i).getAnswers().get(0).getAnswer());
-                    answer2.setText(questions.get(i).getAnswers().get(1).getAnswer());
-                    answer3.setText(questions.get(i).getAnswers().get(2).getAnswer());
-                    answer4.setText(questions.get(i).getAnswers().get(3).getAnswer());
+                    answer1.setText(answers1.get(0).getAnswer());
+                    answer2.setText(answers1.get(1).getAnswer());
+                    answer3.setText(answers1.get(2).getAnswer());
+                    answer4.setText(answers1.get(3).getAnswer());
                 }
             }
-            if(questions.get(i).getAnswers().size() <= 7){answer8.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 6){answer7.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 5){answer6.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 4){answer5.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 3){answer4.setVisibility(View.GONE);}
-            if(questions.get(i).getAnswers().size() <= 2){answer3.setVisibility(View.GONE);}
+            if(answers1.size() <= 7){answer8.setVisibility(View.GONE);}
+            if(answers1.size() <= 6){answer7.setVisibility(View.GONE);}
+            if(answers1.size() <= 5){answer6.setVisibility(View.GONE);}
+            if(answers1.size() <= 4){answer5.setVisibility(View.GONE);}
+            if(answers1.size() <= 3){answer4.setVisibility(View.GONE);}
+            if(answers1.size() <= 2){answer3.setVisibility(View.GONE);}
 
 
         }
-        //Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/text.ttf");
-        //question.setTypeface(tf);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if(hasFocus == false)
+        {
+            socket.disconnect();
+        }
     }
 
     /**
@@ -319,27 +352,29 @@ public class MainActivity extends Activity implements OnClickListener {
      */
     public void checkAnswer(String answer)
     {
+        int code = ((DefaultApplication)this.getApplication()).getSocketcode();
+        String naam = ((DefaultApplication)this.getApplication()).getSocketnaam();
         Log.d("Ans en ques", answer + questionNumber);
         Log.d("Correct",  questions.get(questionNumber).getCorrectAnswer());
-        if(answer == questions.get(questionNumber).getCorrectAnswer())
+        boolean correct = false;
+        if(answer == actualAnswer.getAnswer())
         {
             questionsCorrect += 1;
+            correct = true;
         }
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        JSONObject message = new JSONObject();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        try {
+            message.put("naam", naam);
+            message.put("vraag", questionNumber);
+            message.put("goed", correct);
+            message.put("quizID",code );
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        return super.onOptionsItemSelected(item);
+        socket.emit("sendAnswer", message);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -510,6 +545,7 @@ public class MainActivity extends Activity implements OnClickListener {
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
 
+            /*
             if(appVersion == sharedpreferences.getLong("version", 0))
             {
                 Log.d("versie", "Versies komen overeen");
@@ -521,7 +557,8 @@ public class MainActivity extends Activity implements OnClickListener {
                 editor.commit();
                 Log.d("Check version", String.valueOf(appVersion));
                 new Search().execute();
-            }
+            }*/
+            new Search().execute();
 
 
         }

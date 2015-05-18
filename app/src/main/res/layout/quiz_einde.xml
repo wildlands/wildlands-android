@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/kaart_view">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height= "100dp"
+        android:layout_marginBottom="-25dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:id="@+id/wildlogo"
+        android:src="@drawable/element_07"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wildlogo"
+        android:id="@+id/bush"
+        android:src="@drawable/element_01"
+        android:layout_marginTop="0dp"/>
+
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="@drawable/home_bg_color" android:layout_marginTop="-25dp" android:layout_below="@+id/bush">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dequizis"
+            android:layout_marginTop="75dp"
+            android:textColor="#FFE102"
+            android:textSize="35dp"
+            android:text=" DE QUIZ IS "
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afgelopen"
+            android:layout_below="@id/dequizis"
+            android:layout_marginTop="10dp"
+            android:textColor="#FFE102"
+            android:textSize="35dp"
+            android:text=" AFGELOPEN! "
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkjedocent"
+            android:layout_marginTop="75dp"
+            android:layout_below="@id/afgelopen"
+            android:textColor="#FFFFFF"
+            android:textSize="25dp"
+            android:textStyle="italic"
+            android:text="VRAAG JE DOCENT"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="75dp"
+            android:id="@+id/voorjouwscore"
+            android:layout_below="@id/checkjedocent"
+            android:layout_marginTop="5dp"
+            android:textColor="#FFFFFF"
+            android:textSize="25dp"
+            android:textStyle="italic"
+            android:text="VOOR JOUW SCORE"
+            android:gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="TERUG"
+            android:id="@+id/btn_terug"
+            android:layout_below="@+id/voorjouwscore"
+            android:layout_marginBottom="30dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_green"
+            android:textColor="#ffffffff"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
