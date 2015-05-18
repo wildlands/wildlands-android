@@ -43,7 +43,19 @@
         <activity
             android:name=".SplashScreen"
             android:label="Wildlands"
+<<<<<<< HEAD
             android:screenOrientation="portrait" >
+=======
+
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+>>>>>>> 574b5dc25ee63d1b1da488b79ec7be18b949deb3
         </activity>
         <activity
             android:name=".Filtermenu"
@@ -76,8 +88,12 @@
         <activity
             android:name=".GenerateQuiz"
             android:label="@string/title_activity_generate_quiz"
+<<<<<<< HEAD
             android:screenOrientation="portrait" >
 
+=======
+            android:screenOrientation="portrait">
+>>>>>>> 574b5dc25ee63d1b1da488b79ec7be18b949deb3
         </activity>
         <activity
             android:name=".TrackScores"
@@ -99,6 +115,7 @@
         <activity
             android:name=".view_15"
             android:label="@string/title_activity_view_15" >
+<<<<<<< HEAD
         </activity>
         <activity
             android:name=".LevelChoice"
@@ -108,6 +125,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+=======
+>>>>>>> 574b5dc25ee63d1b1da488b79ec7be18b949deb3
         </activity>
     </application>
 

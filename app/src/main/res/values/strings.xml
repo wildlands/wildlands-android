@@ -19,7 +19,10 @@
     <string name="title_activity_view_13">view_13</string>
     <string name="title_activity_view_14">view_14</string>
     <string name="title_activity_view_15">view_15</string>
+<<<<<<< HEAD
     <string name="title_activity_level_choice">LevelChoice</string>
 
+=======
+>>>>>>> 574b5dc25ee63d1b1da488b79ec7be18b949deb3
 
 </resources>
