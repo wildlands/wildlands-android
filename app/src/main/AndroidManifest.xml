@@ -101,6 +101,10 @@
             android:name=".view_13"
             android:label="@string/title_activity_view_13" >
         </activity>
+        <activity
+            android:name=".view_14"
+            android:label="@string/title_activity_view_14" >
+        </activity>
     </application>
 
 </manifest>
