@@ -68,7 +68,6 @@
         android:text="START     QUIZ"
         android:textColor="#ffffff"
         android:id="@+id/startQuiz"
-        android:layout_below="@+id/seekBar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="440dp"/>
 
