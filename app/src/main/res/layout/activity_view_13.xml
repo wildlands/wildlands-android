@@ -35,7 +35,7 @@
         android:layout_width="fill_parent"
         android:layout_height="75dp"
         android:gravity="center"
-        android:text="0 MIN"
+        android:text="Code"
         android:textColor="#00FF00"
         android:textSize="30dp"
         android:layout_marginTop="260dp"
