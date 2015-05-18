@@ -1,14 +1,16 @@
 package nl.wildlands.wildlandseducation;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 
-public class view_12 extends ActionBarActivity implements SeekBar.OnSeekBarChangeListener {
+public class view_12 extends Activity implements SeekBar.OnSeekBarChangeListener {
 
     //seekbar object variable
     private SeekBar bar;
@@ -19,6 +21,8 @@ public class view_12 extends ActionBarActivity implements SeekBar.OnSeekBarChang
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_12);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //make seekbar object
         bar =(SeekBar)findViewById(R.id.seekBar);
         //set seekbar listener
@@ -28,28 +32,6 @@ public class view_12 extends ActionBarActivity implements SeekBar.OnSeekBarChang
         textProgress = (TextView)findViewById(R.id.textView3);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_12, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
