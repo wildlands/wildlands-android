@@ -1,39 +1,64 @@
 package nl.wildlands.wildlandseducation;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
-public class view_13 extends ActionBarActivity {
+public class view_13 extends Activity implements View.OnClickListener {
 
+    TextView code;
+    Socket mSocket;
+    int duration;
+    Button startQuiz;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_13);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        code = (TextView)findViewById(R.id.code);
+        startQuiz = (Button)findViewById(R.id.startQuiz);
+        startQuiz.setOnClickListener(this);
+        int quizID = ((DefaultApplication)this.getApplication()).getSocketcode();
+         duration = ((DefaultApplication)this.getApplication()).getDuration();
+        code.setText(String.valueOf(quizID));
+        mSocket = ((DefaultApplication)this.getApplicationContext()).getSocket();
     }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_13, menu);
-        return true;
-    }
+    public void onClick(View v) {
+        switch(v.getId())
+        {
+            case R.id.startQuiz:
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+                JSONObject quizData = new JSONObject();
+                int quizID = ((DefaultApplication)this.getApplication()).getSocketcode();
+                try {
+                    quizData.put("quizID", quizID);
+                    quizData.put("duration", duration);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                mSocket.emit("startQuiz", quizData);
+                Intent scoreScreen = new Intent(this, TrackScores.class);
+                startActivity(scoreScreen);
+                this.finish();
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }

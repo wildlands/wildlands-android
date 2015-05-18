@@ -39,7 +39,7 @@
         android:textColor="#00FF00"
         android:textSize="30dp"
         android:layout_marginTop="260dp"
-        android:id="@+id/textView2"
+        android:id="@+id/code"
         android:layout_centerHorizontal="true"/>
     <TextView
         android:layout_width="fill_parent"
@@ -67,7 +67,7 @@
         android:background="@drawable/btn_green"
         android:text="START     QUIZ"
         android:textColor="#ffffff"
-        android:id="@+id/generateQuiz"
+        android:id="@+id/startQuiz"
         android:layout_below="@+id/seekBar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="440dp"/>

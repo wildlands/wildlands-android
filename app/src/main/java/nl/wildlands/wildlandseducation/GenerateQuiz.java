@@ -48,7 +48,7 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
                     }
 
                     Log.d("Zou nu zijn, wolla", "wolla");
-                    //startNewActivity(success, quizID);
+                    startNewActivity(success, quizID);
 
                 }
             });
@@ -86,21 +86,7 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
             mSocket.emit("createQuiz","");
                 startListening();
                 break;
-            case R.id.startQuiz:
-                /*
-                JSONObject quizData = new JSONObject();
-                int quizID = ((DefaultApplication)this.getApplication()).getSocketcode();
-                try {
-                    quizData.put("quizID", quizID);
-                    quizData.put("duration", bar.getProgress());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
-                mSocket.emit("startQuiz", quizData);
-                Intent scoreScreen = new Intent(this, TrackScores.class);
-                startActivity(scoreScreen);
-                this.finish();*/
 
         }
     }
@@ -112,9 +98,12 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
 
     public void startNewActivity(String success, int quizID)
     {
-        tv.setText(String.valueOf(quizID)
-        );
+
         ((DefaultApplication)this.getApplication()).setSocketcode(quizID);
+        ((DefaultApplication)this.getApplication()).setDuration(bar.getProgress());
+        Intent codeScreen = new Intent(this, view_13.class);
+        startActivity(codeScreen);
+        this.finish();
     }
 
     @Override

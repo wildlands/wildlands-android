@@ -18,6 +18,7 @@ public final class DefaultApplication extends android.app.Application {
     public String socketnaam;
     public ArrayList<Question> questions;
     public boolean loaded;
+    public int duration;
 
     @Override
     public void onCreate() {
@@ -37,6 +38,15 @@ public final class DefaultApplication extends android.app.Application {
     }
     public void setSocketcode(int socketcode) { this.socketcode = socketcode;}
     public int getSocketcode() { return socketcode;}
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     public void setSocketnaam(String socketnaam){this.socketnaam = socketnaam;}
     public String getSocketnaam() {return socketnaam;}
     public boolean isQuestionsLoaded(){return loaded;}

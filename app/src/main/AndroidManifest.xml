@@ -43,19 +43,7 @@
         <activity
             android:name=".SplashScreen"
             android:label="Wildlands"
-<<<<<<< HEAD
-            android:screenOrientation="portrait"
->
-
-
-=======
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
->>>>>>> 4530b034fab9e1c41775d6c00253306d608dd5f4
         </activity>
         <activity
             android:name=".Filtermenu"
@@ -88,17 +76,8 @@
         <activity
             android:name=".GenerateQuiz"
             android:label="@string/title_activity_generate_quiz"
-<<<<<<< HEAD
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-=======
             android:screenOrientation="portrait" >
->>>>>>> 4530b034fab9e1c41775d6c00253306d608dd5f4
+
         </activity>
         <activity
             android:name=".TrackScores"
@@ -108,14 +87,6 @@
         <activity
             android:name=".view_12"
             android:label="@string/title_activity_view_12" >
-<<<<<<< HEAD
-
-=======
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".view_13"
@@ -128,7 +99,15 @@
         <activity
             android:name=".view_15"
             android:label="@string/title_activity_view_15" >
->>>>>>> 4530b034fab9e1c41775d6c00253306d608dd5f4
+        </activity>
+        <activity
+            android:name=".LevelChoice"
+            android:label="@string/title_activity_level_choice" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

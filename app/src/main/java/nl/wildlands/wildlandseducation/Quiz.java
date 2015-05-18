@@ -245,6 +245,7 @@ public class Quiz extends Activity implements OnClickListener {
             startActivity(quizEnd);
             this.finish();
             socket.disconnect();
+
         }
         else {
             answer1.setVisibility(View.VISIBLE);

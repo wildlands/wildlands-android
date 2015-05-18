@@ -25,6 +25,7 @@
         android:layout_height="fill_parent"
         android:background="@drawable/home_bg_color"
         android:layout_marginTop="-25dp"
+        android:id="@+id/screen"
         android:layout_below="@+id/bush">
 
         <TextView
@@ -37,6 +38,22 @@
             android:text=" QUIZ OVERZICHT "
             android:gravity="center"
             android:layout_centerHorizontal="true"/>
+
+
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/quizoverzicht"
+            android:layout_weight=".25"
+            android:background="@null"
+            android:foregroundGravity="center_horizontal">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/scrollOverzicht">
+            </RelativeLayout>
+        </ScrollView>
 
     </RelativeLayout>
 
