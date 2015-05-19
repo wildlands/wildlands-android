@@ -43,17 +43,12 @@
         <activity
             android:name=".SplashScreen"
             android:label="Wildlands"
-
             android:screenOrientation="portrait" >
-
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".Filtermenu"
@@ -86,10 +81,7 @@
         <activity
             android:name=".GenerateQuiz"
             android:label="@string/title_activity_generate_quiz"
-
             android:screenOrientation="portrait" >
-
-
         </activity>
         <activity
             android:name=".TrackScores"
@@ -115,12 +107,11 @@
         <activity
             android:name=".LevelChoice"
             android:label="@string/title_activity_level_choice" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
+        </activity>
+        <activity
+            android:name=".uitslag_venster"
+            android:label="@string/title_activity_uitslag_venster" >
         </activity>
     </application>
 
