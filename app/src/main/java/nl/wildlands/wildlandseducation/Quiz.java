@@ -45,6 +45,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 
 public class Quiz extends Activity implements OnClickListener {
@@ -76,6 +77,12 @@ public class Quiz extends Activity implements OnClickListener {
     private TextView question;
     private Button answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8;
     private ImageView img1;
+
+    // String voor Thema, String voor Onvoldoende/voldoende/goed etc.
+    private HashMap<String, String> themaAntwoorden;
+
+    //
+    private HashMap<Question, Boolean> beantwoordevragen;
 
     /*
     Datasource voor SQLite
@@ -160,6 +167,10 @@ public class Quiz extends Activity implements OnClickListener {
 
         ArrayList<Question> values = datasource.getAllQuestions();
 
+        themaAntwoorden = new HashMap<String, String>();
+        beantwoordevragen = new HashMap<Question, Boolean>();
+
+
         display(questionNumber);
 
         NotificationManager mNotificationManager =
@@ -226,6 +237,8 @@ public class Quiz extends Activity implements OnClickListener {
     }
 
     public void display(int i){
+
+
         int searchId = i + 1;
         ArrayList<Answer> answers1 = new ArrayList<Answer>();
         for(Answer answer: answers)
@@ -241,6 +254,54 @@ public class Quiz extends Activity implements OnClickListener {
         }
 
         if(questions.size() <= i){
+            int energieCorrect = 0, energieTotaal = 0;
+            int waterCorrect = 0, waterTotaal = 0;
+            int materialenCorrect = 0, materialenTotaal = 0;
+            int bioCorrect = 0, bioTotaal = 0;
+            int dierenCorrect = 0, dierenTotaal = 0;
+            calcResults(questionsCorrect, questionNumber, false);
+            Set<Question> questions = beantwoordevragen.keySet();
+            for(Question q: questions)
+            {
+                boolean correct = beantwoordevragen.get(q);
+                String type = q.getType();
+                if(type.equals("Water"))
+                {
+                    waterTotaal += 1;
+                    if(correct)
+                    {
+                        waterCorrect+=1;
+                    }
+                }
+                else if(type.equals("Materiaal"))
+                {
+                    materialenTotaal += 1;
+                    if(correct)
+                    {
+                        materialenCorrect += 1;
+                    }
+                }
+                else if(type.equals("Bio Mimicry"))
+                {
+                    bioTotaal += 1;
+                    if(correct)
+                    {
+                        bioCorrect += 1;
+                    }
+                }
+                else if(type.equals("Energie"))
+                {
+                    energieTotaal += 1;
+                    if(correct)
+                    {
+                        energieCorrect += 1;
+                    }
+                }
+            }
+            calcResults(waterCorrect,waterTotaal, true);
+            calcResults(energieCorrect,energieTotaal, true);
+            calcResults(materialenCorrect, materialenTotaal, true);
+            calcResults(bioCorrect, bioTotaal, true);
             Intent quizEnd = new Intent(this, view_11.class);
             startActivity(quizEnd);
             this.finish();
@@ -248,6 +309,23 @@ public class Quiz extends Activity implements OnClickListener {
 
         }
         else {
+            ImageView bush = (ImageView)findViewById(R.id.bush);
+            String type = questions.get(i).getType();
+            if(type.equals("Water"))
+            {
+                bush.setImageResource(R.drawable.element_03);
+            }
+            else if(type.equals("Bio Mimicry"))
+            {
+                bush.setImageResource(R.drawable.element_05);
+            }
+            else if(type.equals("Materiaal"))
+            {
+
+            }
+            else{
+                bush.setImageResource(R.drawable.element_04);
+            }
             answer1.setVisibility(View.VISIBLE);
             answer2.setVisibility(View.VISIBLE);
             answer3.setVisibility(View.VISIBLE);
@@ -327,6 +405,37 @@ public class Quiz extends Activity implements OnClickListener {
         return directory.getAbsolutePath();
     }
 
+    public void calcResults(int aantalGoed, int totaal, boolean thema)
+    {
+        Log.d("aantalgoed", String.valueOf(aantalGoed));
+        Log.d("totaal", String.valueOf(totaal));
+
+        double percentage = (double)aantalGoed / (double)totaal * 100;
+        int geheelPercentage =(int)percentage;
+        Log.d("geheelpercentage", String.valueOf(geheelPercentage));
+
+        if(geheelPercentage < 30)
+        {
+            Log.d("pr", String.valueOf(geheelPercentage));
+        }
+        else if(geheelPercentage >= 30 && geheelPercentage < 55)
+        {
+            Log.d("pr", String.valueOf(geheelPercentage));
+        }
+        else if(geheelPercentage >= 55 && geheelPercentage < 80)
+        {
+            Log.d("pr", String.valueOf(geheelPercentage));
+        }
+        else if(geheelPercentage >= 80)
+        {
+            Log.d("pr", String.valueOf(geheelPercentage));
+        }
+        if(thema)
+        {
+
+        }
+
+    }
     /**
      * Load image from internal path
      * @param path
@@ -360,9 +469,12 @@ public class Quiz extends Activity implements OnClickListener {
         boolean correct = false;
         if(answer == actualAnswer.getAnswer())
         {
+
             questionsCorrect += 1;
             correct = true;
         }
+        beantwoordevragen.put(questions.get(questionNumber), correct);
+
         JSONObject message = new JSONObject();
 
         try {

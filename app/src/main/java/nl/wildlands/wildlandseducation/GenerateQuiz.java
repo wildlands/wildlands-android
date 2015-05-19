@@ -67,7 +67,7 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
 
         //startQuiz = (Button)findViewById(R.id.startQuiz);
        // startQuiz.setOnClickListener(this);
-        bar =(SeekBar)findViewById(R.id.seekBar);
+        bar =(SeekBar)findViewById(R.id.seekBar1);
         //set seekbar listener
         bar.setOnSeekBarChangeListener(this);
         //textlabel for selected time

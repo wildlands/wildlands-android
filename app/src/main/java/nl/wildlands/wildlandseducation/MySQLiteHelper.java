@@ -15,6 +15,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_TEXT = "text";
     public static final String COLUMN_IMAGE = "image";
+    public static final String COLUMN_LEVEL = "level";
+    public static final String COLUMN_TYPE = "type";
 
     public static final String COLUMN_ANSWER_ID = "id";
     public static final String COLUMN_QUESTION_ID = "questionid";
@@ -28,7 +30,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     private static final String DATABASE_CREATE = "create table "
             + TABLE_QUESTIONS + "(" + COLUMN_ID
             + " integer primary key autoincrement, " + COLUMN_TEXT
-            + " text not null, " + COLUMN_IMAGE + " text );";
+            + " text not null, " + COLUMN_IMAGE + " text, " + COLUMN_LEVEL + " text, " + COLUMN_TYPE + " text);";
 
     private static final String DATABASE_CREATE_ANSWER = "create table "
             + TABLE_ANSWERS + "(" + COLUMN_ANSWER_ID

@@ -30,13 +30,21 @@
              />
         <Spinner
             android:id="@+id/levels_spinner"
-
             android:layout_width="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/logo"/>
-
-
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_green"
+            android:id="@+id/gaverder"
+            android:layout_marginTop="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/levels_spinner"
+            android:text="GA VERDER"
+            android:textColor="#FFFFFF" />
     </RelativeLayout>
 
 

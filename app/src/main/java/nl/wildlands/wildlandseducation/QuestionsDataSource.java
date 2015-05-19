@@ -19,7 +19,7 @@ public class QuestionsDataSource {
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
     private String[] allColumns = { MySQLiteHelper.COLUMN_ID,
-            MySQLiteHelper.COLUMN_TEXT, MySQLiteHelper.COLUMN_IMAGE };
+            MySQLiteHelper.COLUMN_TEXT, MySQLiteHelper.COLUMN_IMAGE, MySQLiteHelper.COLUMN_LEVEL, MySQLiteHelper.COLUMN_TYPE };
     private String[] answerColums = { MySQLiteHelper.COLUMN_ANSWER_ID, MySQLiteHelper.COLUMN_QUESTION_ID, MySQLiteHelper.COLUMN_ANSWER_TEXT, MySQLiteHelper.COLUMN_GOOD};
 
 
@@ -35,11 +35,13 @@ public class QuestionsDataSource {
         dbHelper.close();
     }
 
-    public Question createQuestion(String question, String image)
+    public Question createQuestion(String question, String image, String level, String type)
     {
         ContentValues values = new ContentValues();
         values.put(MySQLiteHelper.COLUMN_TEXT, question);
         values.put(MySQLiteHelper.COLUMN_IMAGE, image);
+        values.put(MySQLiteHelper.COLUMN_LEVEL, level);
+        values.put(MySQLiteHelper.COLUMN_TYPE, type);
         long insertId = database.insert(MySQLiteHelper.TABLE_QUESTIONS, null,
                 values);
         Cursor cursor = database.query(MySQLiteHelper.TABLE_QUESTIONS,
@@ -114,7 +116,7 @@ public class QuestionsDataSource {
 
     private Question cursorToQuestion(Cursor cursor) {
 
-        Question question = new Question(cursor.getLong(0), cursor.getString(1), cursor.getString(2));
+        Question question = new Question(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
         return question;
     }
 

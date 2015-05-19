@@ -42,8 +42,11 @@ public class SplashScreen extends Activity {
      */
     public void startKaart()
     {
-        Intent h = new Intent(this, Home.class);
-        startActivity(h);
+        //Intent h = new Intent(this, Home.class);
+        //startActivity(h);
+        Intent level = new Intent(this, LevelChoice.class);
+        startActivity(level);
+
         this.finish();
     }
 

@@ -7,7 +7,8 @@ import java.util.ArrayList;
 
 /**
  * Write a description of class Question here.
- * 
+ *
+
  * @author (your name) 
  * @version (a version number or a date)
  */
@@ -18,6 +19,8 @@ public class Question
     private String question;
     private String image;
     private String imagePath;
+    private String level;
+    private String type;
 
     public String getImage() {
         return image;
@@ -28,17 +31,27 @@ public class Question
     }
 
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     /**
      * Constructor for objects of class Question
      */
-    public Question(long id, String question, String image)
+    public Question(long id, String question, String image, String level, String type)
     {
         this.id = id;
         answers = new ArrayList<Answer>();
         this.question = question;
         imagePath = "";
         this.image = image;
+        this.level = level;
+        this.type = type;
+
 
     }
 
@@ -92,4 +105,11 @@ public class Question
         this.imagePath = imagePath;
     }
 
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
 }

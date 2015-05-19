@@ -19,6 +19,7 @@ public final class DefaultApplication extends android.app.Application {
     public ArrayList<Question> questions;
     public boolean loaded;
     public int duration;
+    public String level;
 
     @Override
     public void onCreate() {
@@ -38,6 +39,14 @@ public final class DefaultApplication extends android.app.Application {
     }
     public void setSocketcode(int socketcode) { this.socketcode = socketcode;}
     public int getSocketcode() { return socketcode;}
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
     public int getDuration() {
         return duration;

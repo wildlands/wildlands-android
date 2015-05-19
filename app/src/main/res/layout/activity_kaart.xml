@@ -8,8 +8,8 @@
 
 
     <nl.wildlands.wildlandseducation.GestureImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="1000dp"
+        android:layout_height="1000dp"
         android:scaleType="center"
         android:id="@+id/imageView2"
         android:src="@drawable/kaart_view"

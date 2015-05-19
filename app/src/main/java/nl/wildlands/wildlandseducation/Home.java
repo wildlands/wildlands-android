@@ -50,6 +50,7 @@ public class Home extends Activity implements View.OnClickListener {
     private static final String TAG_IMAGE = "image";
     private static final String TAG_ANSWERS = "answers";
     private static final String TAG_RIGHTWRONG = "rightWrong";
+    private static final String TAG_LEVEL = "level";
     private static final String TAG_CHECKSUM = "checksum";
 
     private ArrayList<Question> questions;
@@ -128,18 +129,23 @@ public class Home extends Activity implements View.OnClickListener {
             for (int i = 0; i < questionArray.length(); i++) {
                 JSONObject c = questionArray.getJSONObject(i);
                 String bitImage = c.getString(TAG_IMAGE);
+                JSONObject level = c.getJSONObject(TAG_LEVEL);
+                String levelnaam = level.getString("name");
+                JSONObject typeObj = c.getJSONObject("type");
+                String type = typeObj.getString("name");
+                Log.d("typenaam", type);
                 Log.d("url", bitImage);
                 String urlString = baseUrl + bitImage;
                 Log.d("urlstring", urlString);
 
                 datasource.open();
-                Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), urlString);
+                Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), urlString, levelnaam, type);
 
 
-                Question q = new Question(i,c.getString(TAG_TEXT), urlString);
+            //    Question q = new Question(i,c.getString(TAG_TEXT), urlString, levelnaam);
 
                 //questions.add(q);
-                ((DefaultApplication)this.getApplication()).addQuestion(q);
+                //((DefaultApplication)this.getApplication()).addQuestion(q);
                 JSONArray a = c.getJSONArray(TAG_ANSWERS);
                 for(int j = 0; j < a.length(); j++){
                     JSONObject ans = a.getJSONObject(j);
