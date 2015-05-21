@@ -9,20 +9,32 @@ import java.util.ArrayList;
  */
 public class Pinpoint {
     private String name;
-    private int id;
+    private String description;
+    private long id;
     private int xPos;
     private int yPos;
-    private PinpointType type;
+    private String type;
     private ArrayList<Page> pages;
-    public Pinpoint(int id, String name, PinpointType type, int xPos, int yPos){
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Pinpoint(long id, String name, String description, String type, int xPos, int yPos){
         this.id = id;
         this.name = name;
+        this.description = description;
+
         this.xPos = xPos;
         this.yPos = yPos;
         this.type = type;
     }
 
-    public int getId()
+    public long getId()
     {
         return id;
     }
@@ -41,11 +53,11 @@ public class Pinpoint {
         return pages;
     }
 
-    public PinpointType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(PinpointType type) {
+    public void setType(String type) {
         this.type = type;
     }
 

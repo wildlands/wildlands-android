@@ -19,7 +19,7 @@ public class Question
     private String question;
     private String image;
     private String imagePath;
-    private String level;
+    private int level;
     private String type;
 
     public String getImage() {
@@ -42,7 +42,7 @@ public class Question
     /**
      * Constructor for objects of class Question
      */
-    public Question(long id, String question, String image, String level, String type)
+    public Question(long id, String question, String image, int level, String type)
     {
         this.id = id;
         answers = new ArrayList<Answer>();
@@ -105,11 +105,11 @@ public class Question
         this.imagePath = imagePath;
     }
 
-    public String getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 }

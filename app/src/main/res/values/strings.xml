@@ -21,6 +21,9 @@
     <string name="title_activity_view_15">view_15</string>
     <string name="title_activity_level_choice">LevelChoice</string>
     <string name="title_activity_uitslag_venster">uitslag_venster</string>
+    <string name="title_activity_testje">Testje</string>
+    <string name="title_activity_test2">Test2</string>
+    <string name="title_activity_test3">Test3</string>
 
 
 </resources>

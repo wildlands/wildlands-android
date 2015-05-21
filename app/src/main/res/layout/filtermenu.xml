@@ -22,9 +22,9 @@
     <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="@drawable/home_bg_color" android:layout_marginTop="-25dp" android:layout_below="@+id/bush">
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="75dp"
+            android:layout_height="60dp"
             android:id="@+id/themaKiezen"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:textColor="#FFE102"
             android:textSize="30dp"
             android:textStyle="italic"
@@ -34,24 +34,24 @@
 
         <Button
             android:layout_width="250dp"
-            android:layout_height="50dp"
+            android:layout_height="45dp"
             android:text="ENERGIE"
             android:id="@+id/btnEnergie"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/themaKiezen"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/btn_yellow"
             android:textColor="#ffffffff"
             android:visibility="invisible"/>
 
         <Button
             android:layout_width="250dp"
-            android:layout_height="50dp"
+            android:layout_height="45dp"
             android:text="WATER"
             android:id="@+id/btnWater"
             android:layout_below="@+id/btnEnergie"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_alignLeft="@+id/btnEnergie"
             android:layout_alignStart="@+id/btnEnergie"
             android:background="@drawable/btn_blue"
@@ -60,11 +60,11 @@
 
         <Button
             android:layout_width="250dp"
-            android:layout_height="50dp"
+            android:layout_height="45dp"
             android:text="MATERIALEN"
             android:id="@+id/btnMaterialen"
             android:layout_below="@+id/btnWater"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_alignLeft="@+id/btnWater"
             android:layout_alignStart="@+id/btnWater"
             android:background="@drawable/btn_brown"
@@ -73,13 +73,24 @@
 
         <Button
             android:layout_width="250dp"
-            android:layout_height="50dp"
+            android:layout_height="45dp"
             android:text="BIO MIMICRY"
             android:id="@+id/btnBio"
             android:layout_below="@+id/btnMaterialen"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="5dp"
             android:layout_alignLeft="@+id/btnWater"
             android:background="@drawable/btn_magenta"
+            android:textColor="#ffffffff"
+            android:visibility="invisible"/>
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="45dp"
+            android:text="DIERENWELZIJN"
+            android:id="@+id/btnDieren"
+            android:layout_below="@+id/btnBio"
+            android:layout_marginBottom="30dp"
+            android:layout_alignLeft="@+id/btnWater"
+            android:background="@drawable/btn_red"
             android:textColor="#ffffffff"
             android:visibility="invisible"/>
 
@@ -89,7 +100,7 @@
             android:id="@+id/backbutton"
             android:src="@drawable/backarrow"
             android:background="@null"
-            android:layout_below="@+id/btnBio"
+            android:layout_below="@+id/btnDieren"
             android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>

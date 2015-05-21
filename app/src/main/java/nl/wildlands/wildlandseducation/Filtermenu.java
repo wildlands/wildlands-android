@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 
 
 public class Filtermenu extends Activity implements View.OnClickListener {
-    Button btnWater, btnEnergie, btnMaterialen, btnBio;
+    Button btnWater, btnEnergie, btnMaterialen, btnBio, btnDieren;
 
 
     @Override
@@ -34,6 +34,7 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         btnEnergie = (Button)findViewById(R.id.btnEnergie);
         btnMaterialen = (Button)findViewById(R.id.btnMaterialen);
         btnBio = (Button)findViewById(R.id.btnBio);
+        btnDieren = (Button)findViewById(R.id.btnDieren);
         ImageButton btnBack = (ImageButton)findViewById(R.id.backbutton);
         btnBack.setOnClickListener(this);
         TextView tv = (TextView)findViewById(R.id.themaKiezen);
@@ -45,6 +46,7 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         btnEnergie.setOnClickListener(this);
         btnMaterialen.setOnClickListener(this);
         btnBio.setOnClickListener(this);
+        btnDieren.setOnClickListener(this);
 
         animateFadeIn();
 
@@ -57,10 +59,12 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         btnEnergie.setTranslationX(-1000);
         btnWater.setTranslationX(1000);
         btnMaterialen.setTranslationX(-1000);
+        btnDieren.setTranslationX(-1000);
         btnBio.setVisibility(View.VISIBLE);
         btnEnergie.setVisibility(View.VISIBLE);
         btnWater.setVisibility(View.VISIBLE);
         btnMaterialen.setVisibility(View.VISIBLE);
+        btnDieren.setVisibility(View.VISIBLE);
         btnEnergie.animate()
                 .translationX(0)
                 .setDuration(1000);
@@ -71,6 +75,9 @@ public class Filtermenu extends Activity implements View.OnClickListener {
                 .translationX(0)
                 .setDuration(1000);
         btnWater.animate()
+                .translationX(0)
+                .setDuration(1000);
+        btnDieren.animate()
                 .translationX(0)
                 .setDuration(1000);
     }
@@ -92,21 +99,26 @@ public class Filtermenu extends Activity implements View.OnClickListener {
                 break;
             case R.id.btnBio:
                 // make dis
-                h.putExtra("TYPE", "bio");
+                h.putExtra("TYPE", "Bio Mimicry");
                 startActivity(h);
                 break;
             case R.id.btnEnergie:
-                h.putExtra("TYPE", "energie");
+                h.putExtra("TYPE", "Energie");
                 startActivity(h);
                 break;
             case R.id.btnWater:
-                h.putExtra("TYPE", "water");
+                h.putExtra("TYPE", "Water");
                 startActivity(h);
                 break;
             case R.id.btnMaterialen:
-                h.putExtra("TYPE", "materialen");
+                h.putExtra("TYPE", "Materiaal");
                 startActivity(h);
                 break;
+            case R.id.btnDieren:
+                h.putExtra("TYPE", "Dierenwelzijn");
+                startActivity(h);
+                break;
+
         }
     }
 }

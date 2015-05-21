@@ -35,7 +35,7 @@ public class QuestionsDataSource {
         dbHelper.close();
     }
 
-    public Question createQuestion(String question, String image, String level, String type)
+    public Question createQuestion(String question, String image, int level, String type)
     {
         ContentValues values = new ContentValues();
         values.put(MySQLiteHelper.COLUMN_TEXT, question);
@@ -116,7 +116,7 @@ public class QuestionsDataSource {
 
     private Question cursorToQuestion(Cursor cursor) {
 
-        Question question = new Question(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+        Question question = new Question(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4));
         return question;
     }
 

@@ -50,8 +50,8 @@ import java.util.Set;
 
 public class Quiz extends Activity implements OnClickListener {
 
-    private ArrayList<Question> questions;                              // ArrayList to store all questions
-    private ArrayList<Answer> answers;
+    private ArrayList<Question> questions, questionAll;                              // ArrayList to store all questions
+    private ArrayList<Answer> answers, answerAll;
 
     private Answer actualAnswer;
     public static final String MyPREFERENCES = "MyPrefs" ;              // String to get sharedprefs
@@ -162,8 +162,30 @@ public class Quiz extends Activity implements OnClickListener {
         datasource = new QuestionsDataSource(this);
         datasource.open();
 
-        questions = datasource.getAllQuestions();
-        answers = datasource.getAllAnswers();
+        questions = new ArrayList<Question>();
+        questionAll = datasource.getAllQuestions();
+        int level = ((DefaultApplication)this.getApplication()).getLevel();
+
+        for(Question question1: questionAll)
+        {
+            if(question1.getLevel() == level)
+            {
+                questions.add(question1);
+            }
+        }
+        answers = new ArrayList<Answer>();
+        answerAll = datasource.getAllAnswers();
+        for(Answer answer: answerAll)
+        {
+            long vraagId = answer.getVraagId();
+            for(Question question1: questions)
+            {
+                if(vraagId == question1.getId())
+                {
+                    answers.add(answer);
+                }
+            }
+        }
 
         ArrayList<Question> values = datasource.getAllQuestions();
 
@@ -240,18 +262,7 @@ public class Quiz extends Activity implements OnClickListener {
 
 
         int searchId = i + 1;
-        ArrayList<Answer> answers1 = new ArrayList<Answer>();
-        for(Answer answer: answers)
-        {
-            if(answer.getVraagId() == searchId)
-            {
-                answers1.add(answer);
-                if(answer.isGood())
-                {
-                    actualAnswer = answer;
-                }
-            }
-        }
+
 
         if(questions.size() <= i){
             int energieCorrect = 0, energieTotaal = 0;
@@ -259,7 +270,7 @@ public class Quiz extends Activity implements OnClickListener {
             int materialenCorrect = 0, materialenTotaal = 0;
             int bioCorrect = 0, bioTotaal = 0;
             int dierenCorrect = 0, dierenTotaal = 0;
-            calcResults(questionsCorrect, questionNumber, false);
+            calcResults(questionsCorrect, questionNumber, "Totaal");
             Set<Question> questions = beantwoordevragen.keySet();
             for(Question q: questions)
             {
@@ -297,18 +308,41 @@ public class Quiz extends Activity implements OnClickListener {
                         energieCorrect += 1;
                     }
                 }
+                else if(type.equals("Dierenwelzijn"))
+                {
+                    dierenTotaal += 1;
+                    if(correct)
+                    {
+                        dierenCorrect += 1;
+                    }
+                }
             }
-            calcResults(waterCorrect,waterTotaal, true);
-            calcResults(energieCorrect,energieTotaal, true);
-            calcResults(materialenCorrect, materialenTotaal, true);
-            calcResults(bioCorrect, bioTotaal, true);
-            Intent quizEnd = new Intent(this, view_11.class);
+            calcResults(waterCorrect,waterTotaal, "Water");
+            calcResults(energieCorrect,energieTotaal, "Energie");
+            calcResults(materialenCorrect, materialenTotaal, "Materiaal");
+            calcResults(bioCorrect, bioTotaal, "Bio Mimicry");
+            calcResults(dierenCorrect, dierenTotaal, "Dierenwelzijn");
+            Intent quizEnd = new Intent(this, uitslag_venster.class);
             startActivity(quizEnd);
             this.finish();
             socket.disconnect();
 
         }
         else {
+            Question qActual = questions.get(i);
+            long id = qActual.getId();
+            ArrayList<Answer> answers1 = new ArrayList<Answer>();
+            for(Answer answer: answers)
+            {
+                if(answer.getVraagId() == id)
+                {
+                    answers1.add(answer);
+                    if(answer.isGood())
+                    {
+                        actualAnswer = answer;
+                    }
+                }
+            }
             ImageView bush = (ImageView)findViewById(R.id.bush);
             String type = questions.get(i).getType();
             if(type.equals("Water"))
@@ -405,7 +439,7 @@ public class Quiz extends Activity implements OnClickListener {
         return directory.getAbsolutePath();
     }
 
-    public void calcResults(int aantalGoed, int totaal, boolean thema)
+    public void calcResults(int aantalGoed, int totaal, String thema)
     {
         Log.d("aantalgoed", String.valueOf(aantalGoed));
         Log.d("totaal", String.valueOf(totaal));
@@ -430,10 +464,12 @@ public class Quiz extends Activity implements OnClickListener {
         {
             Log.d("pr", String.valueOf(geheelPercentage));
         }
-        if(thema)
-        {
 
-        }
+            HashMap<Integer, Integer> score = new HashMap<Integer, Integer>();
+            score.put(aantalGoed,totaal);
+
+            ((DefaultApplication)this.getApplication()).addThemaScores(thema, score);
+
 
     }
     /**
@@ -464,8 +500,8 @@ public class Quiz extends Activity implements OnClickListener {
     {
         int code = ((DefaultApplication)this.getApplication()).getSocketcode();
         String naam = ((DefaultApplication)this.getApplication()).getSocketnaam();
-        Log.d("Ans en ques", answer + questionNumber);
-        Log.d("Correct",  questions.get(questionNumber).getCorrectAnswer());
+  //      Log.d("Ans en ques", answer + questionNumber);
+//        Log.d("Correct",  questions.get(questionNumber).getCorrectAnswer());
         boolean correct = false;
         if(answer == actualAnswer.getAnswer())
         {
@@ -587,43 +623,7 @@ public class Quiz extends Activity implements OnClickListener {
         }
     }
 
-    class Search extends AsyncTask<String, String, String> implements OnClickListener {
 
-        boolean failure = false;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("search", ""));
-            Log.d("request!", "starting");
-
-            //Posting user data to script
-            jsonArray = jsonParser.makeHttpRequest(
-                    GET_QUESTION_URL, "POST", params);
-            Log.d("Json meuk", jsonArray.toString());
-
-            return jsonArray.toString();
-
-        }
-
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product deleted
-
-            updateJSONdata();
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
 
     class CheckVersion extends AsyncTask<String, String, String> implements OnClickListener {
 
@@ -640,7 +640,7 @@ public class Quiz extends Activity implements OnClickListener {
         protected String doInBackground(String... args) {
 
 
-            JSONObject versionObj = jsonParser.getJSONObjFromUrl("http://wildlands.doornbosagrait.tk//api/api.php?c=GetDatabaseChecksum");
+            JSONObject versionObj = jsonParser.getJSONObjFromUrl(Values.BASE_URL + Values.GET_CHECKSUM);
             Log.d("Versionjson", versionObj.toString());
             try {
 
@@ -671,7 +671,7 @@ public class Quiz extends Activity implements OnClickListener {
                 Log.d("Check version", String.valueOf(appVersion));
                 new Search().execute();
             }*/
-            new Search().execute();
+
 
 
         }

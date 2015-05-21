@@ -13,6 +13,18 @@
         <item name="android:layout_margin">5dp</item>
 
     </style>
+    <style name="bush">
+        <item name="android:src">@drawable/element_01</item>
+    </style>
+
+    <style name="logo">
+        <item name="android:src">@drawable/element_07</item>
+    </style>
+
+    <style name="background">
+        <item name="android:background">@drawable/kaart_view</item>
+    </style>
+
 
 
 

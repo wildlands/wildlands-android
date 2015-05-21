@@ -39,7 +39,7 @@ public class Home extends Activity implements View.OnClickListener {
 
     SharedPreferences sharedpreferences;
     // Url to get JSON
-    private static final String GET_QUESTION_URL = "http://wildlands.doornbosagrait.tk/api/api.php?c=GetAllQuestions";
+    private static final String GET_QUESTION_URL = Values.BASE_URL + Values.GET_QUESTIONS;
 
     /*
     Tags om variabelen uit JSON te halen
@@ -53,17 +53,26 @@ public class Home extends Activity implements View.OnClickListener {
     private static final String TAG_LEVEL = "level";
     private static final String TAG_CHECKSUM = "checksum";
 
+    private static final String GET_PINPOINT_URL= Values.BASE_URL + Values.GET_PINPOINTS;
+    private static final String TAG_NAME = "name";
+    private static final String TAG_DESCRIPTION = "description";
+    private static final String TAG_XPOS = "xPos";
+    private static final String TAG_YPOS = "yPos";
+
     private ArrayList<Question> questions;
 
     private QuestionsDataSource datasource;
+    private PinpointsDataSource pinpointsDataSource;
 
-    private JSONArray questionArray;
-    private JSONArray jsonArray;
+    private JSONArray questionArray, pinpointArray;
+    private JSONArray jsonArray, jsonArrayPinpoint;
 
     // JSONParser voor ophalen van data
     JSONParser jsonParser = new JSONParser();
 
     ArrayList<HashMap<String, String>> mQuestionList;
+
+    private boolean pinpointsSaved;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +83,7 @@ public class Home extends Activity implements View.OnClickListener {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         datasource = new QuestionsDataSource(this.getApplicationContext());
+        pinpointsDataSource = new PinpointsDataSource(this.getApplicationContext());
 
         btnVerkenning = (Button)findViewById(R.id.verkenning);
         btnQuiz = (Button)findViewById(R.id.quiz);
@@ -82,6 +92,7 @@ public class Home extends Activity implements View.OnClickListener {
         btnQuiz.setOnClickListener(this);
         questionArray = new JSONArray();
         jsonArray = new JSONArray();
+        pinpointsSaved = false;
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
@@ -89,21 +100,19 @@ public class Home extends Activity implements View.OnClickListener {
         loadingTxt = (TextView)findViewById(R.id.loading);
         questions = new ArrayList<Question>();
 
-        if(sharedpreferences.getBoolean("questionsadded", false) == false)
-        {
+
+       // if(sharedpreferences.getBoolean("questionsadded", false) == false)
+       // {
             spinner.setVisibility(View.VISIBLE);
             loadingTxt.setVisibility(View.VISIBLE);
+            new CheckVersion().execute();
 
-            new Search().execute();
-        }
-        else{
+       // }
+      //  else{
             //spinner.setVisibility(View.INVISIBLE);
             //loadingTxt.setVisibility(View.INVISIBLE);
-            logo.setVisibility(View.VISIBLE);
-            btnVerkenning.setVisibility(View.VISIBLE);
-            btnQuiz.setVisibility(View.VISIBLE);
-            animateFadeIn();
-        }
+
+      //  }
     }
 
     public void animateFadeIn()
@@ -117,13 +126,80 @@ public class Home extends Activity implements View.OnClickListener {
 
     }
 
+    public void updatePinpointdata() {
+
+
+        mQuestionList = new ArrayList<HashMap<String, String>>();
+
+        try {
+            pinpointArray = jsonArrayPinpoint;
+
+            // looping through all posts according to the json object returned
+            for (int i = 0; i < pinpointArray.length(); i++) {
+                JSONObject c = pinpointArray.getJSONObject(i);
+                Log.d("C object", c.toString());
+                int id = c.getInt(TAG_ID);
+                String name = c.getString(TAG_NAME);
+                String description = c.getString(TAG_DESCRIPTION);
+                int xPos = c.getInt(TAG_XPOS);
+                int yPos = c.getInt(TAG_YPOS);
+                JSONObject typeJSON = c.getJSONObject("type");
+                int typeID = typeJSON.getInt("id");
+                String image = typeJSON.getString("image");
+                String unit = typeJSON.getString("unit");
+                String typeName = typeJSON.getString("name");
+                PinpointType type = new PinpointType(typeID, image, unit, typeName);
+
+                pinpointsDataSource.open();
+                JSONArray pages = c.getJSONArray("pages");
+                for(int j = 0; j< pages.length();j++)
+                {
+                    JSONObject onePage = pages.getJSONObject(j);
+                    JSONObject level = onePage.getJSONObject("level");
+                    int levelId = level.getInt("id");
+                    String title = onePage.getString("title");
+                    String pageImage = onePage.getString("image");
+                    String text = onePage.getString("text");
+
+                    pinpointsDataSource.createPage(id, levelId, title, pageImage, text);
+                }
+
+
+
+                Pinpoint addedPinpoint = pinpointsDataSource.createPinpoint(name, description, typeName, xPos, yPos);
+                pinpointsDataSource.close();
+
+                Log.d("pin", addedPinpoint.getDescription());
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if(pinpointsSaved) {
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putBoolean("questionsadded", true);
+            editor.commit();
+            spinner.setVisibility(View.INVISIBLE);
+            loadingTxt.setVisibility(View.INVISIBLE);
+            logo.setVisibility(View.VISIBLE);
+            btnVerkenning.setVisibility(View.VISIBLE);
+            btnQuiz.setVisibility(View.VISIBLE);
+            animateFadeIn();
+        }
+        else{
+            pinpointsSaved = true;
+        }
+    }
+
     public void updateJSONdata(){
 
         mQuestionList = new ArrayList<HashMap<String, String>>();
         ((DefaultApplication)this.getApplication()).setQuestionsLoaded(true);
         try {
             questionArray = jsonArray;
-            String baseUrl = "http://wildlands.doornbosagrait.tk/app/images/";
+            String baseUrl = Values.BASE_URL + Values.IMAGE_BASE;
 
             // looping through all posts according to the json object returned
             for (int i = 0; i < questionArray.length(); i++) {
@@ -131,6 +207,7 @@ public class Home extends Activity implements View.OnClickListener {
                 String bitImage = c.getString(TAG_IMAGE);
                 JSONObject level = c.getJSONObject(TAG_LEVEL);
                 String levelnaam = level.getString("name");
+                int levelid = level.getInt("id");
                 JSONObject typeObj = c.getJSONObject("type");
                 String type = typeObj.getString("name");
                 Log.d("typenaam", type);
@@ -139,13 +216,10 @@ public class Home extends Activity implements View.OnClickListener {
                 Log.d("urlstring", urlString);
 
                 datasource.open();
-                Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), urlString, levelnaam, type);
+                Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), urlString, levelid, type);
 
 
-            //    Question q = new Question(i,c.getString(TAG_TEXT), urlString, levelnaam);
 
-                //questions.add(q);
-                //((DefaultApplication)this.getApplication()).addQuestion(q);
                 JSONArray a = c.getJSONArray(TAG_ANSWERS);
                 for(int j = 0; j < a.length(); j++){
                     JSONObject ans = a.getJSONObject(j);
@@ -154,12 +228,13 @@ public class Home extends Activity implements View.OnClickListener {
                     Answer newAnswer = new Answer(1, addedQuestion.getId(), answer,good);
                     Answer wut = datasource.createAnswer(newAnswer);
                     Log.d("wut", wut.getAnswer());
-                    //q.addAnswer(answer, good);
+
 
                 }
                 // creating new HashMap
                 HashMap<String, String> map = new HashMap<String, String>();
 
+                datasource.close();
                 //map.put(TAG_ID, text);
                 // adding HashList to ArrayList
                 mQuestionList.add(map);
@@ -173,15 +248,22 @@ public class Home extends Activity implements View.OnClickListener {
             e.printStackTrace();
         }
 
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean("questionsadded", true);
-        editor.commit();
-        spinner.setVisibility(View.INVISIBLE);
-        loadingTxt.setVisibility(View.INVISIBLE);
-        logo.setVisibility(View.VISIBLE);
-        btnVerkenning.setVisibility(View.VISIBLE);
-        btnQuiz.setVisibility(View.VISIBLE);
-        animateFadeIn();
+
+        if(pinpointsSaved) {
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putBoolean("questionsadded", true);
+            editor.commit();
+            spinner.setVisibility(View.INVISIBLE);
+            loadingTxt.setVisibility(View.INVISIBLE);
+            logo.setVisibility(View.VISIBLE);
+            btnVerkenning.setVisibility(View.VISIBLE);
+            btnQuiz.setVisibility(View.VISIBLE);
+            animateFadeIn();
+        }
+        else{
+            pinpointsSaved = true;
+        }
+
 
 
     }
@@ -234,6 +316,97 @@ public class Home extends Activity implements View.OnClickListener {
             // dismiss the dialog once product deleted
 
             updateJSONdata();
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
+
+    class PinpointSaver extends AsyncTask<String, String, String> implements View.OnClickListener {
+
+        boolean failure = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+
+         jsonArrayPinpoint = jsonParser.getJSONFromUrl(GET_PINPOINT_URL);
+
+
+            return jsonArrayPinpoint.toString();
+
+        }
+
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once product deleted
+            updatePinpointdata();
+
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
+
+    class CheckVersion extends AsyncTask<String, String, String> implements View.OnClickListener {
+
+        boolean failure = false;
+        boolean loadNewData = true;
+        long appVersion;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+
+
+            JSONObject versionObj = jsonParser.getJSONObjFromUrl(Values.BASE_URL + Values.GET_CHECKSUM);
+            Log.d("Versionjson", versionObj.toString());
+            try {
+
+                appVersion = versionObj.getLong(TAG_CHECKSUM);
+                Log.d("version", String.valueOf(appVersion));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return versionObj.toString();
+
+        }
+
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once product deleted
+
+            if(appVersion == sharedpreferences.getLong("version", 0))
+            {
+                Log.d("versie", "Versies komen overeen");
+                logo.setVisibility(View.VISIBLE);
+                btnVerkenning.setVisibility(View.VISIBLE);
+                btnQuiz.setVisibility(View.VISIBLE);
+                spinner.setVisibility(View.INVISIBLE);
+                loadingTxt.setVisibility(View.INVISIBLE);
+                animateFadeIn();
+
+            }
+            else {
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putLong("version", appVersion);
+                editor.commit();
+                Log.d("Check version", String.valueOf(appVersion));
+                new Search().execute();
+                new PinpointSaver().execute();
+            }
 
         }
 

@@ -32,8 +32,8 @@ public class LevelChoice extends Activity implements AdapterView.OnItemSelectedL
     Spinner spinner;
     Button gaverder;
     JSONParser jsonParser;
-    String selectedLevel;
-    private static final String GET_LEVELS_URL = "http://wildlands.doornbosagrait.tk/api/api.php?c=GetAllLevels";
+    int selectedLevel;
+    private static final String GET_LEVELS_URL = Values.BASE_URL + Values.GET_LEVELS;
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
     JSONArray jsonArray;
@@ -67,10 +67,11 @@ public class LevelChoice extends Activity implements AdapterView.OnItemSelectedL
             {
                 JSONObject c = questionArray.getJSONObject(i);
                 String level = c.getString(TAG_NAME);
+                int levelid = c.getInt(TAG_ID);
                 String content = level.toUpperCase();
                 if(i == 0)
                 {
-                    selectedLevel = content;
+                    selectedLevel = levelid;
                 }
                 spinnerArray.add(content);
             }
@@ -80,21 +81,17 @@ public class LevelChoice extends Activity implements AdapterView.OnItemSelectedL
             spinner.setAdapter(spinnerArrayAdapter);
             spinner.setOnItemSelectedListener(this);
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
 
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        selectedLevel = parent.getItemAtPosition(position).toString();
+        selectedLevel = position+1;
 
-        Log.d("level", selectedLevel);
+        Log.d("level", String.valueOf(selectedLevel));
     }
 
     @Override
@@ -129,13 +126,10 @@ public class LevelChoice extends Activity implements AdapterView.OnItemSelectedL
         protected String doInBackground(String... args) {
             //Posting user data to script
             jsonArray = jsonParser.getJSONFromUrl(GET_LEVELS_URL);
-            Log.d("Json meuk", jsonArray.toString());
             return jsonArray.toString();
-
         }
 
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product deleted
             updateJSONdata();
         }
 

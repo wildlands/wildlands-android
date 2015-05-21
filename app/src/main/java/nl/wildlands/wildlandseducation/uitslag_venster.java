@@ -1,39 +1,81 @@
 package nl.wildlands.wildlandseducation;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.Set;
 
 
-public class uitslag_venster extends ActionBarActivity {
+public class uitslag_venster extends Activity {
 
+    TextView energieScore, waterScore, materiaalScore, bioScore, dierenScore, totaalScore;
+    int totaalGoed, beantwoord;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uitslag_venster);
-    }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        energieScore = (TextView)findViewById(R.id.energieScore);
+        waterScore = (TextView)findViewById(R.id.waterScore);
+        materiaalScore = (TextView)findViewById(R.id.materiaalScore);
+        bioScore = (TextView)findViewById(R.id.bioScore);
+        dierenScore = (TextView)findViewById(R.id.dierenScore);
+        totaalScore = (TextView)findViewById(R.id.totaalcore);
 
+        beantwoord = 0;
+        totaalGoed = 0;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_uitslag_venster, menu);
-        return true;
-    }
+        HashMap<String, HashMap<Integer, Integer>> scores = ((DefaultApplication)this.getApplication()).getThemaScores();
+        Set<String> soorten = scores.keySet();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        for(String string: soorten) {
+            HashMap<Integer, Integer> score = scores.get(string);
+            String scoreString = "";
+            Set<Integer> aantalGoed = score.keySet();
+            int goed = 0;
+            int totaal = 0;
+            for (Integer integer : aantalGoed) {
+                goed = integer;
+                totaal = score.get(integer);
+                beantwoord += totaal;
+                totaalGoed += goed;
+            }
+            if (string.equals("Water"))
+            {
+                waterScore.setText(goed + "/" + totaal);
+            }
+            else if(string.equals("Bio Mimicry"))
+            {
+                bioScore.setText(goed + "/" + totaal);
+            }
+            else if(string.equals("Energie"))
+            {
+                energieScore.setText(goed + "/" + totaal);
+            }
+            else if(string.equals("Materiaal"))
+            {
+                materiaalScore.setText(goed + "/" + totaal);
+            }
+            else if(string.equals("Dierenwelzijn"))
+            {
+                dierenScore.setText(goed + "/" + totaal);
+            }
+            else if(string.equals("Totaal"))
+            {
+                totaalScore.setText(goed + "/" + totaal);
+            }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
 
-        return super.onOptionsItemSelected(item);
     }
+
+
+
 }

@@ -304,23 +304,23 @@ public class GestureImageView extends ImageView{
 		fitScaleVertical = (float) measuredHeight / (float) imageHeight;
 	}
 
-    public void addButton(int x, int y, int id, String soort)
+    public void addButton(int x, int y, long id, String soort)
     {
         Log.d("soort die in kaart ", soort);
         ImageButton imageBtn = new ImageButton(context);
-        imageBtn.setId(i+id);
-        if(soort.equals("Stroom")) {
+        imageBtn.setId(i+(int)id);
+        if(soort.equals("Energie")) {
             imageBtn.setImageResource(R.drawable.pin);
         }
         else if(soort.equals("Water"))
         {
             imageBtn.setImageResource(R.drawable.pin_water);
         }
-        else if(soort.equals("Bio"))
+        else if(soort.equals("Bio Mimicry"))
         {
             imageBtn.setImageResource(R.drawable.pin_bio);
         }
-        else if(soort.equals("Warmte")){
+        else if(soort.equals("Materiaal")){
             imageBtn.setImageResource(R.drawable.pin_warmte);
         }
         else{
@@ -343,6 +343,7 @@ public class GestureImageView extends ImageView{
         imageButtons.add(imageBtn);
         RelativeLayout kaart = (RelativeLayout)getRootView().findViewById(R.id.kaartScreen);
         kaart.addView(imageBtn);
+
 
     }
 

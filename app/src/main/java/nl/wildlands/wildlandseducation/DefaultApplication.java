@@ -5,6 +5,7 @@ import com.github.nkzawa.socketio.client.Socket;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public final class DefaultApplication extends android.app.Application {
     public Socket newSocket;
@@ -19,7 +20,21 @@ public final class DefaultApplication extends android.app.Application {
     public ArrayList<Question> questions;
     public boolean loaded;
     public int duration;
-    public String level;
+    public int level;
+    public HashMap<String, HashMap<Integer, Integer>> themaScores;
+
+    public HashMap<String, HashMap<Integer, Integer>> getThemaScores() {
+        return themaScores;
+    }
+
+    public void setThemaScores(HashMap<String, HashMap<Integer, Integer>> themaScores) {
+        this.themaScores = themaScores;
+    }
+
+    public void addThemaScores(String key, HashMap<Integer, Integer> values)
+    {
+        themaScores.put(key, values);
+    }
 
     @Override
     public void onCreate() {
@@ -27,8 +42,10 @@ public final class DefaultApplication extends android.app.Application {
         FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/text.ttf");
         FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/text.ttf");
         FontsOverride.setDefaultFont(this, "SERIF", "fonts/text.ttf");
+
         FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/text.ttf");
         questions = new ArrayList<Question>();
+        themaScores = new HashMap<String, HashMap<Integer, Integer>>();
         loaded = false;
 
     }
@@ -40,11 +57,11 @@ public final class DefaultApplication extends android.app.Application {
     public void setSocketcode(int socketcode) { this.socketcode = socketcode;}
     public int getSocketcode() { return socketcode;}
 
-    public String getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 

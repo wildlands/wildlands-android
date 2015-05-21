@@ -11,29 +11,58 @@ import android.widget.ImageView;
  */
 public class Page {
 
-    private int pageNumber;
-    private ImageView image;
+    private long id;
+    private long pinpointid;
+    private int level;
+    private String image;
     private String text;
     private String title;
 
-    public Page(int pageNumber,ImageView image, String text, String title)
+    public Page(long id, long pinpointid, int level, String title, String image, String text)
     {
-        this.pageNumber = pageNumber;
+        this.id = id;
+        this.pinpointid = pinpointid;
+        this.level = level;
         this.image = image;
         this.text = text;
         this.title = title;
     }
 
-    public ImageView getImage() {
-        return image;
-    }
-
-    public void setImage(ImageView image) {
-        this.image = image;
-    }
 
     public String getText() {
         return text;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getPinpointid() {
+        return pinpointid;
+    }
+
+    public void setPinpointid(long pinpointid) {
+        this.pinpointid = pinpointid;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public void setText(String text) {
@@ -48,11 +77,5 @@ public class Page {
         this.title = title;
     }
 
-    public int getPageNumber() {
-        return pageNumber;
-    }
 
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
-    }
 }

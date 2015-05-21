@@ -34,6 +34,15 @@
             android:src="@drawable/uitslag_icon_02"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/energieScore"
+            android:textSize="30dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:text="1/1"
+            android:textColor="#FFFFFF"/>
         <ImageView
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -57,6 +66,46 @@
             android:src="@drawable/uitslag_icon_03"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/waterScore"
+            android:textSize="30dp"
+            android:layout_below="@+id/energieScore"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:text="1/1"
+            android:textColor="#FFFFFF"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/materiaalScore"
+            android:textSize="30dp"
+            android:layout_below="@+id/waterScore"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:text="1/1"
+            android:textColor="#FFFFFF"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/bioScore"
+            android:textSize="30dp"
+            android:layout_below="@+id/materiaalScore"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:text="1/1"
+            android:textColor="#FFFFFF"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/dierenScore"
+            android:textSize="30dp"
+            android:layout_below="@+id/bioScore"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:text="0/0"
+            android:textColor="#FFFFFF"/>
         <ImageView
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -145,8 +194,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/icon5"
+            android:id="@+id/totaal"
             android:layout_marginTop="350dp"
             android:text="TOTAAL:"
+            android:textColor="#FFFFFF"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/totaalcore"
+            android:textSize="35dp"
+            android:layout_toRightOf="@+id/totaal"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="330dp"
+            android:text="1/1"
             android:textColor="#FFFFFF"/>
         <ImageView
             android:layout_width="312dp"

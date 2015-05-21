@@ -13,19 +13,22 @@
         android:layout_width="150dp"
         android:layout_height="120dp"
         android:background="@drawable/element_07"
+        android:id="@+id/bush"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="125dp"/>
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="500dp"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/bush"
         android:background="#999999"
-        android:layout_marginTop="150dp"/>
+        android:layout_marginTop="25dp"/>
     <TextView
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:id="@+id/ikben"
         android:text="Ik ben... "
+        android:layout_centerHorizontal="true"
         android:textColor="#ffffff"
         android:textSize="40dp"
         android:layout_marginTop="180dp"

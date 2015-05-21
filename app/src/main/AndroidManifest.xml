@@ -44,12 +44,9 @@
             android:name=".SplashScreen"
             android:label="Wildlands"
             android:screenOrientation="portrait" >
-<<<<<<< HEAD
-
-=======
->>>>>>> 813521dab9051d58a980d1de1451a82665f321e0
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -85,12 +82,6 @@
             android:name=".GenerateQuiz"
             android:label="@string/title_activity_generate_quiz"
             android:screenOrientation="portrait" >
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 813521dab9051d58a980d1de1451a82665f321e0
         </activity>
         <activity
             android:name=".TrackScores"
@@ -116,15 +107,22 @@
         <activity
             android:name=".LevelChoice"
             android:label="@string/title_activity_level_choice" >
-<<<<<<< HEAD
-
-=======
->>>>>>> 813521dab9051d58a980d1de1451a82665f321e0
-
         </activity>
         <activity
             android:name=".uitslag_venster"
             android:label="@string/title_activity_uitslag_venster" >
+        </activity>
+        <activity
+            android:name=".Testje"
+            android:label="@string/title_activity_testje" >
+        </activity>
+        <activity
+            android:name=".Test2"
+            android:label="@string/title_activity_test2" >
+        </activity>
+        <activity
+            android:name=".Test3"
+            android:label="@string/title_activity_test3" >
         </activity>
     </application>
 
