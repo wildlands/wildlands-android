@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -17,6 +18,7 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.nkzawa.socketio.client.Socket;
@@ -339,18 +341,23 @@ public class Quiz extends Activity implements OnClickListener {
                 }
             }
             ImageView bush = (ImageView)findViewById(R.id.bush);
+            RelativeLayout rl = (RelativeLayout)findViewById(R.id.content);
+
             String type = questions.get(i).getType();
             if(type.equals("Water"))
             {
                 bush.setImageResource(R.drawable.element_03);
+                rl.setBackgroundResource(R.drawable.quiz_gradient_blauw);
             }
             else if(type.equals("Bio Mimicry"))
             {
                 bush.setImageResource(R.drawable.element_05);
+                rl.setBackgroundResource(R.drawable.quiz_gradient_magenta);
             }
             else if(type.equals("Materiaal"))
             {
-
+                bush.setImageResource(R.drawable.element_06);
+                rl.setBackgroundResource(R.drawable.quiz_gradient_bruin);
             }
             else{
                 bush.setImageResource(R.drawable.element_04);
@@ -503,6 +510,11 @@ public class Quiz extends Activity implements OnClickListener {
 
             questionsCorrect += 1;
             correct = true;
+        }
+        else{
+            Vibrator v = (Vibrator) this.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            v.vibrate(500);
         }
         beantwoordevragen.put(questions.get(questionNumber), correct);
 

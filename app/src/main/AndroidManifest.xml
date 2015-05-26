@@ -6,7 +6,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<<<<<<< HEAD
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+=======
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+>>>>>>> e90eeefb442e28865c486d23b8b252accad2d06e
 
     <uses-feature android:name="android.hardware.screen.portrait" />
 .

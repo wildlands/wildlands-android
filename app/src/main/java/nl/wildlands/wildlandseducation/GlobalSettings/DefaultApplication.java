@@ -23,6 +23,7 @@ public final class DefaultApplication extends android.app.Application {
     public boolean loaded;
     public int duration;
     public int level;
+    public boolean homeFinished;
     public HashMap<String, HashMap<Integer, Integer>> themaScores;
 
     public HashMap<String, HashMap<Integer, Integer>> getThemaScores() {
@@ -38,13 +39,21 @@ public final class DefaultApplication extends android.app.Application {
         themaScores.put(key, values);
     }
 
+    public boolean isHomeFinished() {
+        return homeFinished;
+    }
+
+    public void setHomeFinished(boolean homeFinished) {
+        this.homeFinished = homeFinished;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/text.ttf");
+
         FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/text.ttf");
         FontsOverride.setDefaultFont(this, "SERIF", "fonts/text.ttf");
-
         FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/text.ttf");
         questions = new ArrayList<Question>();
         themaScores = new HashMap<String, HashMap<Integer, Integer>>();
