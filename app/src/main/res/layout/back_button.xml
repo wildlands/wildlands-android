@@ -7,6 +7,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/backarrow"
+        android:id="@+id/backbutton"
         android:background="@null"
         android:layout_centerHorizontal="true"/>
 

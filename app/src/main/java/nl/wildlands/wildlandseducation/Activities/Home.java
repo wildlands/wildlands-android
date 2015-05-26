@@ -50,7 +50,7 @@ import nl.wildlands.wildlandseducation.SQLite.QuestionsDataSource;
 
 
 public class Home extends Activity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
-    private Button btnVerkenning, btnQuiz;
+    private Button btnVerkenning, btnQuiz, btnCredits;
 
     private ProgressBar spinner;
     private TextView loadingTxt;
@@ -129,9 +129,11 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         btnVerkenning = (Button)findViewById(R.id.verkenning);
         btnQuiz = (Button)findViewById(R.id.quiz);
+        btnCredits = (Button)findViewById(R.id.credits);
         logo = (ImageView)findViewById(R.id.logo);
         btnVerkenning.setOnClickListener(this);
         btnQuiz.setOnClickListener(this);
+        btnCredits.setOnClickListener(this);
         questionArray = new JSONArray();
         jsonArray = new JSONArray();
         pinpointsSaved = false;
@@ -211,6 +213,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         fadeIn.setDuration(1500);
         btnVerkenning.setAnimation(fadeIn);
         btnQuiz.setAnimation(fadeIn);
+        btnCredits.setAnimation(fadeIn);
         logo.setAnimation(fadeIn);
 
     }
@@ -408,7 +411,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         switch(v.getId())
         {
             case R.id.verkenning:
-                Intent h = new Intent(this, Filtermenu.class);
+                Intent h = new Intent(this, Credits.class);
                 startActivity(h);
                 ((DefaultApplication)this.getApplication()).setHomeFinished(true);
                 this.finish();
@@ -419,6 +422,11 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 ((DefaultApplication)this.getApplication()).setHomeFinished(true);
                 this.finish();
                 break;
+            case R.id.credits:
+                Intent k = new Intent(this, Credits.class);
+                startActivity(k);
+                this.finish();
+                break;
             case R.id.gaverder:
                 ((DefaultApplication)this.getApplication()).setLevel(selectedLevel);
                 gaverder.setVisibility(View.INVISIBLE);
@@ -426,6 +434,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 logo.setVisibility(View.VISIBLE);
                 btnVerkenning.setVisibility(View.VISIBLE);
                 btnQuiz.setVisibility(View.VISIBLE);
+                btnCredits.setVisibility(View.VISIBLE);
                 animateFadeIn();
 
                 break;

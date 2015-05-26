@@ -6,8 +6,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<<<<<<< HEAD
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+=======
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+>>>>>>> e90eeefb442e28865c486d23b8b252accad2d06e
 
     <uses-feature android:name="android.hardware.screen.portrait" />
 .
@@ -38,7 +42,6 @@
             android:label="@string/title_activity_kaart"
             android:screenOrientation="portrait" >
         </activity>
-
         <activity
             android:name=".Activities.SplashScreen"
             android:label="Wildlands"
@@ -103,10 +106,13 @@
             android:name=".Activities.uitslag_venster"
             android:label="@string/title_activity_uitslag_venster" >
         </activity>
-
         <activity
             android:name=".PageDisplay"
             android:label="@string/title_activity_page_display" >
+        </activity>
+        <activity
+            android:name=".Activities.Credits"
+            android:label="@string/title_activity_credits" >
         </activity>
     </application>
 

@@ -26,6 +26,11 @@
     <string name="title_activity_test3">Test3</string>
     <string name="title_activity_groene_layout">GroeneLayout</string>
     <string name="title_activity_page_display">PageDisplay</string>
+    <string name="title_activity_credits">credits</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
 </resources>
