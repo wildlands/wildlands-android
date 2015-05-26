@@ -24,6 +24,8 @@
     <string name="title_activity_testje">Testje</string>
     <string name="title_activity_test2">Test2</string>
     <string name="title_activity_test3">Test3</string>
+    <string name="title_activity_groene_layout">GroeneLayout</string>
+    <string name="title_activity_page_display">PageDisplay</string>
 
 
 </resources>

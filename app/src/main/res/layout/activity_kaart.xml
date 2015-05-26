@@ -4,10 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/kaartScreen"
-    tools:context="nl.wildlands.wildlandseducation.Kaart">
+    tools:context="nl.wildlands.wildlandseducation.Activities.Kaart">
 
 
-    <nl.wildlands.wildlandseducation.GestureImageView
+    <nl.wildlands.wildlandseducation.MapAssets.GestureImageView
         android:layout_width="1000dp"
         android:layout_height="1000dp"
         android:scaleType="center"

@@ -5,10 +5,15 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:text="JUNGOLA"
         android:gravity="center_vertical|center_horizontal" />
 
+    <WebView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#376251"
+        android:id="@+id/webview"></WebView>
 
 </LinearLayout>

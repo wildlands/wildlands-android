@@ -6,23 +6,24 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <uses-feature android:name="android.hardware.screen.portrait" />
 .
     <application
-        android:name=".DefaultApplication"
+        android:name=".GlobalSettings.DefaultApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Quiz"
+            android:name=".Activities.Quiz"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".Kaart"
+            android:name=".Activities.Kaart"
             android:label="@string/title_activity_kaart"
             android:screenOrientation="portrait" >
         </activity>
@@ -32,16 +33,13 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".MultiTouch"
+            android:name=".MapAssets.MultiTouch"
             android:label="@string/title_activity_kaart"
             android:screenOrientation="portrait" >
         </activity>
+
         <activity
-            android:name=".TestSql"
-            android:label="@string/title_activity_test_sql" >
-        </activity>
-        <activity
-            android:name=".SplashScreen"
+            android:name=".Activities.SplashScreen"
             android:label="Wildlands"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -51,78 +49,63 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Filtermenu"
+            android:name=".Activities.Filtermenu"
             android:label="@string/title_activity_filtermenu"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".Home"
+            android:name=".Activities.Home"
             android:label="@string/title_activity_home" >
         </activity>
         <activity
-            android:name=".ChooseQuizGroup"
+            android:name=".Activities.ChooseQuizGroup"
             android:label="@string/title_activity_view_4"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".JoinQuiz"
+            android:name=".Activities.JoinQuiz"
             android:label="@string/title_activity_view_5"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".WaitForQuizStart"
+            android:name=".Activities.WaitForQuizStart"
             android:label="@string/title_activity_view_6"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".view_11"
+            android:name=".Activities.QuizEnd"
             android:label="@string/title_activity_view_11"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".GenerateQuiz"
+            android:name=".Activities.GenerateQuiz"
             android:label="@string/title_activity_generate_quiz"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".TrackScores"
+            android:name=".Activities.TrackScores"
             android:label="@string/title_activity_track_scores"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".view_12"
-            android:label="@string/title_activity_view_12" >
-        </activity>
-        <activity
-            android:name=".view_13"
+            android:name=".Activities.QuizStart"
             android:label="@string/title_activity_view_13" >
         </activity>
         <activity
-            android:name=".view_14"
-            android:label="@string/title_activity_view_14" >
-        </activity>
-        <activity
-            android:name=".view_15"
+            android:name=".Activities.view_15"
             android:label="@string/title_activity_view_15" >
         </activity>
         <activity
-            android:name=".LevelChoice"
+            android:name=".Activities.LevelChoice"
             android:label="@string/title_activity_level_choice" >
         </activity>
         <activity
-            android:name=".uitslag_venster"
+            android:name=".Activities.uitslag_venster"
             android:label="@string/title_activity_uitslag_venster" >
         </activity>
+
         <activity
-            android:name=".Testje"
-            android:label="@string/title_activity_testje" >
-        </activity>
-        <activity
-            android:name=".Test2"
-            android:label="@string/title_activity_test2" >
-        </activity>
-        <activity
-            android:name=".Test3"
-            android:label="@string/title_activity_test3" >
+            android:name=".PageDisplay"
+            android:label="@string/title_activity_page_display" >
         </activity>
     </application>
 

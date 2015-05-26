@@ -7,7 +7,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.WindowManager;
+import android.webkit.WebView;
+
+import java.util.ArrayList;
+
+import nl.wildlands.wildlandseducation.Pinpoint.Page;
+import nl.wildlands.wildlandseducation.SQLite.PinpointsDataSource;
 
 
 public class ScreenSlidePagerActivity extends FragmentActivity {
@@ -22,6 +29,10 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
      */
     private ViewPager mPager;
 
+    private PinpointsDataSource pinpointsDataSource;
+    private ArrayList<Page> allPages;
+    private ArrayList<Page> pages;
+    private WebView wv;
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
@@ -35,6 +46,28 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // Instantiate a ViewPager and a PagerAdapter.
+        pinpointsDataSource = new PinpointsDataSource(this.getApplicationContext());
+        pinpointsDataSource.open();
+        pages = new ArrayList<Page>();
+        allPages = pinpointsDataSource.getAllPages();
+
+        long id = -1;
+        Bundle button =getIntent().getExtras();
+        if(button!=null)
+        {
+            id =button.getLong("BUTTON");
+            Log.d("id", String.valueOf(id));
+        }
+        for(Page page: allPages)
+        {
+            if(page.getId() == id)
+            {
+                pages.add(page);
+            }
+        }
+
+
+
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -63,7 +96,9 @@ public class ScreenSlidePagerActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new ScreenSlidePageFragment();
+
+               Fragment view =     new ScreenSlidePageFragment();
+            return view;
         }
 
         @Override
