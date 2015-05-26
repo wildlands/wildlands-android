@@ -148,16 +148,26 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         gaverder = (Button)findViewById(R.id.gaverder);
         gaverder.setOnClickListener(this);
 
-        if(isNetworkAvailable()) {
-            spinner.setVisibility(View.VISIBLE);
-            loadingTxt.setVisibility(View.VISIBLE);
-            new CheckVersion().execute();
+        if(((DefaultApplication)this.getApplication()).isHomeFinished())
+        {
+            logo.setVisibility(View.VISIBLE);
+            btnVerkenning.setVisibility(View.VISIBLE);
+            btnQuiz.setVisibility(View.VISIBLE);
+            animateFadeIn();
         }
-        else{
-            spinner.setVisibility(View.VISIBLE);
-            loadingTxt.setVisibility(View.VISIBLE);
-            makeToast("GEEN INTERNETVERBINDING");
-            mHandler.sendEmptyMessageDelayed(DISPLAY_DATA, MSDELAY);
+        else {
+
+
+            if (isNetworkAvailable()) {
+                spinner.setVisibility(View.VISIBLE);
+                loadingTxt.setVisibility(View.VISIBLE);
+                new CheckVersion().execute();
+            } else {
+                spinner.setVisibility(View.VISIBLE);
+                loadingTxt.setVisibility(View.VISIBLE);
+                makeToast("GEEN INTERNETVERBINDING");
+                mHandler.sendEmptyMessageDelayed(DISPLAY_DATA, MSDELAY);
+            }
         }
 
 
@@ -372,6 +382,8 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             editor.commit();
             spinner.setVisibility(View.INVISIBLE);
             loadingTxt.setVisibility(View.INVISIBLE);
+            gaverder.setVisibility(View.VISIBLE);
+            levels.setVisibility(View.VISIBLE);
             /*
             logo.setVisibility(View.VISIBLE);
             btnVerkenning.setVisibility(View.VISIBLE);
@@ -398,11 +410,13 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             case R.id.verkenning:
                 Intent h = new Intent(this, Filtermenu.class);
                 startActivity(h);
+                ((DefaultApplication)this.getApplication()).setHomeFinished(true);
                 this.finish();
                 break;
             case R.id.quiz:
                 Intent i = new Intent(this, ChooseQuizGroup.class);
                 startActivity(i);
+                ((DefaultApplication)this.getApplication()).setHomeFinished(true);
                 this.finish();
                 break;
             case R.id.gaverder:
