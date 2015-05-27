@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -102,7 +103,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
 
     private boolean pinpointsSaved;
-
+    private MediaPlayer mp;
     private static final int MSDELAY = 3000;            // Aantal ms voor het doorschakelen naar contentweergave
     private static final int DISPLAY_DATA = 1;          // Checkwaarde voor Handler
     private Handler mHandler = new Handler() {
@@ -134,6 +135,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         btnVerkenning.setOnClickListener(this);
         btnQuiz.setOnClickListener(this);
         btnCredits.setOnClickListener(this);
+
         questionArray = new JSONArray();
         jsonArray = new JSONArray();
         pinpointsSaved = false;
@@ -155,6 +157,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             logo.setVisibility(View.VISIBLE);
             btnVerkenning.setVisibility(View.VISIBLE);
             btnQuiz.setVisibility(View.VISIBLE);
+            btnCredits.setVisibility(View.VISIBLE);
             animateFadeIn();
         }
         else {
@@ -171,6 +174,22 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 mHandler.sendEmptyMessageDelayed(DISPLAY_DATA, MSDELAY);
             }
         }
+
+
+        mp = MediaPlayer.create(this, R.raw.themesong);                               // Maak een mediaplayer met het muziekje
+        mp.setVolume(0.2f, 0.2f);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+
+
+            }
+
+        });
+        mp.start();                                                                            // Start de muziek
+        mp.setLooping(true);                                                                   // Loop tot scherm wordt verlaten
 
 
     }
@@ -323,70 +342,70 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         }
     }
 
-    public void updateJSONdata(){
+    public void updateJSONdata(boolean failure){
 
-        mQuestionList = new ArrayList<HashMap<String, String>>();
-        ((DefaultApplication)this.getApplication()).setQuestionsLoaded(true);
-        try {
-            questionArray = jsonArray;
-            String baseUrl = Values.BASE_URL + Values.IMAGE_BASE;
+        if(!failure) {
+            mQuestionList = new ArrayList<HashMap<String, String>>();
+            ((DefaultApplication) this.getApplication()).setQuestionsLoaded(true);
+            try {
+                questionArray = jsonArray;
+                String baseUrl = Values.BASE_URL + Values.IMAGE_BASE;
 
-            // looping through all posts according to the json object returned
-            for (int i = 0; i < questionArray.length(); i++) {
-                JSONObject c = questionArray.getJSONObject(i);
-                String bitImage = c.getString(TAG_IMAGE);
-                JSONObject level = c.getJSONObject(TAG_LEVEL);
-                String levelnaam = level.getString("name");
-                int levelid = level.getInt("id");
-                JSONObject typeObj = c.getJSONObject("type");
-                String type = typeObj.getString("name");
-                Log.d("typenaam", type);
-                Log.d("url", bitImage);
-                String urlString = baseUrl + bitImage;
-                Log.d("urlstring", urlString);
+                // looping through all posts according to the json object returned
+                for (int i = 0; i < questionArray.length(); i++) {
+                    JSONObject c = questionArray.getJSONObject(i);
+                    String bitImage = c.getString(TAG_IMAGE);
+                    JSONObject level = c.getJSONObject(TAG_LEVEL);
+                    String levelnaam = level.getString("name");
+                    int levelid = level.getInt("id");
+                    JSONObject typeObj = c.getJSONObject("type");
+                    String type = typeObj.getString("name");
+                    Log.d("typenaam", type);
+                    Log.d("url", bitImage);
+                    String urlString = baseUrl + bitImage;
+                    Log.d("urlstring", urlString);
 
-                datasource.open();
-                Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), urlString, levelid, type);
-
-
-
-                JSONArray a = c.getJSONArray(TAG_ANSWERS);
-                for(int j = 0; j < a.length(); j++){
-                    JSONObject ans = a.getJSONObject(j);
-                    String answer = ans.getString(TAG_TEXT);
-                    boolean good = ans.getBoolean(TAG_RIGHTWRONG);
-                    Answer newAnswer = new Answer(1, addedQuestion.getId(), answer,good);
-                    Answer wut = datasource.createAnswer(newAnswer);
-                    Log.d("wut", wut.getAnswer());
+                    datasource.open();
+                    Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), urlString, levelid, type);
 
 
+                    JSONArray a = c.getJSONArray(TAG_ANSWERS);
+                    for (int j = 0; j < a.length(); j++) {
+                        JSONObject ans = a.getJSONObject(j);
+                        String answer = ans.getString(TAG_TEXT);
+                        boolean good = ans.getBoolean(TAG_RIGHTWRONG);
+                        Answer newAnswer = new Answer(1, addedQuestion.getId(), answer, good);
+                        Answer wut = datasource.createAnswer(newAnswer);
+                        Log.d("wut", wut.getAnswer());
+
+
+                    }
+                    // creating new HashMap
+                    HashMap<String, String> map = new HashMap<String, String>();
+
+                    datasource.close();
+                    //map.put(TAG_ID, text);
+                    // adding HashList to ArrayList
+                    mQuestionList.add(map);
+
+                    // annndddd, our JSON data is up to date same with our array
+                    // list
                 }
-                // creating new HashMap
-                HashMap<String, String> map = new HashMap<String, String>();
+                // Log.d("Goed vraag 1", questions.get(0).getCorrectAnswer());
 
-                datasource.close();
-                //map.put(TAG_ID, text);
-                // adding HashList to ArrayList
-                mQuestionList.add(map);
-
-                // annndddd, our JSON data is up to date same with our array
-                // list
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-           // Log.d("Goed vraag 1", questions.get(0).getCorrectAnswer());
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
 
-        if(pinpointsSaved) {
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putBoolean("questionsadded", true);
-            editor.commit();
-            spinner.setVisibility(View.INVISIBLE);
-            loadingTxt.setVisibility(View.INVISIBLE);
-            gaverder.setVisibility(View.VISIBLE);
-            levels.setVisibility(View.VISIBLE);
+            if (pinpointsSaved) {
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putBoolean("questionsadded", true);
+                editor.commit();
+                spinner.setVisibility(View.INVISIBLE);
+                loadingTxt.setVisibility(View.INVISIBLE);
+                gaverder.setVisibility(View.VISIBLE);
+                levels.setVisibility(View.VISIBLE);
             /*
             logo.setVisibility(View.VISIBLE);
             btnVerkenning.setVisibility(View.VISIBLE);
@@ -395,12 +414,27 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             */
 
 
+            } else {
+                pinpointsSaved = true;
+            }
+
         }
         else{
-            pinpointsSaved = true;
+            if (pinpointsSaved) {
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putBoolean("questionsadded", true);
+                editor.commit();
+                spinner.setVisibility(View.INVISIBLE);
+                loadingTxt.setVisibility(View.INVISIBLE);
+                gaverder.setVisibility(View.VISIBLE);
+                levels.setVisibility(View.VISIBLE);
+
+
+
+            } else {
+                pinpointsSaved = true;
+            }
         }
-
-
 
     }
 
@@ -411,7 +445,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         switch(v.getId())
         {
             case R.id.verkenning:
-                Intent h = new Intent(this, Credits.class);
+                Intent h = new Intent(this, Filtermenu.class);
                 startActivity(h);
                 ((DefaultApplication)this.getApplication()).setHomeFinished(true);
                 this.finish();
@@ -425,6 +459,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             case R.id.credits:
                 Intent k = new Intent(this, Credits.class);
                 startActivity(k);
+                ((DefaultApplication)this.getApplication()).setHomeFinished(true);
                 this.finish();
                 break;
             case R.id.gaverder:
@@ -463,6 +498,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         boolean failure = false;
 
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -476,13 +512,21 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             //Posting user data to script
             jsonArray = jsonParser.makeHttpRequest(
                     GET_QUESTION_URL, "POST", params);
-            return jsonArray.toString();
+            try {
+                if(jsonArray.getJSONObject(0).getString("error").equals("haha"))
+                {
+                    failure = true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
+            return jsonArray.toString();
         }
 
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
-            updateJSONdata();
+            updateJSONdata(failure);
 
         }
 
@@ -539,6 +583,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
     class CheckVersion extends AsyncTask<String, String, String> {
         long appVersion;
+        JSONObject versionObj = null;
 
         @Override
         protected void onPreExecute() {
@@ -547,42 +592,53 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         @Override
         protected String doInBackground(String... args) {
-            JSONObject versionObj = jsonParser.getJSONObjFromUrl(Values.BASE_URL + Values.GET_CHECKSUM);
-            Log.d("Versionjson", versionObj.toString());
-            try {
-
-                appVersion = versionObj.getLong(TAG_CHECKSUM);
-                Log.d("version", String.valueOf(appVersion));
-            } catch (JSONException e) {
-                e.printStackTrace();
+            versionObj = jsonParser.getJSONObjFromUrl(Values.BASE_URL + Values.GET_CHECKSUM);
+            if(versionObj == null)
+            {
+                logo.setVisibility(View.VISIBLE);
+                btnVerkenning.setVisibility(View.VISIBLE);
+                btnQuiz.setVisibility(View.VISIBLE);
+                btnCredits.setVisibility(View.VISIBLE);
+                animateFadeIn();
+                return "null";
             }
-            return versionObj.toString();
+            else {
+                Log.d("Versionjson", versionObj.toString());
+                try {
+
+                    appVersion = versionObj.getLong(TAG_CHECKSUM);
+                    Log.d("version", String.valueOf(appVersion));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return versionObj.toString();
+            }
 
         }
 
         protected void onPostExecute(String file_url) {
-            if(appVersion == sharedpreferences.getLong("version", 0))
-            {
-                Log.d("versie", "Versies komen overeen");
-                //logo.setVisibility(View.VISIBLE);
-               // btnVerkenning.setVisibility(View.VISIBLE);
+            if (versionObj != null) {
+                if (appVersion == sharedpreferences.getLong("version", 0)) {
+                    Log.d("versie", "Versies komen overeen");
+                    //logo.setVisibility(View.VISIBLE);
+                    // btnVerkenning.setVisibility(View.VISIBLE);
 
-                //btnQuiz.setVisibility(View.VISIBLE);
+                    //btnQuiz.setVisibility(View.VISIBLE);
 
 
-              //  animateFadeIn();
-                new GetLevels().execute();
-                gaverder.setVisibility(View.VISIBLE);
-                levels.setVisibility(View.VISIBLE);
+                    //  animateFadeIn();
+                    new GetLevels().execute();
+                    gaverder.setVisibility(View.VISIBLE);
+                    levels.setVisibility(View.VISIBLE);
 
-            }
-            else {
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putLong("version", appVersion);
-                editor.commit();
-                Log.d("Check version", String.valueOf(appVersion));
-                new Search().execute();
-                new PinpointSaver().execute();
+                } else {
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putLong("version", appVersion);
+                    editor.commit();
+                    Log.d("Check version", String.valueOf(appVersion));
+                    new Search().execute();
+                    new PinpointSaver().execute();
+                }
             }
         }
     }

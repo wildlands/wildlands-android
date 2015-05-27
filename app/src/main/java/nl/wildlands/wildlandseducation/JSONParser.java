@@ -217,11 +217,29 @@ public class JSONParser {
         // try parse the string to a JSON object
         try {
             jArray = new JSONArray(json);
-            jObj = new JSONObject(jsonSub);
-          //  Log.d("Jobj", jObj.toString());
-           // Log.d("Jarray", jArray.toString());
+
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
+            jArray = new JSONArray();
+            JSONObject error = new JSONObject();
+            try {
+                error.put("error", "haha");
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+            try {
+                jArray.put(0, error);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        try{
+            jObj = new JSONObject(jsonSub);
+        }
+        catch (JSONException e)
+        {
+
         }
 
         // return JSON String

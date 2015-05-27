@@ -359,8 +359,14 @@ public class Quiz extends Activity implements OnClickListener {
                 bush.setImageResource(R.drawable.element_06);
                 rl.setBackgroundResource(R.drawable.quiz_gradient_bruin);
             }
+            else if(type.equals("Dierenwelzijn"))
+            {
+                bush.setImageResource(R.drawable.element_dierenwelzijn);
+                rl.setBackgroundResource(R.drawable.quiz_gradient_red);
+            }
             else{
                 bush.setImageResource(R.drawable.element_04);
+                rl.setBackgroundResource(R.drawable.quiz_gradient_oranje);
             }
             answer1.setVisibility(View.VISIBLE);
             answer2.setVisibility(View.VISIBLE);
