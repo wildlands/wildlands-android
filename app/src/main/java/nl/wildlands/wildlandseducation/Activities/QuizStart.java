@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.nkzawa.socketio.client.Socket;
@@ -23,6 +24,7 @@ public class QuizStart extends Activity implements View.OnClickListener {
     Socket mSocket;
     int duration;
     Button startQuiz;
+    ImageButton quitBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,8 @@ public class QuizStart extends Activity implements View.OnClickListener {
         code = (TextView)findViewById(R.id.code);
         startQuiz = (Button)findViewById(R.id.startQuiz);
         startQuiz.setOnClickListener(this);
+        quitBtn = (ImageButton)findViewById(R.id.quitbutton);
+        quitBtn.setOnClickListener(this);
         int quizID = ((DefaultApplication)this.getApplication()).getSocketcode();
          duration = ((DefaultApplication)this.getApplication()).getDuration();
         code.setText(String.valueOf(quizID));
@@ -59,6 +63,12 @@ public class QuizStart extends Activity implements View.OnClickListener {
                 Intent scoreScreen = new Intent(this, TrackScores.class);
                 startActivity(scoreScreen);
                 this.finish();
+                break;
+            case R.id.quitbutton:
+                Intent i = new Intent(this, GenerateQuiz.class);        // Backbutton gaat naar home activity
+                startActivity(i);
+                this.finish();                                          // Beeindig deze activity
+                break;
         }
     }
 }

@@ -20,6 +20,7 @@ import nl.wildlands.wildlandseducation.R;
 public class Filtermenu extends Activity implements View.OnClickListener {
 
     private Button btnWater, btnEnergie, btnMaterialen, btnBio, btnDieren;              // De 5 buttons voor de hoofdthema's
+    private ImageButton backBtn;                                                        // backbutton om terug te kunnen
 
 
     @Override
@@ -37,6 +38,7 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         btnMaterialen = (Button)findViewById(R.id.btnMaterialen);
         btnBio = (Button)findViewById(R.id.btnBio);
         btnDieren = (Button)findViewById(R.id.btnDieren);
+        backBtn = (ImageButton)findViewById(R.id.backbutton);
 
         // De terugknop, dit is het pijltje
         ImageButton btnBack = (ImageButton)findViewById(R.id.backbutton);
@@ -53,6 +55,7 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         btnMaterialen.setOnClickListener(this);
         btnBio.setOnClickListener(this);
         btnDieren.setOnClickListener(this);
+        backBtn.setOnClickListener(this);
 
         // Begin met het infaden van de buttons.
         animateFadeIn();

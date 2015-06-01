@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -14,7 +16,7 @@ import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.R;
 
 
-public class WaitForQuizStart extends Activity {
+public class WaitForQuizStart extends Activity implements View.OnClickListener{
 
     private Socket mSocket = null;
 
@@ -46,6 +48,8 @@ public class WaitForQuizStart extends Activity {
         tv3.setTypeface(tf);
         tv4.setTypeface(tf);
         mSocket.on("startTheQuiz", onNewMessage);
+        ImageButton quitBtn = (ImageButton)findViewById(R.id.quitbutton);
+        quitBtn.setOnClickListener(this);
 
 
 
@@ -94,4 +98,16 @@ public class WaitForQuizStart extends Activity {
         this.finish();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch(v.getId())
+        {
+            case R.id.quitbutton:
+                Intent i = new Intent(this, JoinQuiz.class);            // Backbutton gaat naar join quiz activity
+                startActivity(i);
+                this.finish();                                          // Beeindig deze activity
+                break;
+
+        }
+    }
 }
