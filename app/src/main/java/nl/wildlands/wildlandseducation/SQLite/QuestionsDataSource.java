@@ -15,6 +15,7 @@ import android.util.Log;
 
 import nl.wildlands.wildlandseducation.quiz.Answer;
 import nl.wildlands.wildlandseducation.quiz.Question;
+import nl.wildlands.wildlandseducation.quiz.QuestionImage;
 
 public class QuestionsDataSource {
 
@@ -24,7 +25,7 @@ public class QuestionsDataSource {
     private String[] allColumns = { MySQLiteHelper.COLUMN_ID,
             MySQLiteHelper.COLUMN_TEXT, MySQLiteHelper.COLUMN_IMAGE, MySQLiteHelper.COLUMN_LEVEL, MySQLiteHelper.COLUMN_TYPE };
     private String[] answerColums = { MySQLiteHelper.COLUMN_ANSWER_ID, MySQLiteHelper.COLUMN_QUESTION_ID, MySQLiteHelper.COLUMN_ANSWER_TEXT, MySQLiteHelper.COLUMN_GOOD};
-
+    private String[] imageColumns = { MySQLiteHelper.COLUMN_IMAGE_ID, MySQLiteHelper.COLUMN_IMAGE_PATH, MySQLiteHelper.COLUMN_IMAGE_NAME, MySQLiteHelper.COLUMN_IMAGE_QUESTION};
 
     public QuestionsDataSource(Context context) {
         dbHelper = new MySQLiteHelper(context);
@@ -55,6 +56,24 @@ public class QuestionsDataSource {
         cursor.close();
         Log.d("Question naar opslag", newQuestion.getQuestion());
         return newQuestion;
+    }
+
+    public QuestionImage createImage(String path, String name, long id)
+    {
+        Log.d("name in opslag", name);
+        ContentValues values = new ContentValues();
+        values.put(MySQLiteHelper.COLUMN_IMAGE_PATH, path);
+        values.put(MySQLiteHelper.COLUMN_IMAGE_NAME, name);
+        values.put(MySQLiteHelper.COLUMN_IMAGE_QUESTION, id);
+        long insertId = database.insert(MySQLiteHelper.TABLE_IMAGES, null,
+                values);
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_IMAGES,
+                imageColumns, MySQLiteHelper.COLUMN_IMAGE_ID + " = " + insertId, null,
+                null, null, null);
+        cursor.moveToFirst();
+        QuestionImage newQuestionImage = cursorToQuestionImage(cursor);
+        cursor.close();
+        return newQuestionImage;
     }
 
     public Answer createAnswer(Answer answer)
@@ -99,6 +118,20 @@ public class QuestionsDataSource {
         return questions;
     }
 
+    public ArrayList<QuestionImage> getAllImages()
+    {
+        ArrayList<QuestionImage> images = new ArrayList<>();
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_IMAGES, imageColumns, null, null, null, null, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            QuestionImage questionImage = cursorToQuestionImage(cursor);
+            images.add(questionImage);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return images;
+    }
+
     public ArrayList<Answer> getAllAnswers() {
         ArrayList<Answer> answers = new ArrayList<Answer>();
 
@@ -123,6 +156,11 @@ public class QuestionsDataSource {
         return question;
     }
 
+    private QuestionImage cursorToQuestionImage(Cursor cursor)
+    {
+        QuestionImage questionImage = new QuestionImage(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getLong(3));
+        return questionImage;
+    }
     private Answer cursorToAnswer(Cursor cursor)
     {
         int good = cursor.getInt(3);

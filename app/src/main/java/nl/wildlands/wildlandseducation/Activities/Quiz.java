@@ -43,6 +43,7 @@ import nl.wildlands.wildlandseducation.R;
 import nl.wildlands.wildlandseducation.quiz.Answer;
 import nl.wildlands.wildlandseducation.quiz.Question;
 import nl.wildlands.wildlandseducation.SQLite.QuestionsDataSource;
+import nl.wildlands.wildlandseducation.quiz.QuestionImage;
 
 
 public class Quiz extends Activity implements OnClickListener {
@@ -161,7 +162,7 @@ public class Quiz extends Activity implements OnClickListener {
 
         questions = new ArrayList<Question>();
         questionAll = datasource.getAllQuestions();
-        int level = ((DefaultApplication)this.getApplication()).getLevel();
+        int level = ((DefaultApplication)this.getApplication()).getQuizLevel();
 
         for(Question question1: questionAll)
         {
@@ -200,66 +201,10 @@ public class Quiz extends Activity implements OnClickListener {
 
     }
 
-    public void updateJSONdata(){
 
-        mQuestionList = new ArrayList<HashMap<String, String>>();
-
-        try {
-            questionArray = jsonArray;
-            String baseUrl = "http://wildlands.doornbosagrait.tk/app/images/";
-
-            // looping through all posts according to the json object returned
-            for (int i = 0; i < questionArray.length(); i++) {
-                JSONObject c = questionArray.getJSONObject(i);
-                String bitImage = c.getString(TAG_IMAGE);
-                Log.d("url", bitImage);
-                String urlString = baseUrl + bitImage;
-                Log.d("urlstring", urlString);
-
-             //   datasource.createQuestion(c.getString(TAG_TEXT));
-              //  Question q = new Question(c.getString(TAG_TEXT), urlString);
-
-               // questions.add(q);
-                JSONArray a = c.getJSONArray(TAG_ANSWERS);
-                for(int j = 0; j < a.length(); j++){
-                    JSONObject ans = a.getJSONObject(j);
-                    String answer = ans.getString(TAG_TEXT);
-                    boolean good = ans.getBoolean(TAG_RIGHTWRONG);
-
-                  //  q.addAnswer(answer, good);
-
-                }
-                // creating new HashMap
-                HashMap<String, String> map = new HashMap<String, String>();
-
-                //map.put(TAG_ID, text);
-                // adding HashList to ArrayList
-                mQuestionList.add(map);
-
-                // annndddd, our JSON data is up to date same with our array
-                // list
-            }
-            Log.d("Goed vraag 1", questions.get(0).getCorrectAnswer());
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        new ImageLoader().execute();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        display(questionNumber);
-
-
-    }
 
     public void display(int i){
-
-
         int searchId = i + 1;
-
 
         if(questions.size() <= i){
             int energieCorrect = 0, energieTotaal = 0;
@@ -327,6 +272,17 @@ public class Quiz extends Activity implements OnClickListener {
         }
         else {
             Question qActual = questions.get(i);
+            String path = qActual.getImagePath();
+            ArrayList<QuestionImage> images = datasource.getAllImages();
+            for(QuestionImage questionImage: images)
+            {
+                if(questionImage.getQuestionid() == qActual.getId())
+                {
+                    Log.d("pathBijLaden", questionImage.getImagePath());
+                    loadImageFromStorage(questionImage.getImagePath(),questionImage.getImageName());
+                }
+            }
+
             long id = qActual.getId();
             ArrayList<Answer> answers1 = new ArrayList<Answer>();
             for(Answer answer: answers)
@@ -385,7 +341,7 @@ public class Quiz extends Activity implements OnClickListener {
             if(questions.get(i).getImagePath() != "") {
                // img1.setImageBitmap(questions.get(i).getBmp());
 
-                loadImageFromStorage(questions.get(i).getImagePath());
+                loadImageFromStorage(questions.get(i).getImagePath(), String.valueOf(questions.get(i).getId()));
             }
             if(answers1.size() > 0) {
                 if (answers1.size() == 3) {
@@ -484,12 +440,12 @@ public class Quiz extends Activity implements OnClickListener {
      * Load image from internal path
      * @param path
      */
-    private void loadImageFromStorage(String path)
+    private void loadImageFromStorage(String path, String name)
     {
         try {
-            File f=new File(path, "profile.png");
+            File f=new File(path, name);
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            ImageView img=(ImageView)findViewById(R.id.imageView);
+            ImageView img=(ImageView)findViewById(R.id.headerImage);
             img.setImageBitmap(b);
         }
         catch (FileNotFoundException e)
@@ -599,6 +555,7 @@ public class Quiz extends Activity implements OnClickListener {
                     ;
                     String path = saveToInternalStorage(bitmap, "picture.png");
                     question.setImagePath(path);
+                    Log.d("path", path);
                 }
             }
 
@@ -638,60 +595,5 @@ public class Quiz extends Activity implements OnClickListener {
 
 
 
-    class CheckVersion extends AsyncTask<String, String, String> implements OnClickListener {
 
-        boolean failure = false;
-        boolean loadNewData = true;
-        long appVersion;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-
-
-            JSONObject versionObj = jsonParser.getJSONObjFromUrl(Values.BASE_URL + Values.GET_CHECKSUM);
-            Log.d("Versionjson", versionObj.toString());
-            try {
-
-                appVersion = versionObj.getLong(TAG_CHECKSUM);
-                Log.d("version", String.valueOf(appVersion));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            return versionObj.toString();
-
-        }
-
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product deleted
-
-            /*
-            if(appVersion == sharedpreferences.getLong("version", 0))
-            {
-                Log.d("versie", "Versies komen overeen");
-                display(questionNumber);
-            }
-            else {
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putLong("version", appVersion);
-                editor.commit();
-                Log.d("Check version", String.valueOf(appVersion));
-                new Search().execute();
-            }*/
-
-
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
 }

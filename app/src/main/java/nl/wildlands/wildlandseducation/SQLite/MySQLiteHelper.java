@@ -13,6 +13,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     public static final String TABLE_ANSWERS = "answers";
     public static final String TABLE_PINPOINTS = "pinpoints";
     public static final String TABLE_PAGES = "pages";
+    public static final String TABLE_IMAGES = "images";
 
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_TEXT = "text";
@@ -39,7 +40,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     public static final String COLUMN_PAGE_IMAGE = "image";
     public static final String COLUMN_PAGE_TEXT = "text";
 
-
+    public static final String COLUMN_IMAGE_ID = "id";
+    public static final String COLUMN_IMAGE_PATH = "path";
+    public static final String COLUMN_IMAGE_NAME = "name";
+    public static final String COLUMN_IMAGE_QUESTION = "questionid";
 
     private static final String DATABASE_NAME = "questions.db";
     private static final int DATABASE_VERSION = 1;
@@ -64,6 +68,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             + " integer primary key autoincrement, " + COLUMN_PINPOINT + " integer, " + COLUMN_PAGE_LEVEL + " integer, "
             + COLUMN_PAGE_TITLE + " text, " + COLUMN_PAGE_IMAGE + " text, " + COLUMN_PAGE_TEXT + " text);";
 
+    private static final String DATABASE_CREATE_IMAGES = "create table "
+            + TABLE_IMAGES + "(" + COLUMN_IMAGE_ID
+            + " integer primary key autoincrement, " + COLUMN_IMAGE_PATH + " text, " + COLUMN_IMAGE_NAME + " text, " + COLUMN_IMAGE_QUESTION + " integer);";
+
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -74,6 +82,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         db.execSQL(DATABASE_CREATE_ANSWER);
         db.execSQL(DATABASE_CREATE_PINPOINT);
         db.execSQL(DATABASE_CREATE_PAGES);
+        db.execSQL(DATABASE_CREATE_IMAGES);
     }
 
     @Override
@@ -83,6 +92,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUESTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ANSWERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
         onCreate(db);
     }
 }

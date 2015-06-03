@@ -2,8 +2,12 @@ package nl.wildlands.wildlandseducation.Activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,6 +38,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,6 +143,13 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         btnQuiz.setOnClickListener(this);
         btnCredits.setOnClickListener(this);
 
+        Typeface tf = DefaultApplication.tf;
+
+        btnQuiz.setTypeface(tf);
+        btnVerkenning.setTypeface(tf);
+        btnCredits.setTypeface(tf);
+
+
         questionArray = new JSONArray();
         jsonArray = new JSONArray();
         pinpointsSaved = false;
@@ -144,13 +158,17 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         loadingTxt = (TextView)findViewById(R.id.loading);
+        loadingTxt.setTypeface(tf);
+
         questions = new ArrayList<Question>();
 
 
         levels = (Spinner)findViewById(R.id.levels_spinner);
 
+
         gaverder = (Button)findViewById(R.id.gaverder);
         gaverder.setOnClickListener(this);
+        gaverder.setTypeface(tf);
 
         if(((DefaultApplication)this.getApplication()).isHomeFinished())
         {
@@ -176,20 +194,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         }
 
 
-        mp = MediaPlayer.create(this, R.raw.themesong);                               // Maak een mediaplayer met het muziekje
-        mp.setVolume(0.2f, 0.2f);
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mp.release();
-
-
-            }
-
-        });
-        mp.start();                                                                            // Start de muziek
-        mp.setLooping(true);                                                                   // Loop tot scherm wordt verlaten
 
 
     }
@@ -268,6 +273,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         loadingTxt.setVisibility(View.INVISIBLE);
         gaverder.setVisibility(View.VISIBLE);
         levels.setVisibility(View.VISIBLE);
+        logo.setVisibility(View.VISIBLE);
 
     }
     public void updatePinpointdata() {
@@ -366,7 +372,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                     Log.d("urlstring", urlString);
 
                     datasource.open();
-                    Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), urlString, levelid, type);
+                    Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), bitImage, levelid, type);
 
 
                     JSONArray a = c.getJSONArray(TAG_ANSWERS);
@@ -383,7 +389,8 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                     // creating new HashMap
                     HashMap<String, String> map = new HashMap<String, String>();
 
-                    datasource.close();
+
+
                     //map.put(TAG_ID, text);
                     // adding HashList to ArrayList
                     mQuestionList.add(map);
@@ -391,6 +398,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                     // annndddd, our JSON data is up to date same with our array
                     // list
                 }
+                new ImageLoader().execute();
                 // Log.d("Goed vraag 1", questions.get(0).getCorrectAnswer());
 
             } catch (JSONException e) {
@@ -436,6 +444,30 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             }
         }
 
+    }
+
+    private String saveToInternalStorage(Bitmap bitmapImage, String filename){
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        Log.d("dir", directory.toString());
+        // Create imageDir
+        File mypath=new File(directory,filename);
+        Log.d("path", mypath.toString());
+
+        FileOutputStream fos = null;
+        try {
+
+            fos = new FileOutputStream(mypath);
+
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("ingesteld path", directory.getAbsolutePath());
+        return directory.getAbsolutePath();
     }
 
 
@@ -628,8 +660,8 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
                     //  animateFadeIn();
                     new GetLevels().execute();
-                    gaverder.setVisibility(View.VISIBLE);
-                    levels.setVisibility(View.VISIBLE);
+                    //gaverder.setVisibility(View.VISIBLE);
+                  //  levels.setVisibility(View.VISIBLE);
 
                 } else {
                     SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -640,6 +672,60 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                     new PinpointSaver().execute();
                 }
             }
+        }
+    }
+
+    /**
+     * Class to load the images from the right urls
+     */
+    class ImageLoader extends  AsyncTask<String, String, String> implements View.OnClickListener {
+        boolean failure = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            /**
+             * Get the image for each question
+             */
+            for(Question question: datasource.getAllQuestions()){
+                if(!question.getImage().equals("question/biodiesel.png")) {
+                    String urlString = question.getImage();
+                    Log.d("id", String.valueOf(question.getId()));
+                    Log.d("urlstring", urlString);
+                    Bitmap bitmap = null;
+                    try {
+                        URL url = new URL(urlString);
+                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+                    } catch (Exception e) {
+                        Log.d(e.toString(), e.toString());
+                    }
+                    ;
+                    String name = String.valueOf(question.getId()) + ".png";
+                    String path = saveToInternalStorage(bitmap, name);
+                    question.setImagePath(path);
+                    datasource.createImage(path,name,question.getId());
+                    Log.d("path", path);
+                }
+            }
+
+
+            return "ja";
+        }
+
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once product deleted
+
+
+        }
+
+        @Override
+        public void onClick(View v) {
+
         }
     }
 }

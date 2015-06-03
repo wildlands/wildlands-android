@@ -1,5 +1,9 @@
 package nl.wildlands.wildlandseducation.GlobalSettings;
 
+import android.graphics.Typeface;
+import android.util.Log;
+import android.widget.TextView;
+
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
@@ -7,6 +11,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.wildlands.wildlandseducation.CalligraphyConfig;
+import nl.wildlands.wildlandseducation.R;
+import nl.wildlands.wildlandseducation.TextField;
 import nl.wildlands.wildlandseducation.quiz.Question;
 
 public final class DefaultApplication extends android.app.Application {
@@ -17,12 +24,26 @@ public final class DefaultApplication extends android.app.Application {
         } catch (URISyntaxException e) {
         }
     }
+
+    public static Typeface tf;
+
     public int socketcode;
+
+    public int getQuizLevel() {
+        return quizLevel;
+    }
+
+    public void setQuizLevel(int quizLevel) {
+        this.quizLevel = quizLevel;
+    }
+
     public String socketnaam;
     public ArrayList<Question> questions;
     public boolean loaded;
     public int duration;
     public int level;
+    public int quizLevel;
+
     public boolean homeFinished;
     public HashMap<String, HashMap<Integer, Integer>> themaScores;
 
@@ -50,14 +71,24 @@ public final class DefaultApplication extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/text.ttf");
-
-        FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/text.ttf");
-        FontsOverride.setDefaultFont(this, "SERIF", "fonts/text.ttf");
-        FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/text.ttf");
+        tf = Typeface.createFromAsset(getAssets(),
+                "fonts/text.ttf");
+       FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/text.ttf");
+       FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/text.ttf");
+       FontsOverride.setDefaultFont(this, "SERIF", "fonts/text.ttf");
+       FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/text.ttf");
         questions = new ArrayList<Question>();
         themaScores = new HashMap<String, HashMap<Integer, Integer>>();
         loaded = false;
+
+        String customFont = "text.ttf";
+        CalligraphyConfig.initDefault(
+                new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/Roboto-Bold.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .addCustomStyle(TextField.class, R.attr.textFieldStyle)
+                        .build()
+        );
 
     }
 
