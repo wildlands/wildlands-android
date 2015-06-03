@@ -31,14 +31,14 @@ public class ChooseQuizGroup extends Activity implements View.OnClickListener {
 
         Button btnDocent = (Button)findViewById(R.id.docent);                   // Docentbutton uit layout
         Button btnLeerling = (Button)findViewById(R.id.leerling);               // Leerlingbutton uit layout
-        ImageButton backArrow = (ImageButton)findViewById(R.id.backbutton);     // Terugknop uit layout
+        ImageButton backBtn = (ImageButton)findViewById(R.id.quitbutton);     // Terugknop uit layout
 
         /*
         Click listeners activeren
          */
         btnDocent.setOnClickListener(this);
         btnLeerling.setOnClickListener(this);
-        backArrow.setOnClickListener(this);
+        backBtn.setOnClickListener(this);
 
         /*
         Verander het lettertype van de textview
@@ -55,7 +55,7 @@ public class ChooseQuizGroup extends Activity implements View.OnClickListener {
         System.gc();                                                    // Onnodige data verwijderen, alvorens door te gaan
         switch(v.getId())
         {
-            case R.id.backbutton:
+            case R.id.quitbutton:
                 Intent i = new Intent(this, Home.class);                // Backbutton gaat naar home activity
                 startActivity(i);
                 this.finish();                                          // Beeindig deze activity

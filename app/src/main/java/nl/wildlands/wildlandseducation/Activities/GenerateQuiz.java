@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,6 +25,8 @@ import nl.wildlands.wildlandseducation.R;
  * en deze vervolgens d.m.v. socekts wordt aangemaakt
  */
 public class GenerateQuiz extends Activity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+
+    ImageButton backBtn;                    // ImageButton om terug te gaan
 
     Button generateQuiz;                    // Button om quiz te genereren
 
@@ -69,6 +72,9 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
         generateQuiz = (Button)findViewById(R.id.generateQuiz);                         // Button voor genereren quiz
         generateQuiz.setOnClickListener(this);                                          // Activeer knopactie
 
+        backBtn = (ImageButton)findViewById(R.id.quitbutton);                           // ImageButton om terug te gaan
+        backBtn.setOnClickListener(this);                                               // Activeer knopactie
+
         bar =(SeekBar)findViewById(R.id.seekBar1);                                      // Seekbar om tijd in te stellen
 
         bar.setOnSeekBarChangeListener(this);                                           // Actie bij het veranderen van de seekbar
@@ -87,6 +93,11 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
             case R.id.generateQuiz:                                                     // Genereer quiz ingedrukt
             mSocket.emit("createQuiz","");                                              // Verzend het verzoek om een quiz te maken
                 startListening();                                                       // Wacht op bevestiging
+                break;
+            case R.id.quitbutton:
+                Intent i = new Intent(this, ChooseQuizGroup.class);                     // Backbutton gaat naar choose quiz group activity
+                startActivity(i);
+                this.finish();                                                          // Beeindig deze activity
                 break;
         }
     }

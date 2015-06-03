@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import nl.wildlands.wildlandseducation.R;
 
 public class JoinQuiz extends Activity implements View.OnClickListener {
 
+    ImageButton backBtn;                // ImageButton om terug te gaan
     Button startBtn;                    // Button om te verbinden
     EditText naam, quiz;                // Invoervelden voor naam en code
     String leerling;                    // Naam vd leerling
@@ -87,6 +89,8 @@ public class JoinQuiz extends Activity implements View.OnClickListener {
 
         startBtn = (Button)findViewById(R.id.btnStart);
         startBtn.setOnClickListener(this);
+        backBtn = (ImageButton)findViewById(R.id.quitbutton);
+        backBtn.setOnClickListener(this);
     }
 
 
@@ -131,6 +135,11 @@ public class JoinQuiz extends Activity implements View.OnClickListener {
                 {
                     makeToast("GEEN GEGEVENS INGEVULD");                             // Maak een toast met deze message
                 }
+                break;
+            case R.id.quitbutton:
+                Intent i = new Intent(this, ChooseQuizGroup.class);     // Backbutton gaat naar Choose quiz group activity
+                startActivity(i);
+                this.finish();                                          // Beeindig deze activity
                 break;
         }
     }

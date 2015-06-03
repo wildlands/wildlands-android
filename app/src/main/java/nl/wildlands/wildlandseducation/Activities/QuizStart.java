@@ -9,7 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+<<<<<<< HEAD
 import android.widget.RelativeLayout;
+=======
+import android.widget.ImageButton;
+>>>>>>> ce3ed80b59578c2eb4c9153a894c90c3facd21b5
 import android.widget.TextView;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -28,6 +32,7 @@ public class QuizStart extends Activity implements View.OnClickListener {
     Socket mSocket;
     int duration;
     Button startQuiz;
+<<<<<<< HEAD
     int topmargin;
 
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
@@ -55,6 +60,9 @@ public class QuizStart extends Activity implements View.OnClickListener {
     };
 
 
+=======
+    ImageButton quitBtn;
+>>>>>>> ce3ed80b59578c2eb4c9153a894c90c3facd21b5
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +73,8 @@ public class QuizStart extends Activity implements View.OnClickListener {
         code = (TextView)findViewById(R.id.code);
         startQuiz = (Button)findViewById(R.id.startQuiz);
         startQuiz.setOnClickListener(this);
+        quitBtn = (ImageButton)findViewById(R.id.quitbutton);
+        quitBtn.setOnClickListener(this);
         int quizID = ((DefaultApplication)this.getApplication()).getSocketcode();
          duration = ((DefaultApplication)this.getApplication()).getDuration();
         code.setText(String.valueOf(quizID));
@@ -113,6 +123,12 @@ public class QuizStart extends Activity implements View.OnClickListener {
                 Intent scoreScreen = new Intent(this, TrackScores.class);
                 startActivity(scoreScreen);
                 this.finish();
+                break;
+            case R.id.quitbutton:
+                Intent i = new Intent(this, GenerateQuiz.class);        // Backbutton gaat naar home activity
+                startActivity(i);
+                this.finish();                                          // Beeindig deze activity
+                break;
         }
     }
 }
