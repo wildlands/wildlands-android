@@ -10,6 +10,9 @@ import android.widget.TextView;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.R;
 
@@ -24,7 +27,19 @@ public class WaitForQuizStart extends Activity {
             WaitForQuizStart.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    startQuiz();
+                    JSONObject data = (JSONObject) args[0];
+                    int level;
+                    int duration;
+
+                    try {
+                        level = data.getInt("level");
+                        duration = data.getInt("duration");
+
+                    } catch (JSONException e) {
+                        return;
+                    }
+
+                    startQuiz(level, duration);
                 }
             });
         }
@@ -57,7 +72,7 @@ public class WaitForQuizStart extends Activity {
     /**
      * Functie die de quiz start
      */
-    public void startQuiz()
+    public void startQuiz(int level, int duration)
     {
         /*
         NotificationCompat.Builder mBuilder =
@@ -89,6 +104,9 @@ public class WaitForQuizStart extends Activity {
         int mId = 0;
         mNotificationManager.notify(mId, mBuilder.build());
 */
+
+        ((DefaultApplication)this.getApplication()).setQuizLevel(level);
+        ((DefaultApplication)this.getApplication()).setDuration(duration);
       Intent h = new Intent(this, Quiz.class);
       startActivity(h);
         this.finish();

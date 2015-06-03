@@ -2,12 +2,17 @@ package nl.wildlands.wildlandseducation.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 
 import org.json.JSONException;
@@ -23,6 +28,33 @@ public class QuizStart extends Activity implements View.OnClickListener {
     Socket mSocket;
     int duration;
     Button startQuiz;
+    int topmargin;
+
+    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            QuizStart.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String naam;
+
+                    try {
+                        naam = data.getString("naam");
+
+                    } catch (JSONException e) {
+                        return;
+                    }
+                    String content = naam ;
+                    addTextView(content);
+
+
+                }
+            });
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +69,29 @@ public class QuizStart extends Activity implements View.OnClickListener {
          duration = ((DefaultApplication)this.getApplication()).getDuration();
         code.setText(String.valueOf(quizID));
         mSocket = ((DefaultApplication)this.getApplicationContext()).getSocket();
+        mSocket.on("somebodyJoined", onNewMessage);
+
+        topmargin = 30;
     }
 
+    public void addTextView(String content) {
+        TextView tvnew = new TextView(this.getApplicationContext());
+        tvnew.setText(content);
+        tvnew.setTextColor(Color.parseColor("#FFE102"));
+        tvnew.setTextSize(25);
+        RelativeLayout.LayoutParams lp =
+                new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.FILL_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, topmargin, 0, 0);
+        topmargin += 70;
+        tvnew.setLayoutParams(lp);
+        tvnew.setGravity(Gravity.CENTER_HORIZONTAL);
+
+
+        RelativeLayout screen = (RelativeLayout) findViewById(R.id.scrollOverzicht);
+        screen.addView(tvnew);
+    }
 
     @Override
     public void onClick(View v) {
@@ -51,6 +104,7 @@ public class QuizStart extends Activity implements View.OnClickListener {
                 try {
                     quizData.put("quizID", quizID);
                     quizData.put("duration", duration);
+                    quizData.put("level", ((DefaultApplication)this.getApplication()).getLevel());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

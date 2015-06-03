@@ -1,28 +1,27 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
-    android:orientation="vertical"
     android:layout_height="fill_parent"
     android:background="@drawable/kaart_view"
     tools:context=".MainActivity">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height= "100dp"
-        android:layout_marginBottom="-25dp"
-        android:layout_marginTop="25dp"
-        android:id="@+id/wildlogo"
-        android:src="@drawable/element_07"
-        android:layout_gravity="center_horizontal" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/headerImage"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitStart" />
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/bush"
         android:src="@drawable/element_04"
-        android:layout_marginTop="0dp"/>
+        android:layout_marginTop="150dp"/>
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@drawable/quiz_gradient_oranje"
+        android:layout_below="@id/bush"
         android:layout_marginTop="-25dp"
         android:id="@+id/content"
 
@@ -32,7 +31,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight=".25"
-
             android:background="@null"
             >
             <RelativeLayout
@@ -138,4 +136,4 @@
 </RelativeLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="fill_parent"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/kaart_view">
+    android:background="@drawable/kaart_view"
+    tools:ignore="MissingPrefix">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height= "100dp"
@@ -23,7 +27,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="150dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:id="@+id/logo"
             android:layout_centerHorizontal="true"
             android:src="@drawable/logo"
@@ -70,34 +74,35 @@
             android:gravity="center_horizontal"
             android:visibility="invisible" />
     <Button
-        android:layout_width="200dp"
+        fontPath="fonts/Roboto-Bold.ttf"
+        android:layout_width="250dp"
         android:layout_height="50dp"
         android:background="@drawable/btn_green"
         android:id="@+id/verkenning"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/logo"
         android:text="VERKENNING"
         android:textColor="#FFFFFF"
         android:visibility="invisible" />
     <Button
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
         android:background="@drawable/btn_green"
         android:id="@+id/quiz"
         android:layout_below="@+id/verkenning"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:text="QUIZ"
         android:textColor="#FFFFFF"
         android:visibility="invisible" />
     <Button
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
         android:background="@drawable/btn_green"
         android:id="@+id/credits"
         android:layout_below="@+id/quiz"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:text="CREDITS"
         android:textColor="#FFFFFF"
