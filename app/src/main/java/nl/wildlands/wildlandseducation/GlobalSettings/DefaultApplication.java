@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import nl.wildlands.wildlandseducation.CalligraphyConfig;
 import nl.wildlands.wildlandseducation.R;
 import nl.wildlands.wildlandseducation.TextField;
 import nl.wildlands.wildlandseducation.quiz.Question;
@@ -82,13 +81,7 @@ public final class DefaultApplication extends android.app.Application {
         loaded = false;
 
         String customFont = "text.ttf";
-        CalligraphyConfig.initDefault(
-                new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/Roboto-Bold.ttf")
-                        .setFontAttrId(R.attr.fontPath)
-                        .addCustomStyle(TextField.class, R.attr.textFieldStyle)
-                        .build()
-        );
+
 
     }
 
