@@ -46,6 +46,8 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         // Verander het lettertype van de tekst
         TextView tv = (TextView)findViewById(R.id.themaKiezen);
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
+        Typeface tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
+
         tv.setTypeface(tf);
 
         // Zet de clicklisteners van de buttons aan
@@ -57,6 +59,11 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         btnDieren.setOnClickListener(this);
         backBtn.setOnClickListener(this);
 
+        btnWater.setTypeface(tf2);
+        btnEnergie.setTypeface(tf2);
+        btnMaterialen.setTypeface(tf2);
+        btnBio.setTypeface(tf2);
+        btnDieren.setTypeface(tf2);
         // Begin met het infaden van de buttons.
         animateFadeIn();
 

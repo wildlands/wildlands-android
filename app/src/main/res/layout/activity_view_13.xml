@@ -37,7 +37,7 @@
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:background="@drawable/btn_green"
-        android:text="START     QUIZ"
+        android:text="START QUIZ"
         android:textColor="#ffffff"
         android:id="@+id/startQuiz"
         android:layout_centerHorizontal="true"

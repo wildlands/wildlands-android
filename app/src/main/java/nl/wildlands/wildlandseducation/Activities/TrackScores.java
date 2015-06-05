@@ -1,6 +1,7 @@
 package nl.wildlands.wildlandseducation.Activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,7 +28,7 @@ import nl.wildlands.wildlandseducation.R;
 public class TrackScores extends Activity implements View.OnClickListener{
 
     Socket mSocket;
-    Button closeSocket;
+    ImageButton quitButton;
     TextView tv;
     int topmargin;
     private int aantalCorrect, totaal;
@@ -75,6 +77,9 @@ public class TrackScores extends Activity implements View.OnClickListener{
 
         leerlingen = new HashMap<String, TextView>();
 
+        quitButton = (ImageButton)findViewById(R.id.quitbutton);
+        quitButton.setOnClickListener(this);
+
         mSocket = ((DefaultApplication)this.getApplication()).getSocket();
         mSocket.on("receiveAnswer", onNewMessage);
 
@@ -112,7 +117,18 @@ public class TrackScores extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch(v.getId())
         {
-
+            case R.id.quitbutton:
+                JSONObject bericht = new JSONObject();
+                try {
+                    bericht.put("quizID", ((DefaultApplication)this.getApplication()).getSocketcode());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mSocket.emit("abortQuiz", bericht);
+                Intent start = new Intent(this, QuizStart.class);
+                startActivity(start);
+                this.finish();
+                break;
         }
     }
 }

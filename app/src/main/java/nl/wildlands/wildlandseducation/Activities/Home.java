@@ -262,6 +262,8 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_dropdown_tv, spinnerArray); //selected item will look like a spinner set from XML
             spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            
+
             levels.setAdapter(spinnerArrayAdapter);
             levels.setOnItemSelectedListener(this);
 
@@ -271,6 +273,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         spinner.setVisibility(View.INVISIBLE);
         loadingTxt.setVisibility(View.INVISIBLE);
+
         gaverder.setVisibility(View.VISIBLE);
         levels.setVisibility(View.VISIBLE);
         logo.setVisibility(View.VISIBLE);
@@ -332,16 +335,17 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             editor.putBoolean("questionsadded", true);
             editor.commit();
 
-            spinner.setVisibility(View.INVISIBLE);
-            loadingTxt.setVisibility(View.INVISIBLE);
+          //  spinner.setVisibility(View.INVISIBLE);
+           // loadingTxt.setVisibility(View.INVISIBLE);
+            new GetLevels().execute();
             /*
             logo.setVisibility(View.VISIBLE);
             btnVerkenning.setVisibility(View.VISIBLE);
             btnQuiz.setVisibility(View.VISIBLE);
             animateFadeIn();
             */
-            gaverder.setVisibility(View.VISIBLE);
-            levels.setVisibility(View.VISIBLE);
+           // gaverder.setVisibility(View.VISIBLE);
+            //levels.setVisibility(View.VISIBLE);
         }
         else{
             pinpointsSaved = true;
@@ -410,10 +414,11 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putBoolean("questionsadded", true);
                 editor.commit();
-                spinner.setVisibility(View.INVISIBLE);
-                loadingTxt.setVisibility(View.INVISIBLE);
-                gaverder.setVisibility(View.VISIBLE);
-                levels.setVisibility(View.VISIBLE);
+               // spinner.setVisibility(View.INVISIBLE);
+                //loadingTxt.setVisibility(View.INVISIBLE);
+                //gaverder.setVisibility(View.VISIBLE);
+                //levels.setVisibility(View.VISIBLE);
+                new GetLevels().execute();
             /*
             logo.setVisibility(View.VISIBLE);
             btnVerkenning.setVisibility(View.VISIBLE);
@@ -433,7 +438,9 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 editor.putBoolean("questionsadded", true);
                 editor.commit();
                 spinner.setVisibility(View.INVISIBLE);
+
                 loadingTxt.setVisibility(View.INVISIBLE);
+
                 gaverder.setVisibility(View.VISIBLE);
                 levels.setVisibility(View.VISIBLE);
 

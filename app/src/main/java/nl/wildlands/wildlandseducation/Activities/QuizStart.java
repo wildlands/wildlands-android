@@ -3,17 +3,15 @@ package nl.wildlands.wildlandseducation.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-<<<<<<< HEAD
 import android.widget.RelativeLayout;
-=======
 import android.widget.ImageButton;
->>>>>>> ce3ed80b59578c2eb4c9153a894c90c3facd21b5
 import android.widget.TextView;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -21,6 +19,8 @@ import com.github.nkzawa.socketio.client.Socket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.R;
@@ -30,10 +30,11 @@ public class QuizStart extends Activity implements View.OnClickListener {
 
     TextView code;
     Socket mSocket;
+    private ArrayList<String> studenten;
     int duration;
     Button startQuiz;
-<<<<<<< HEAD
     int topmargin;
+    Typeface tf, tf2;
 
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
@@ -59,10 +60,31 @@ public class QuizStart extends Activity implements View.OnClickListener {
         }
     };
 
+    private Emitter.Listener leftMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            QuizStart.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String naam;
+                    try {
+                        naam = data.getString("naam");
 
-=======
+                    } catch (JSONException e) {
+                        return;
+                    }
+                    String content = naam ;
+                    removeStudent(content);
+                }
+            });
+        }
+    };
+
+
+
     ImageButton quitBtn;
->>>>>>> ce3ed80b59578c2eb4c9153a894c90c3facd21b5
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +92,7 @@ public class QuizStart extends Activity implements View.OnClickListener {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        studenten = new ArrayList<String>();
         code = (TextView)findViewById(R.id.code);
         startQuiz = (Button)findViewById(R.id.startQuiz);
         startQuiz.setOnClickListener(this);
@@ -80,14 +103,36 @@ public class QuizStart extends Activity implements View.OnClickListener {
         code.setText(String.valueOf(quizID));
         mSocket = ((DefaultApplication)this.getApplicationContext()).getSocket();
         mSocket.on("somebodyJoined", onNewMessage);
+        mSocket.on("somebodyLeaved", leftMessage);
 
         topmargin = 30;
+
+        tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
+        tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
+
+
+        code.setTypeface(tf2);
+        startQuiz.setTypeface(tf2);
+
+    }
+
+    public void removeStudent(String name)
+    {
+        studenten.remove(name);
+        RelativeLayout screen = (RelativeLayout) findViewById(R.id.scrollOverzicht);
+        screen.removeAllViews();
+        for(String student: studenten)
+        {
+            addTextView(student);
+        }
     }
 
     public void addTextView(String content) {
         TextView tvnew = new TextView(this.getApplicationContext());
         tvnew.setText(content);
+        studenten.add(content);
         tvnew.setTextColor(Color.parseColor("#FFE102"));
+        tvnew.setTypeface(tf);
         tvnew.setTextSize(25);
         RelativeLayout.LayoutParams lp =
                 new RelativeLayout.LayoutParams(
@@ -98,9 +143,9 @@ public class QuizStart extends Activity implements View.OnClickListener {
         tvnew.setLayoutParams(lp);
         tvnew.setGravity(Gravity.CENTER_HORIZONTAL);
 
-
         RelativeLayout screen = (RelativeLayout) findViewById(R.id.scrollOverzicht);
         screen.addView(tvnew);
+
     }
 
     @Override

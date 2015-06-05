@@ -8,12 +8,13 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:background="@drawable/element_02"
+        android:id="@+id/bush"
         android:layout_marginTop="100dp"/>
     <ImageView
         android:layout_width="150dp"
         android:layout_height="120dp"
         android:background="@drawable/element_07"
-        android:id="@+id/bush"
+        android:id="@+id/logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="125dp"/>
@@ -22,7 +23,7 @@
         android:layout_height="fill_parent"
         android:layout_below="@+id/bush"
         android:background="#999999"
-        android:layout_marginTop="25dp"/>
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="100dp"
@@ -48,7 +49,7 @@
         android:layout_height="50dp"
         android:id="@+id/docent"
         android:background="@drawable/btn_green"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/leerling"
         android:layout_centerHorizontal="true"
         android:text="DOCENT"
@@ -58,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         layout="@layout/quit_button"
-        android:layout_alignTop="@+id/bush"
+        android:layout_alignTop="@+id/logo"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

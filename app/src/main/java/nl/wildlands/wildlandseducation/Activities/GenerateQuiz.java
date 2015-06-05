@@ -2,6 +2,7 @@ package nl.wildlands.wildlandseducation.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,7 +35,7 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
 
     private SeekBar bar;                    // Seekbar om tijd dynamisch in te stellen
 
-    private TextView textProgress;          // TextView voor weergave huidige tijdsinput
+    private TextView textProgress, genereerQuiz,tijd;          // TextView voor weergave huidige tijdsinput
 
     /**
      * Actie die voltrokken wordt, als de socket een bepaald bericht krijgt
@@ -80,6 +81,17 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
         bar.setOnSeekBarChangeListener(this);                                           // Actie bij het veranderen van de seekbar
 
         textProgress = (TextView)findViewById(R.id.textView3);                          // Tekst voor de actuele tijdsinstelling
+        genereerQuiz = (TextView)findViewById(R.id.textView1);
+        tijd = (TextView)findViewById(R.id.textView2);
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
+
+        genereerQuiz.setTypeface(tf);
+        tijd.setTypeface(tf);
+
+        Typeface tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
+        generateQuiz.setTypeface(tf2);
+        textProgress.setTypeface(tf2);
 
         mSocket = ((DefaultApplication)this.getApplicationContext()).getSocket();       // Vraag de centrale socket op
         mSocket.connect();                                                              // Maak verbinding met de server

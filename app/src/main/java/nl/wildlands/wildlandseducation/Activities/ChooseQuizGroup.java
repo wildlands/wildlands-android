@@ -47,6 +47,10 @@ public class ChooseQuizGroup extends Activity implements View.OnClickListener {
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
         tv.setTypeface(tf);
 
+        Typeface tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
+        btnDocent.setTypeface(tf2);
+        btnLeerling.setTypeface(tf2);
+
     }
 
 

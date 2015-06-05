@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class uitslag_venster extends Activity {
     ImageView bush;
     RelativeLayout alertView;
     int totaalGoed, beantwoord;
+    int scoreNiveau;
     final Context context = this;
     LinearLayout layoutOfPopup; PopupWindow popupMessage; Button popupButton, insidePopupButton; TextView popupText;
 
@@ -99,29 +101,34 @@ public class uitslag_venster extends Activity {
                 {
                     info = "Oeij! Jouw uitslag is niet zo goed. Je kunt het beste nog een keer naar op verkenning gaan bij de thema's";
                     alertView.setBackgroundResource(R.drawable.alert_red);
+                    scoreNiveau = 0;
                 }
                 else if(geheelPercentage >= 30 && geheelPercentage < 55)
                 {
                     info = "Jammer, net niet! Jouw uitslag is net geen voldoende. Je kunt het beste nog een keer naar op verkenning gaan bij de volgende thema's";
                     alertView.setBackgroundResource(R.drawable.alert_orange);
+                    scoreNiveau = 1;
                 }
                 else if(geheelPercentage >= 55 && geheelPercentage < 80)
                 {
                     info = "Yes, voldoende! Als je wilt kun je het beste nog een keer naar op verkenning gaan bij de volgende thema's";
                     alertView.setBackgroundResource(R.drawable.alert_yellow);
+                    scoreNiveau = 2;
                 }
-                else if(geheelPercentage >= 80)
+                else if(geheelPercentage >= 80 && geheelPercentage < 100)
                 {
                     info ="Geweldig, jij hebt een goed! Bij de volgende thema's heb je misschien iets laten liggen:";
                     alertView.setBackgroundResource(R.drawable.alert_green);
+                    scoreNiveau = 3;
                 }
                 else if(geheelPercentage == 100)
                 {
                     info ="SUPER!!!! Alles goed! Jij bent waarschijnlijk een Ecologisch wezen!";
                     alertView.setBackgroundResource(R.drawable.alert_extra_green);
+                    scoreNiveau = 4;
                 }
                 alertText.setText(info);
-                showAlert(info);
+                showAlert(info, scoreNiveau);
             }
 
         }
@@ -133,7 +140,7 @@ public class uitslag_venster extends Activity {
 
     }
 
-    public void showAlert(String info)
+    public void showAlert(String info, int niveau)
     {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
@@ -144,27 +151,74 @@ public class uitslag_venster extends Activity {
 
         View resultsView = LayoutInflater.from(getBaseContext()).inflate(R.layout.custom_alert,
             null);
+        TextView title = (TextView)resultsView.findViewById(R.id.titleAlert);
+        String image = "";
 
+
+        if(niveau == 0) {
+            resultsView.setBackgroundResource(R.drawable.alert_red);
+            title.setText("SLECHT");
+            image = "thumbs";
+        }
+        else if(niveau == 1)
+        {
+            resultsView.setBackgroundResource(R.drawable.alert_orange);
+            title.setText("ONVOLDOENDE");
+            image = "thumbs";
+        }
+        else if(niveau == 2)
+        {
+            resultsView.setBackgroundResource(R.drawable.alert_yellow);
+            title.setText("VOLDOENDE");
+            image = "check";
+        }
+        else if(niveau == 3)
+        {
+            resultsView.setBackgroundResource(R.drawable.alert_green);
+            title.setText("GOED");
+            image = "check";
+        }
+        else if(niveau == 4)
+        {
+            resultsView.setBackgroundResource(R.drawable.alert_extra_green);
+            title.setText("SUPER");
+            image = "thumbsUp";
+        }
 
 
         // set dialog message
         alertDialogBuilder
                 .setView(resultsView)
-
-
                 .setCancelable(false)
-                .setPositiveButton("Oke", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, close
-                        // current activity
-                        dialog.dismiss();
-
-                    }
-                });
+               ;
 
         // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        final AlertDialog alertDialog = alertDialogBuilder.create();
         TextView tv = (TextView)resultsView.findViewById(R.id.alertTextDialog);
+        Button dismiss = (Button)resultsView.findViewById(R.id.alertBtn);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
+        TextView alertImage = (TextView)resultsView.findViewById(R.id.alertImage);
+        String string = "";
+        if(image.equals("thumbs")) {
+            string = getString(R.string.thumbs);
+        }
+        else if(image.equals("check"))
+        {
+            string = getString(R.string.check);
+        }
+        else{
+            string = getString(R.string.thumbsUp);
+        }
+        alertImage.setText(string);
+        alertImage.setTypeface(font);
+
         tv.setText(info);
 
 

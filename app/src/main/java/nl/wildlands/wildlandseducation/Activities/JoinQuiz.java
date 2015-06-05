@@ -83,14 +83,21 @@ public class JoinQuiz extends Activity implements View.OnClickListener {
         tv2.setTypeface(tf);
         tv3.setTypeface(tf);
 
+
+
+
         // Zet de invoer van de naam op alleen hoofdletters om het lettertype mooi te laten lijken
-        EditText naam = (EditText)findViewById(R.id.editText);
         naam.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
 
         startBtn = (Button)findViewById(R.id.btnStart);
         startBtn.setOnClickListener(this);
         backBtn = (ImageButton)findViewById(R.id.quitbutton);
         backBtn.setOnClickListener(this);
+
+        Typeface tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
+        naam.setTypeface(tf2);
+        quiz.setTypeface(tf2);
+        startBtn.setTypeface(tf2);
     }
 
 

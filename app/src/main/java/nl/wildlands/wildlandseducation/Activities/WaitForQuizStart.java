@@ -62,6 +62,8 @@ public class WaitForQuizStart extends Activity implements View.OnClickListener{
         tv2.setTypeface(tf);
         tv3.setTypeface(tf);
         tv4.setTypeface(tf);
+
+
         mSocket.on("startTheQuiz", onNewMessage);
         ImageButton quitBtn = (ImageButton)findViewById(R.id.quitbutton);
         quitBtn.setOnClickListener(this);
@@ -111,6 +113,7 @@ public class WaitForQuizStart extends Activity implements View.OnClickListener{
 
         ((DefaultApplication)this.getApplication()).setQuizLevel(level);
         ((DefaultApplication)this.getApplication()).setDuration(duration);
+        mSocket.off("startTheQuiz", onNewMessage);
       Intent h = new Intent(this, Quiz.class);
       startActivity(h);
         this.finish();
@@ -121,6 +124,16 @@ public class WaitForQuizStart extends Activity implements View.OnClickListener{
         switch(v.getId())
         {
             case R.id.quitbutton:
+                int quizCode = ((DefaultApplication) this.getApplication()).getSocketcode();
+                String naam =((DefaultApplication)this.getApplication()).getSocketnaam();
+                JSONObject bericht = new JSONObject();
+                try {
+                    bericht.put("quizID", quizCode);
+                    bericht.put("naam", naam);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mSocket.emit("leaveQuiz", bericht);
                 Intent i = new Intent(this, JoinQuiz.class);            // Backbutton gaat naar join quiz activity
                 startActivity(i);
                 this.finish();                                          // Beeindig deze activity

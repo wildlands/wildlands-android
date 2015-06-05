@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/kaart_view"
@@ -10,20 +8,20 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height= "100dp"
-        android:layout_marginBottom="-25dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
         android:id="@+id/wildlogo"
         android:src="@drawable/element_07"/>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
         android:layout_below="@+id/wildlogo"
         android:id="@+id/bush"
         android:src="@drawable/element_01"
-        android:layout_marginTop="0dp"/>
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="-10dp" />
 
-    <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="@drawable/home_bg_color" android:layout_below="@+id/bush" android:layout_marginTop="-25dp">
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="@drawable/home_bg_color" android:layout_below="@id/bush">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="150dp"

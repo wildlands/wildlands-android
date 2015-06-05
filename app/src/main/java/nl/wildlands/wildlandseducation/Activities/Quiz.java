@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 
 import org.json.JSONArray;
@@ -55,6 +56,18 @@ public class Quiz extends Activity implements OnClickListener {
     public static final String MyPREFERENCES = "MyPrefs" ;              // String to get sharedprefs
     private Socket socket;
 
+
+    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Quiz.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    abortQuiz();
+                }
+            });
+        }
+    };
     // Url to get JSON
     private static final String GET_QUESTION_URL = "http://wildlands.doornbosagrait.tk/api/api.php?c=GetAllQuestions";
 
@@ -197,11 +210,19 @@ public class Quiz extends Activity implements OnClickListener {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(0);
 
+        socket.on("quizAborted", onNewMessage);
+
        // new CheckVersion().execute();
 
     }
 
 
+    public void abortQuiz()
+    {
+        Intent wait = new Intent(this, WaitForQuizStart.class);
+        startActivity(wait);
+        this.finish();
+    }
 
     public void display(int i){
         int searchId = i + 1;
@@ -370,7 +391,7 @@ public class Quiz extends Activity implements OnClickListener {
     public void onWindowFocusChanged(boolean hasFocus) {
         if(hasFocus == false)
         {
-            socket.disconnect();
+           // socket.disconnect();
         }
     }
 
