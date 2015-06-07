@@ -152,6 +152,7 @@ public class uitslag_venster extends Activity {
         View resultsView = LayoutInflater.from(getBaseContext()).inflate(R.layout.custom_alert,
             null);
         TextView title = (TextView)resultsView.findViewById(R.id.titleAlert);
+        title.setTypeface(DefaultApplication.tf);
         String image = "";
 
 

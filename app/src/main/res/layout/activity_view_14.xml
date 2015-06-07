@@ -33,18 +33,28 @@
             android:layout_height="wrap_content"
             android:id="@+id/quizoverzicht"
             android:layout_marginTop="20dp"
+            android:textStyle="italic"
             android:textColor="#FFE102"
             android:textSize="35dp"
             android:text=" QUIZ OVERZICHT "
             android:gravity="center"
             android:layout_centerHorizontal="true"/>
 
+        <ProgressBar
+            android:layout_width="300dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/pb"
+            android:layout_below="@id/quizoverzicht"
+            style="@android:style/Widget.ProgressBar.Horizontal"/>
+
 
 
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@+id/quizoverzicht"
+            android:layout_below="@+id/pb"
             android:layout_weight=".25"
             android:background="@null"
             android:foregroundGravity="center_horizontal">
@@ -63,6 +73,20 @@
         layout="@layout/quit_button"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:id="@+id/include" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:background="@null"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:id="@+id/skipButton"
+        android:text="@string/skip"
+        android:layout_alignBottom="@+id/include"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

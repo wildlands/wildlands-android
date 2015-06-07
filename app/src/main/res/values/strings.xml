@@ -34,5 +34,9 @@
     <string name="thumbs">&#xf165;</string>
     <string name="check">&#xf00c;</string>
     <string name="thumbsUp">&#xf091;</string>
+    <string name="user">&#xf007;</string>
+    <string name="question">&#xf128;</string>
+    <string name="skip">&#xf050;</string>
+    <string name="title_activity_test_map">TestMap</string>
 
 </resources>

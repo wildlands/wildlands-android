@@ -2,7 +2,7 @@
     android:id="@android:id/text1"
     style="?android:attr/spinnerItemStyle"
     android:singleLine="true"
-    android:layout_width="200dp"
+    android:layout_width="230dp"
     android:layout_height="50dp"
     android:textSize="30dp"
     android:background="@drawable/btn_grey"

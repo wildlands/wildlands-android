@@ -31,7 +31,7 @@ public class ChooseQuizGroup extends Activity implements View.OnClickListener {
 
         Button btnDocent = (Button)findViewById(R.id.docent);                   // Docentbutton uit layout
         Button btnLeerling = (Button)findViewById(R.id.leerling);               // Leerlingbutton uit layout
-        ImageButton backBtn = (ImageButton)findViewById(R.id.quitbutton);     // Terugknop uit layout
+        ImageButton backBtn = (ImageButton)findViewById(R.id.backbutton);     // Terugknop uit layout
 
         /*
         Click listeners activeren
@@ -59,7 +59,7 @@ public class ChooseQuizGroup extends Activity implements View.OnClickListener {
         System.gc();                                                    // Onnodige data verwijderen, alvorens door te gaan
         switch(v.getId())
         {
-            case R.id.quitbutton:
+            case R.id.backbutton:
                 Intent i = new Intent(this, Home.class);                // Backbutton gaat naar home activity
                 startActivity(i);
                 this.finish();                                          // Beeindig deze activity

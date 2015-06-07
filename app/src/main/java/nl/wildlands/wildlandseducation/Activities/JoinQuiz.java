@@ -87,7 +87,11 @@ public class JoinQuiz extends Activity implements View.OnClickListener {
 
 
         // Zet de invoer van de naam op alleen hoofdletters om het lettertype mooi te laten lijken
-        naam.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
+
+        InputFilter[] filters = new InputFilter[2];
+        filters[0] = new InputFilter.LengthFilter(25);
+        filters[1] = new InputFilter.AllCaps();
+        naam.setFilters(filters);
 
         startBtn = (Button)findViewById(R.id.btnStart);
         startBtn.setOnClickListener(this);

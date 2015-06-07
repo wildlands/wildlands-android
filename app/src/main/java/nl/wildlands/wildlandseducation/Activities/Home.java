@@ -1,6 +1,7 @@
 package nl.wildlands.wildlandseducation.Activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -90,6 +91,8 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
     private ArrayList<Question> questions;
 
+    private Context context = this;
+
     private QuestionsDataSource datasource;
     private PinpointsDataSource pinpointsDataSource;
 
@@ -124,6 +127,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         }
     };
 
+    private Typeface tf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.gc();
@@ -143,7 +147,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         btnQuiz.setOnClickListener(this);
         btnCredits.setOnClickListener(this);
 
-        Typeface tf = DefaultApplication.tf;
+        tf = DefaultApplication.tf;
 
         btnQuiz.setTypeface(tf);
         btnVerkenning.setTypeface(tf);
@@ -246,7 +250,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         try {
             JSONArray levelArray = jsonArrayLevels;
             ArrayList<String> spinnerArray = new ArrayList<String>();
-
+            spinnerArray.add("SELECTEER NIVEAU");
             for (int i = 0; i < levelArray.length(); i++)
             {
                 JSONObject c = levelArray.getJSONObject(i);
@@ -260,9 +264,9 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 spinnerArray.add(content);
             }
 
-            ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_dropdown_tv, spinnerArray); //selected item will look like a spinner set from XML
+            MySpinnerAdapter spinnerArrayAdapter = new MySpinnerAdapter(this, R.layout.spinner_dropdown_tv, spinnerArray); //selected item will look like a spinner set from XML
             spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            
+
 
             levels.setAdapter(spinnerArrayAdapter);
             levels.setOnItemSelectedListener(this);
@@ -277,6 +281,44 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         gaverder.setVisibility(View.VISIBLE);
         levels.setVisibility(View.VISIBLE);
         logo.setVisibility(View.VISIBLE);
+        //startAlertdialog();
+
+    }
+
+    public void startAlertdialog()
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = this.getLayoutInflater();
+        // set title
+
+        View resultsView = LayoutInflater.from(getBaseContext()).inflate(R.layout.custom_alert,
+                null);
+        TextView title = (TextView)resultsView.findViewById(R.id.titleAlert);
+        resultsView.setBackgroundResource(R.drawable.alert_niveau);
+        title.setText("NIVEAU");
+        title.setTypeface(tf);
+
+        alertDialogBuilder
+                .setView(resultsView)
+                .setCancelable(false)
+        ;
+
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        TextView tv = (TextView)resultsView.findViewById(R.id.alertTextDialog);
+        Button dismiss = (Button)resultsView.findViewById(R.id.alertBtn);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        tv.setText("Je moet een niveau selecteren");
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
+        TextView alertImage = (TextView)resultsView.findViewById(R.id.alertImage);
+        alertImage.setText(getString(R.string.user));
+        alertImage.setTypeface(font);
+        alertDialog.show();
 
     }
     public void updatePinpointdata() {
@@ -502,14 +544,19 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 this.finish();
                 break;
             case R.id.gaverder:
-                ((DefaultApplication)this.getApplication()).setLevel(selectedLevel);
-                gaverder.setVisibility(View.INVISIBLE);
-                levels.setVisibility(View.INVISIBLE);
-                logo.setVisibility(View.VISIBLE);
-                btnVerkenning.setVisibility(View.VISIBLE);
-                btnQuiz.setVisibility(View.VISIBLE);
-                btnCredits.setVisibility(View.VISIBLE);
-                animateFadeIn();
+                if(selectedLevel > 1) {
+                    ((DefaultApplication) this.getApplication()).setLevel(selectedLevel);
+                    gaverder.setVisibility(View.INVISIBLE);
+                    levels.setVisibility(View.INVISIBLE);
+                    logo.setVisibility(View.VISIBLE);
+                    btnVerkenning.setVisibility(View.VISIBLE);
+                    btnQuiz.setVisibility(View.VISIBLE);
+                    btnCredits.setVisibility(View.VISIBLE);
+                    animateFadeIn();
+                }
+                else{
+                    startAlertdialog();
+                }
 
                 break;
         }
@@ -733,6 +780,34 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         @Override
         public void onClick(View v) {
 
+        }
+    }
+
+    private static class MySpinnerAdapter extends ArrayAdapter<String> {
+        // Initialise custom font, for example:
+        Typeface font = DefaultApplication.tf;
+
+        // (In reality I used a manager which caches the Typeface objects)
+        // Typeface font = FontManager.getInstance().getFont(getContext(), BLAMBOT);
+
+        private MySpinnerAdapter(Context context, int resource, List<String> items) {
+            super(context, resource, items);
+        }
+
+        // Affects default (closed) state of the spinner
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView view = (TextView) super.getView(position, convertView, parent);
+            view.setTypeface(font);
+            return view;
+        }
+
+        // Affects opened state of the spinner
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            TextView view = (TextView) super.getDropDownView(position, convertView, parent);
+            view.setTypeface(font);
+            return view;
         }
     }
 }

@@ -17,6 +17,7 @@ package nl.wildlands.wildlandseducation.MapAssets;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -27,6 +28,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -36,20 +38,25 @@ import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import nl.wildlands.wildlandseducation.Activities.Kaart;
+import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.PageDisplay;
 import nl.wildlands.wildlandseducation.R;
 
@@ -361,13 +368,15 @@ public class GestureImageView extends ImageView{
     }
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void startPopUp(long id)
     {
+        /*
         Intent h = new Intent(context, PageDisplay.class);
         h.putExtra("BUTTON", id);
         h.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(h);
+        */
+
         //RelativeLayout rlTotal = new RelativeLayout(context);
         /*
         HorizontalScrollView hScroll = new HorizontalScrollView(context);
@@ -422,6 +431,8 @@ public class GestureImageView extends ImageView{
         */
 
     }
+
+
 
 	protected void computeStartingScale(int imageWidth, int imageHeight, int measuredWidth, int measuredHeight) {
 		switch(getScaleType()) {
