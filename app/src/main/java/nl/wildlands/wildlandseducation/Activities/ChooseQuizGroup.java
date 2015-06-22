@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.R;
 
 /**
@@ -44,12 +45,10 @@ public class ChooseQuizGroup extends Activity implements View.OnClickListener {
         Verander het lettertype van de textview
          */
         TextView tv = (TextView)findViewById(R.id.ikben);
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
-        tv.setTypeface(tf);
+        tv.setTypeface(DefaultApplication.tf2);
 
-        Typeface tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
-        btnDocent.setTypeface(tf2);
-        btnLeerling.setTypeface(tf2);
+        btnDocent.setTypeface(DefaultApplication.tf);
+        btnLeerling.setTypeface(DefaultApplication.tf);
 
     }
 

@@ -34,7 +34,7 @@ public class SplashScreen extends Activity {
 
             if (msg.what == DISPLAY_DATA)
             {
-                startKaart();                       // Roep functie aan na splashtijd
+                startHome();                       // Roep functie aan na splashtijd
             }
         }
     };
@@ -42,13 +42,10 @@ public class SplashScreen extends Activity {
     /**
      * Functie die de kaart activiteit start
      */
-    public void startKaart()
+    public void startHome()
     {
-        //Intent h = new Intent(this, Home.class);
-        //startActivity(h);
-        Intent level = new Intent(this, Home.class);
-        Intent credits = new Intent(this, Credits.class);
-        startActivity(level);
+        Intent home = new Intent(this, Home.class);
+        startActivity(home);
 
         this.finish();
     }

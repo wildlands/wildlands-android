@@ -17,6 +17,11 @@ public class GPSTracker extends Service {
     private LocationListener listener;
     private LocationManager locationManager;
 
+    /**
+     * Maak een nieuwe gpstracker aan
+     * @param context
+     * @param listener
+     */
     public GPSTracker(Context context, LocationListener listener) {
         this.context = context;
         this.listener = listener;
@@ -27,16 +32,27 @@ public class GPSTracker extends Service {
         usedProvider = locationManager.getBestProvider(criteria, true);
     }
 
+    /**
+     *
+     * @return laatste locatie
+     */
     public Location getLastKnownLocation() {
         return locationManager.getLastKnownLocation(usedProvider);
     }
 
+    /**
+     * Begin met het bijhouden van locatie
+     * @throws GPSNotEnabledException
+     */
     public void startTracking() throws GPSNotEnabledException {
         if (!locationManager.isProviderEnabled(usedProvider))
             throw new GPSNotEnabledException();
         locationManager.requestLocationUpdates(usedProvider, 0, 0, listener);
     }
 
+    /**
+     * Stop met het bijhouden van locatie
+     */
     public void stopTracking() {
         locationManager.removeUpdates(listener);
     }

@@ -11,6 +11,7 @@ import android.widget.ImageView;
  */
 public class Page {
 
+    // private fields
     private long id;
     private long pinpointid;
     private int level;
@@ -28,7 +29,7 @@ public class Page {
         this.title = title;
     }
 
-
+// Getters en setters
     public String getText() {
         return text;
     }

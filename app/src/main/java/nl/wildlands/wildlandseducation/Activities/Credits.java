@@ -28,7 +28,7 @@ public class Credits extends Activity implements View.OnClickListener {
         ImageButton backbutton = (ImageButton)findViewById(R.id.backbutton);                   // Backbutton uit layout
         backbutton.setOnClickListener(this);                                                   // Activeer clickactie
 
-        mp = MediaPlayer.create(this, R.raw.wildlandsfunkyshit);                               // Maak een mediaplayer met het muziekje
+        mp = MediaPlayer.create(this, R.raw.muziekje);                               // Maak een mediaplayer met het muziekje
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
             @Override
@@ -43,7 +43,10 @@ public class Credits extends Activity implements View.OnClickListener {
     }
 
 
-
+    /**
+     * Als het scherm naar de achtergrond gaat, pauzeer de muziek
+     * @param hasFocus
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if(hasFocus == false)
@@ -63,7 +66,7 @@ public class Credits extends Activity implements View.OnClickListener {
         System.gc();                                                    // Onnodige data verwijderen, alvorens door te gaan
         switch(v.getId()) {
             case R.id.backbutton:
-                mp.stop();
+                mp.stop();                                              // Stop de muziek
                 Intent i = new Intent(this, Home.class);                // Backbutton gaat naar home activity
                 startActivity(i);
                 this.finish();                                          // Beeindig deze activity

@@ -1,8 +1,6 @@
 package nl.wildlands.wildlandseducation.SQLite;
 
-/**
- * Created by stefan on 3/25/2015.
- */
+
 import java.util.ArrayList;
 
 
@@ -17,6 +15,9 @@ import nl.wildlands.wildlandseducation.quiz.Answer;
 import nl.wildlands.wildlandseducation.quiz.Question;
 import nl.wildlands.wildlandseducation.quiz.QuestionImage;
 
+/**
+ * Class om de SQLite handeling voor de vragen te verzorgen
+ */
 public class QuestionsDataSource {
 
     // Database fields
@@ -39,6 +40,14 @@ public class QuestionsDataSource {
         dbHelper.close();
     }
 
+    /**
+     * Maak een nieuwe vraag aan
+     * @param question
+     * @param image
+     * @param level
+     * @param type
+     * @return
+     */
     public Question createQuestion(String question, String image, int level, String type)
     {
         ContentValues values = new ContentValues();
@@ -58,6 +67,13 @@ public class QuestionsDataSource {
         return newQuestion;
     }
 
+    /**
+     * Maak een nieuwe vraagafbeelding aan
+     * @param path
+     * @param name
+     * @param id
+     * @return
+     */
     public QuestionImage createImage(String path, String name, long id)
     {
         Log.d("name in opslag", name);
@@ -76,6 +92,11 @@ public class QuestionsDataSource {
         return newQuestionImage;
     }
 
+    /**
+     * Maak een nieuw antwoord aan
+     * @param answer
+     * @return
+     */
     public Answer createAnswer(Answer answer)
     {
         long id = answer.getVraagId();
@@ -100,7 +121,10 @@ public class QuestionsDataSource {
     }
 
 
-
+    /**
+     *
+     * @return alle vragen
+     */
     public ArrayList<Question> getAllQuestions() {
         ArrayList<Question> questions = new ArrayList<Question>();
 
@@ -118,6 +142,10 @@ public class QuestionsDataSource {
         return questions;
     }
 
+    /**
+     *
+     * @return alle afbeeldingen
+     */
     public ArrayList<QuestionImage> getAllImages()
     {
         ArrayList<QuestionImage> images = new ArrayList<>();
@@ -132,6 +160,10 @@ public class QuestionsDataSource {
         return images;
     }
 
+    /**
+     *
+     * @return alle antwoorden
+     */
     public ArrayList<Answer> getAllAnswers() {
         ArrayList<Answer> answers = new ArrayList<Answer>();
 
@@ -144,23 +176,38 @@ public class QuestionsDataSource {
             answers.add(answer);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
+
         cursor.close();
         return answers;
     }
 
-
+    /**
+     * Cursor voor nieuwe vraag
+     * @param cursor
+     * @return vraag
+     */
     private Question cursorToQuestion(Cursor cursor) {
 
         Question question = new Question(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4));
         return question;
     }
 
+    /**
+     * Cursor voor vraagafbeelding
+     * @param cursor
+     * @return
+     */
     private QuestionImage cursorToQuestionImage(Cursor cursor)
     {
         QuestionImage questionImage = new QuestionImage(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getLong(3));
         return questionImage;
     }
+
+    /**
+     * Cursor voor antwoord
+     * @param cursor
+     * @return
+     */
     private Answer cursorToAnswer(Cursor cursor)
     {
         int good = cursor.getInt(3);

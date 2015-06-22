@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/alertLayout"
+    android:background="@drawable/pinpoint_bg"
+    android:orientation="vertical">
+   <ImageButton
+       android:layout_width="50dp"
+       android:layout_height="50dp"
+       android:src="@drawable/close_bio"
+       android:background="@null"
+       android:scaleType="fitXY"
+       android:id="@+id/closeBtn"
+       android:layout_gravity="right"
+       android:layout_marginTop="5dp"
+       android:layout_marginRight="5dp"
+       android:layout_marginBottom="5dp"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/olifant"
+                android:id="@+id/popupImg"
+                android:scaleType="fitStart"
+                android:contentDescription="popup"
+                android:adjustViewBounds="true"/>
+            <WebView
+                android:layout_width="fill_parent"
+                android:layout_height="250dp"
+                android:layout_below="@id/popupImg"
+                android:background="#F5F2DC"
+                android:id="@+id/webview">
+
+            </WebView>
+
+
+
+
+            </RelativeLayout>
+
+
+
+        </ScrollView>
+
+
+
+
+</LinearLayout>

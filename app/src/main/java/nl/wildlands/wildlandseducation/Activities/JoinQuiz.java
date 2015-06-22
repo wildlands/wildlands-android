@@ -98,7 +98,7 @@ public class JoinQuiz extends Activity implements View.OnClickListener {
         backBtn = (ImageButton)findViewById(R.id.quitbutton);
         backBtn.setOnClickListener(this);
 
-        Typeface tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
+        Typeface tf2 = DefaultApplication.tf;
         naam.setTypeface(tf2);
         quiz.setTypeface(tf2);
         startBtn.setTypeface(tf2);

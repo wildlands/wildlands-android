@@ -18,7 +18,7 @@ public class ScreenSlidePageFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_pinpoint_page, container, false);
+                R.layout.custom_popup, container, false);
 
         return rootView;
     }

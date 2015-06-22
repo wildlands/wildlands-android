@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.R;
+
 
 /**
  * Filtermenu is de activity waarbij er tussen een van de vijf hoofdthema's kan worden
@@ -45,8 +47,8 @@ public class Filtermenu extends Activity implements View.OnClickListener {
 
         // Verander het lettertype van de tekst
         TextView tv = (TextView)findViewById(R.id.themaKiezen);
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
-        Typeface tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
+        Typeface tf = DefaultApplication.tf2;
+        Typeface tf2 = DefaultApplication.tf;
 
         tv.setTypeface(tf);
 
@@ -59,15 +61,15 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         btnDieren.setOnClickListener(this);
         backBtn.setOnClickListener(this);
 
+        // Verander het lettertype van de buttons
         btnWater.setTypeface(tf2);
         btnEnergie.setTypeface(tf2);
         btnMaterialen.setTypeface(tf2);
         btnBio.setTypeface(tf2);
         btnDieren.setTypeface(tf2);
+
         // Begin met het infaden van de buttons.
         animateFadeIn();
-
-
     }
 
     /**
@@ -122,11 +124,11 @@ public class Filtermenu extends Activity implements View.OnClickListener {
                 this.finish();
                 break;
             case R.id.btnBio:                                                       // Bio mimicry knop
-                h.putExtra("TYPE", "Bio Mimicry");                                  // Geef een type mee aan de intent
-                startActivity(h);                                                   // Start de intent
+                h.putExtra("TYPE", "Bio Mimicry");                                  // Geef type mee aan kaart
+                startActivity(h);
                 break;
             case R.id.btnEnergie:                                                   // Voor deze en de andere 3 buttons geldt hetzelfde
-                h.putExtra("TYPE", "Energie");                                      // als bij Bio Mimicry
+               h.putExtra("TYPE", "Energie");
                 startActivity(h);
                 break;
             case R.id.btnWater:

@@ -10,13 +10,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
         android:id="@+id/wildlogo"
-        android:src="@drawable/element_07"/>
+        android:src="@drawable/wildlands_logo"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/wildlogo"
         android:id="@+id/bush"
-        android:src="@drawable/element_01"
+        android:src="@drawable/bush_green"
         android:layout_marginTop="0dp"/>
 
     <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:background="@drawable/home_bg_color" android:layout_marginTop="-25dp" android:layout_below="@+id/bush">

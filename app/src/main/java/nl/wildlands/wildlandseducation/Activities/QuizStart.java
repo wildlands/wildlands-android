@@ -28,14 +28,17 @@ import nl.wildlands.wildlandseducation.R;
 
 public class QuizStart extends Activity implements View.OnClickListener {
 
-    TextView code;
-    Socket mSocket;
+    // Private fields
+    private TextView code;
+    private Socket mSocket;
     private ArrayList<String> studenten;
-    int duration;
-    Button startQuiz;
-    int topmargin;
-    Typeface tf, tf2;
+    private int duration;
+    private Button startQuiz;
+    private int topmargin;
+    private Typeface tf, tf2;
+    private ImageButton quitBtn;
 
+    // Emitter voor joinen van quiz
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -51,15 +54,14 @@ public class QuizStart extends Activity implements View.OnClickListener {
                     } catch (JSONException e) {
                         return;
                     }
-                    String content = naam ;
-                    addTextView(content);
 
-
+                    addTextView(naam);               // Voeg nieuwe textview met naam toe
                 }
             });
         }
     };
 
+    // Emitter voor leaven van quiz
     private Emitter.Listener leftMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -75,7 +77,7 @@ public class QuizStart extends Activity implements View.OnClickListener {
                         return;
                     }
                     String content = naam ;
-                    removeStudent(content);
+                    removeStudent(content);         // Verwijder textview van deze naam
                 }
             });
         }
@@ -83,16 +85,18 @@ public class QuizStart extends Activity implements View.OnClickListener {
 
 
 
-    ImageButton quitBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_13);
+        setContentView(R.layout.activity_quiz_start);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         studenten = new ArrayList<String>();
+
+        // Initialiseer alle waardes
         code = (TextView)findViewById(R.id.code);
         startQuiz = (Button)findViewById(R.id.startQuiz);
         startQuiz.setOnClickListener(this);
@@ -105,17 +109,21 @@ public class QuizStart extends Activity implements View.OnClickListener {
         mSocket.on("somebodyJoined", onNewMessage);
         mSocket.on("somebodyLeaved", leftMessage);
 
-        topmargin = 30;
+        topmargin = 30;     // Startmargin voor textviews
 
-        tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
-        tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
+        tf = DefaultApplication.tf2;
+        tf2 = DefaultApplication.tf;
 
-
+        // Zet lettertypes
         code.setTypeface(tf2);
         startQuiz.setTypeface(tf2);
 
     }
 
+    /**
+     * Verwijder de textview
+     * @param name
+     */
     public void removeStudent(String name)
     {
         studenten.remove(name);
@@ -127,10 +135,16 @@ public class QuizStart extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Voeg een nieuwe textview toe
+     * @param content
+     */
     public void addTextView(String content) {
         TextView tvnew = new TextView(this.getApplicationContext());
         tvnew.setText(content);
-        studenten.add(content);
+        studenten.add(content);         // Voeg toe aan studentenarray
+
+        // Verander de waardes van de textview
         tvnew.setTextColor(Color.parseColor("#FFE102"));
         tvnew.setTypeface(tf);
         tvnew.setTextSize(25);
@@ -144,29 +158,36 @@ public class QuizStart extends Activity implements View.OnClickListener {
         tvnew.setGravity(Gravity.CENTER_HORIZONTAL);
 
         RelativeLayout screen = (RelativeLayout) findViewById(R.id.scrollOverzicht);
-        screen.addView(tvnew);
+        screen.addView(tvnew);      // Voeg toe aan views
 
     }
 
+    /**
+     * Acties voor starten en stoppen
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch(v.getId())
         {
             case R.id.startQuiz:
 
-                JSONObject quizData = new JSONObject();
+                JSONObject quizData = new JSONObject();         // nieuw quiz object
                 int quizID = ((DefaultApplication)this.getApplication()).getSocketcode();
-                try {
+                try
+                {
                     quizData.put("quizID", quizID);
                     quizData.put("duration", duration);
                     quizData.put("level", ((DefaultApplication)this.getApplication()).getLevel());
-                } catch (JSONException e) {
+                }
+                catch (JSONException e)
+                {
                     e.printStackTrace();
                 }
 
-                mSocket.emit("startQuiz", quizData);
+                mSocket.emit("startQuiz", quizData);            // start de quiz
                 Intent scoreScreen = new Intent(this, TrackScores.class);
-                startActivity(scoreScreen);
+                startActivity(scoreScreen);                     // start de activity
                 this.finish();
                 break;
             case R.id.quitbutton:

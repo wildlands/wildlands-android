@@ -27,14 +27,12 @@ import nl.wildlands.wildlandseducation.R;
  */
 public class GenerateQuiz extends Activity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
-    ImageButton backBtn;                    // ImageButton om terug te gaan
+    ImageButton backBtn;                                        // ImageButton om terug te gaan
+    Button generateQuiz;                                         // Button om quiz te genereren
 
-    Button generateQuiz;                    // Button om quiz te genereren
+    Socket mSocket;                                             // Socket voor de quizverbinding
 
-    Socket mSocket;                         // Socket voor de quizverbinding
-
-    private SeekBar bar;                    // Seekbar om tijd dynamisch in te stellen
-
+    private SeekBar bar;                                        // Seekbar om tijd dynamisch in te stellen
     private TextView textProgress, genereerQuiz,tijd;          // TextView voor weergave huidige tijdsinput
 
     /**
@@ -66,7 +64,7 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);                                             // Zet layout
-        setContentView(R.layout.activity_view_12);
+        setContentView(R.layout.activity_generate_quiz);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,                // Fullscreen
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -84,12 +82,14 @@ public class GenerateQuiz extends Activity implements View.OnClickListener, Seek
         genereerQuiz = (TextView)findViewById(R.id.textView1);
         tijd = (TextView)findViewById(R.id.textView2);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
+        Typeface tf = DefaultApplication.tf2;
 
+        // Verander de lettertypes
         genereerQuiz.setTypeface(tf);
         tijd.setTypeface(tf);
 
-        Typeface tf2 = Typeface.createFromAsset(getAssets(), "fonts/text.ttf");
+        Typeface tf2 = DefaultApplication.tf;
+        // Verander de lettertypes
         generateQuiz.setTypeface(tf2);
         textProgress.setTypeface(tf2);
 

@@ -17,12 +17,16 @@ package nl.wildlands.wildlandseducation.MapAssets;
 
 import android.content.res.Configuration;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ImageButton;
+
+import java.util.HashMap;
 
 public class GestureImageViewTouchListener implements OnTouchListener {
 	
@@ -81,11 +85,17 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 	private GestureDetector flingDetector;
 	private GestureImageViewListener imageListener;
 
+    private HashMap<ImageButton, Float> buttons;
+
 	public GestureImageViewTouchListener(final GestureImageView image, int displayWidth, int displayHeight) {
 		super();
 		
 		this.image = image;
-
+        buttons = new HashMap<ImageButton, Float>();
+        for(ImageButton img: image.getImages())
+        {
+            buttons.put(img, 2.0f);
+        }
 		this.displayWidth = displayWidth;
 		this.displayHeight = displayHeight;
 		
@@ -401,7 +411,8 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 	protected void handleScale(float scale, float x, float y) {
 		
 		currentScale = scale;
-
+        float lastX = next.x;
+        float lastY = next.y;
 		if(currentScale > maxScale) {
 			currentScale = maxScale;	
 		}
@@ -417,6 +428,28 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 		
 		image.setScale(currentScale);
 		image.setPosition(next.x, next.y);
+        Log.d("imagePosY", String.valueOf(next.y));
+        Log.d("imagePosX", String.valueOf(next.x));
+        HashMap<ImageButton, Float> buttonsNew = new HashMap<ImageButton, Float>();
+        for(ImageButton imageButton: buttons.keySet())
+        {
+            Log.d("width" ,String.valueOf(imageButton.getWidth()));
+            Log.d("height", String.valueOf(imageButton.getHeight()));
+            float scaleDifX = 0.25f * imageButton.getWidth() * (currentScale - buttons.get(imageButton));
+            Log.d("scaleDifX", String.valueOf(scaleDifX));
+
+
+            imageButton.getHeight();
+            imageButton.setX((imageButton.getX() - (next.x - lastX)));
+            imageButton.setY(imageButton.getY() - (next.y - lastY));
+
+            Log.d("btnX", String.valueOf(imageButton.getX()));
+            Log.d("btnY", String.valueOf(imageButton.getY()));
+
+            buttonsNew.put(imageButton, currentScale);
+        }
+        buttons = buttonsNew;
+
 		
 		if(imageListener != null) {
 			imageListener.onScale(currentScale);

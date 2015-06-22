@@ -2,18 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="nl.wildlands.wildlandseducation.Activities.JoinQuiz"
-    android:background="@drawable/element_13">
+    android:background="@drawable/green_bg">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:background="@drawable/element_02"
+        android:background="@drawable/bush_grey"
         android:layout_marginTop="100dp"
         android:id="@+id/imageView4" />
     <ImageView
         android:layout_width="150dp"
         android:layout_height="120dp"
-        android:background="@drawable/element_07"
+        android:background="@drawable/wildlands_logo"
         android:id="@+id/imageView3"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />

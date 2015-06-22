@@ -22,9 +22,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-/**
- * Created by Arwin on 18-3-2015.
- */
+
 public class JSONParser {
 
     static InputStream is = null;

@@ -38,5 +38,7 @@
     <string name="question">&#xf128;</string>
     <string name="skip">&#xf050;</string>
     <string name="title_activity_test_map">TestMap</string>
+    <string name="title_activity_map_water">MapWater</string>
+    <string name="title_activity_map_materialen">MapMaterialen</string>
 
 </resources>

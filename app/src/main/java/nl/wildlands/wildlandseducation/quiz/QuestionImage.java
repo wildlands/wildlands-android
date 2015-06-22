@@ -1,8 +1,9 @@
 package nl.wildlands.wildlandseducation.quiz;
 
 /**
- * Created by stefan on 6/2/2015.
- */
+ * Object voor een vraag afbeelding
+ *
+ * */
 public class QuestionImage {
     private String imagePath;
     private String imageName;
@@ -17,6 +18,7 @@ public class QuestionImage {
         this.questionid = questionid;
     }
 
+    // Getters en setters
     public String getImagePath() {
         return imagePath;
     }

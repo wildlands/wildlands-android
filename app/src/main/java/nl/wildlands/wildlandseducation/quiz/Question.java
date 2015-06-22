@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import nl.wildlands.wildlandseducation.quiz.Answer;
 
 /**
- * Write a description of class Question here.
+ * Question is een vraag object
  *
 
  * @author (your name) 

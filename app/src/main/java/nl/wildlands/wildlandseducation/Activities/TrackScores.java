@@ -27,30 +27,38 @@ import com.github.nkzawa.socketio.client.Socket;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.R;
+import nl.wildlands.wildlandseducation.SQLite.QuestionsDataSource;
+import nl.wildlands.wildlandseducation.quiz.Question;
 
 
 public class TrackScores extends Activity implements View.OnClickListener{
 
-    Socket mSocket;
-    ImageButton quitButton;
-    Button skipbutton;
-    TextView tv;
-    int topmargin;
+    private Socket mSocket;
+    private ImageButton quitButton;
+    private Button skipbutton;
+    private TextView tv;
+    private int topmargin;
     private int aantalCorrect, totaal;
+    private HashMap<String, HashMap<String, HashMap<Integer,Integer>>> scores;
     private int aantalVragen;
-    HashMap<String, TextView> leerlingen;
-    ProgressBar pb;
-    int i = 0;
-    CountDownTimer mCountDownTimer;
-    int mProgressStatus = 600;
-    Handler mHandler = new Handler();
-    final Context context = this;
+    private HashMap<String, TextView> leerlingen;
+    private HashMap<String, HashMap<Integer,Integer>> score;
+    private ProgressBar pb;
+    private int i = 0;
+    private CountDownTimer mCountDownTimer;
+    private int mProgressStatus = 600;
+    private Handler mHandler = new Handler();
+    private ArrayList<Question> questions, questionAll;
+    private QuestionsDataSource questionsDataSource;
+    private final Context context = this;
 
+    // Emitter voor nieuwe textview
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -67,17 +75,13 @@ public class TrackScores extends Activity implements View.OnClickListener{
                         vraagnummer = data.getInt("vraag");
                         correct = data.getBoolean("goed");
                         quizID = data.getInt("quizID");
-                        if(correct == true)
-                        {
-                            aantalCorrect += 1;
-                        }
-                        totaal+= 1;
-                        aantalVragen = vraagnummer +1;
+
                     } catch (JSONException e) {
                         return;
                     }
-                    String content = naam + "     " + aantalCorrect + "/" + aantalVragen;
-                    addTextView(naam, content);
+
+
+                    addTextView(naam, vraagnummer, correct);
 
 
                 }
@@ -86,12 +90,30 @@ public class TrackScores extends Activity implements View.OnClickListener{
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_14);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        super.onCreate(savedInstanceState);                                     // Zet layout
+        setContentView(R.layout.activity_track_scores_view);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,        // Fullscreen
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         leerlingen = new HashMap<String, TextView>();
+        scores = new HashMap<String, HashMap<String,HashMap<Integer, Integer>>>();
+        score = new HashMap<String,HashMap<Integer, Integer>>();
+
+        questions = new ArrayList<Question>();
+
+        questionsDataSource = new QuestionsDataSource(this.getApplicationContext());
+        questionsDataSource.open();
+        questionAll = questionsDataSource.getAllQuestions();
+        int level = ((DefaultApplication)this.getApplication()).getQuizLevel();
+        level += 1;
+
+        for(Question question1: questionAll)
+        {
+            if(question1.getLevel() == level)
+            {
+                questions.add(question1);
+            }
+        }
 
         quitButton = (ImageButton)findViewById(R.id.quitbutton);
         quitButton.setOnClickListener(this);
@@ -109,8 +131,9 @@ public class TrackScores extends Activity implements View.OnClickListener{
         mSocket.on("receiveAnswer", onNewMessage);
 
         pb = (ProgressBar)findViewById(R.id.pb);
-        int duration = ((DefaultApplication)this.getApplication()).getDuration();
 
+        // Countdown van de tijd
+        int duration = ((DefaultApplication)this.getApplication()).getDuration();
         i = duration * 60;
         int countdown = i * 60 * 1000;
         pb.setMax(i);
@@ -119,6 +142,7 @@ public class TrackScores extends Activity implements View.OnClickListener{
 
         // Start lengthy operation in a background thread
         pb.setProgress(i);
+
         mCountDownTimer=new CountDownTimer(countdown,1000) {
 
             @Override
@@ -141,15 +165,36 @@ public class TrackScores extends Activity implements View.OnClickListener{
         topmargin = 30;
     }
 
-    public void addTextView(String naam, String content)
+    /**
+     * Voeg textview toe aan layout
+     * @param naam
+     * @param vraagNummer
+     * @param correct
+     */
+    public void addTextView(String naam, int vraagNummer, boolean correct)
     {
-        if(leerlingen.get(naam) != null) {
+        if(leerlingen.get(naam) != null)            // Als naam er al is
+        {
             TextView tvLeerling = leerlingen.get(naam);
-            tvLeerling.setText(content);
+            HashMap<Integer,Integer> totaalScore = score.get(naam);
+            Set<Integer> keys = totaalScore.keySet();
+            String content ="";
+            for(Integer aantalgoed: keys)
+            {
+                content = naam + "  " + String.valueOf(aantalgoed) + "/" + String.valueOf(totaalScore.get(aantalgoed));
+            }
+            tvLeerling.setText(content);            // Verander de score
         }
         else {
-            TextView tvnew = new TextView(this.getApplicationContext());
-            tvnew.setText(content);
+            TextView tvnew = new TextView(this.getApplicationContext());        // Nieuwe textview
+            String goedStr = "0";
+            if(correct)
+            {
+                goedStr = "1";
+            }
+            tvnew.setText(naam + " " + goedStr + "/" + "1" );                      // Verander de score
+
+            // Zet layouts
             tvnew.setTextColor(Color.parseColor("#FFE102"));
             tvnew.setTypeface(DefaultApplication.tf2);
             tvnew.setTextSize(25);
@@ -161,38 +206,62 @@ public class TrackScores extends Activity implements View.OnClickListener{
             topmargin += 70;
             tvnew.setLayoutParams(lp);
             tvnew.setGravity(Gravity.CENTER_HORIZONTAL);
+            Log.d("vraagnummer",String.valueOf(vraagNummer));
+            String thema = questions.get(vraagNummer).getType();
+            Log.d("thema", "bij score");
 
+            // Voeg naam en textview toe aan HashMap
             leerlingen.put(naam, tvnew);
+            HashMap<String, HashMap<Integer, Integer>> themas = new HashMap<String, HashMap<Integer, Integer>>();
+            HashMap<Integer,Integer> vragen = new HashMap<Integer,Integer>();
+
+            int goed = 0;
+            if(correct)
+            {
+                goed = 1;
+            }
+            vragen.put(goed,1);
+            themas.put(thema, vragen);
+            scores.put(naam, themas);
+            score.put(naam, vragen);
             RelativeLayout screen = (RelativeLayout) findViewById(R.id.scrollOverzicht);
+
+            // Voeg view toe
             screen.addView(tvnew);
         }
     }
 
+    /**
+     * Voeg scores toe aan defaultapplication
+     */
     public void addScoresToMainFrame()
     {
-        Set<String> keys = leerlingen.keySet();
+        Set<String> keys = leerlingen.keySet();     // Haal namen op
         for(String name: keys)
         {
-            String score = leerlingen.get(name).getText().toString();
+            String score = leerlingen.get(name).getText().toString();       // Haal scores op en voeg toe
             ((DefaultApplication)this.getApplication()).addScore(score,name);
         }
     }
 
+    /**
+     * Bouw alert 1 of 2
+     * @param optie
+     */
+
     public void startAlertdialog(int optie)
     {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = this.getLayoutInflater();
-        // set title
         View resultsView = LayoutInflater.from(getBaseContext()).inflate(R.layout.custom_option_alert,
                 null);
         TextView title = (TextView)resultsView.findViewById(R.id.titleAlert);
         resultsView.setBackgroundResource(R.drawable.alert_red);
 
         if(optie == 1) {
-            title.setText("QUIZ ANNULEREN");
+            title.setText("QUIZ ANNULEREN");                // Title vd dialog
         }
         else{
-            title.setText("QUIZ AFRONDEN");
+            title.setText("QUIZ AFRONDEN");                 // Title vd dialog
         }
 
         title.setTypeface(DefaultApplication.tf);
@@ -201,7 +270,9 @@ public class TrackScores extends Activity implements View.OnClickListener{
                 .setCancelable(false)
         ;
 
-        final AlertDialog alertDialog = alertDialogBuilder.create();
+        final AlertDialog alertDialog = alertDialogBuilder.create();                // Maak nieuwe dialog
+
+
         TextView tv = (TextView)resultsView.findViewById(R.id.alertTextDialog);
         Button nee = (Button)resultsView.findViewById(R.id.alertBtnNo);
         nee.setOnClickListener(new View.OnClickListener() {
@@ -219,7 +290,7 @@ public class TrackScores extends Activity implements View.OnClickListener{
                 }
             });
 
-            tv.setText("Weet u zeker dat u de quiz wilt annuleren?");
+            tv.setText("Weet u zeker dat u de quiz wilt annuleren?");               // Verander tekst
         }
         else{
             ja.setOnClickListener(new View.OnClickListener() {
@@ -228,46 +299,53 @@ public class TrackScores extends Activity implements View.OnClickListener{
                     skipQuiz();
                 }
             });
-            tv.setText("Hiermee wordt de quiz afgerond en de scores berekend.");
+            tv.setText("Hiermee wordt de quiz afgerond en de scores berekend.");   // Verander tekst
         }
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
         TextView alertImage = (TextView)resultsView.findViewById(R.id.alertImage);
         if(optie == 1) {
-            alertImage.setText(getString(R.string.question));
+            alertImage.setText(getString(R.string.question));                       // Verander logootje
         }
         else{
-            alertImage.setText(getString(R.string.skip));
+            alertImage.setText(getString(R.string.skip));                           // Verander logootje
         }
         alertImage.setTypeface(font);
-        alertDialog.show();
+        alertDialog.show();                                                         // Start dialog
 
     }
 
+    /**
+     * Skip de quiz
+     *
+     */
     public void skipQuiz()
     {
-        addScoresToMainFrame();
-        JSONObject bericht = new JSONObject();
+        addScoresToMainFrame();         // Voeg scores toe aan DefaultApplication
+        JSONObject bericht = new JSONObject();      // Maak nieuw object
         try {
             bericht.put("quizID", ((DefaultApplication)this.getApplication()).getSocketcode());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mSocket.emit("skipQuiz", bericht);
-        Intent finish = new Intent(this, view_15.class);
+        mSocket.emit("skipQuiz", bericht);          // Skip the quiz
+        Intent finish = new Intent(this, SendQuiz.class); // Ga door naar venster
         startActivity(finish);
         this.finish();
     }
 
+    /**
+     * Abort de quiz
+     */
     public void abortQuiz()
     {
-        JSONObject bericht = new JSONObject();
+        JSONObject bericht = new JSONObject();              // nieuw object
         try {
             bericht.put("quizID", ((DefaultApplication)this.getApplication()).getSocketcode());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mSocket.emit("abortQuiz", bericht);
-        Intent start = new Intent(this, QuizStart.class);
+        mSocket.emit("abortQuiz", bericht);                 // Emit bericht met object
+        Intent start = new Intent(this, QuizStart.class);   // Ga naar start quiz venster
         startActivity(start);
         this.finish();
     }
@@ -277,10 +355,10 @@ public class TrackScores extends Activity implements View.OnClickListener{
         switch(v.getId())
         {
             case R.id.quitbutton:
-                startAlertdialog(1);
+                startAlertdialog(1);                // Start alertdialog
                 break;
             case R.id.skipButton:
-                startAlertdialog(2);
+                startAlertdialog(2);                // Start andere dialog
                 break;
 
         }

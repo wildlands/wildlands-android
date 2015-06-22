@@ -14,11 +14,11 @@
 
     </style>
     <style name="bush">
-        <item name="android:src">@drawable/element_01</item>
+        <item name="android:src">@drawable/bush_green</item>
     </style>
 
     <style name="logo">
-        <item name="android:src">@drawable/element_07</item>
+        <item name="android:src">@drawable/wildlands_logo</item>
     </style>
 
     <style name="background">

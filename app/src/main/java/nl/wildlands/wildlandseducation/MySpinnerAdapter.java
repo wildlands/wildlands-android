@@ -1,2 +1,0 @@
-package nl.wildlands.wildlandseducation;
-

@@ -10,12 +10,27 @@ import java.util.ArrayList;
 public class Pinpoint {
     private String name;
     private String description;
+    private int pinpointId;
     private long id;
     private int xPos;
     private int yPos;
     private String type;
     private ArrayList<Page> pages;
 
+
+
+    public Pinpoint(long id,int pinpointId, String name, String description, String type, int xPos, int yPos){
+        this.id = id;
+        this.pinpointId = pinpointId;
+        this.name = name;
+        this.description = description;
+
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.type = type;
+    }
+
+    // Getters en setters
     public String getDescription() {
         return description;
     }
@@ -23,15 +38,12 @@ public class Pinpoint {
     public void setDescription(String description) {
         this.description = description;
     }
+    public int getPinpointId() {
+        return pinpointId;
+    }
 
-    public Pinpoint(long id, String name, String description, String type, int xPos, int yPos){
-        this.id = id;
-        this.name = name;
-        this.description = description;
-
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.type = type;
+    public void setPinpointId(int pinpointId) {
+        this.pinpointId = pinpointId;
     }
 
     public long getId()

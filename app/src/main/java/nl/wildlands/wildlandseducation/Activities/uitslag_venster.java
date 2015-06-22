@@ -3,7 +3,7 @@ package nl.wildlands.wildlandseducation.Activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,21 +23,22 @@ import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.R;
 
 
-public class uitslag_venster extends Activity {
+public class uitslag_venster extends Activity implements View.OnClickListener {
 
     TextView energieScore, waterScore, materiaalScore, bioScore, dierenScore, totaalScore, alertText;
     ImageView bush;
     RelativeLayout alertView;
     int totaalGoed, beantwoord;
     int scoreNiveau;
+    ImageButton backBtn;
     final Context context = this;
-    LinearLayout layoutOfPopup; PopupWindow popupMessage; Button popupButton, insidePopupButton; TextView popupText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);                                         // Zet de layout
         setContentView(R.layout.activity_uitslag_venster);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,            // Fullscreen
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         energieScore = (TextView)findViewById(R.id.energieScore);
@@ -51,24 +51,32 @@ public class uitslag_venster extends Activity {
         alertView = (RelativeLayout)findViewById(R.id.alertView);
         bush = (ImageView)findViewById(R.id.bush);
 
+        backBtn = (ImageButton)findViewById(R.id.backbutton);
+        backBtn.setOnClickListener(this);
+
         beantwoord = 0;
         totaalGoed = 0;
 
         HashMap<String, HashMap<Integer, Integer>> scores = ((DefaultApplication)this.getApplication()).getThemaScores();
         Set<String> soorten = scores.keySet();
 
+        // Bereken de scores en geef de uitslag
         for(String string: soorten) {
             HashMap<Integer, Integer> score = scores.get(string);
             String scoreString = "";
             Set<Integer> aantalGoed = score.keySet();
             int goed = 0;
             int totaal = 0;
-            for (Integer integer : aantalGoed) {
+
+
+            for (Integer integer : aantalGoed)
+            {
                 goed = integer;
                 totaal = score.get(integer);
                 beantwoord += totaal;
                 totaalGoed += goed;
             }
+            // Per thema verander de tekst
             if (string.equals("Water"))
             {
                 waterScore.setText(goed + "/" + totaal);
@@ -91,6 +99,7 @@ public class uitslag_venster extends Activity {
             }
             else if(string.equals("Totaal"))
             {
+                // Bij het totoaal, reken het percentage en vul de info in
                 totaalScore.setText(goed + "/" + totaal);
                 double percentage = (double)goed / (double)totaal * 100;
                 String info = "";
@@ -133,21 +142,17 @@ public class uitslag_venster extends Activity {
 
         }
 
-
-
-
-
-
     }
+
+    /**
+     * Laat alert zien met info en niveau
+     * @param info
+     * @param niveau
+     */
 
     public void showAlert(String info, int niveau)
     {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        // set title
-
 
         View resultsView = LayoutInflater.from(getBaseContext()).inflate(R.layout.custom_alert,
             null);
@@ -155,7 +160,7 @@ public class uitslag_venster extends Activity {
         title.setTypeface(DefaultApplication.tf);
         String image = "";
 
-
+        // Zet afhankelijk van niveau de background, tekst en afbeelding
         if(niveau == 0) {
             resultsView.setBackgroundResource(R.drawable.alert_red);
             title.setText("SLECHT");
@@ -207,6 +212,7 @@ public class uitslag_venster extends Activity {
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
         TextView alertImage = (TextView)resultsView.findViewById(R.id.alertImage);
         String string = "";
+        // Verander de afbeeldingsstring
         if(image.equals("thumbs")) {
             string = getString(R.string.thumbs);
         }
@@ -217,6 +223,8 @@ public class uitslag_venster extends Activity {
         else{
             string = getString(R.string.thumbsUp);
         }
+
+        // Zet de afbeelding
         alertImage.setText(string);
         alertImage.setTypeface(font);
 
@@ -228,6 +236,19 @@ public class uitslag_venster extends Activity {
     }
 
 
-
-
+    /**
+     * Backbutton gaat terug naar menu
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        switch(v.getId())
+        {
+            case R.id.backbutton:
+                Intent chooseQuiz = new Intent(this, ChooseQuizGroup.class);
+                startActivity(chooseQuiz);
+                this.finish();
+                break;
+        }
+    }
 }

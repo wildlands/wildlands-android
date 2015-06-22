@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,6 +36,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -42,6 +44,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -49,7 +52,13 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import nl.wildlands.wildlandseducation.MainPagerAdapter;
 
+import org.apache.http.protocol.HTTP;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -58,7 +67,11 @@ import java.util.concurrent.TimeUnit;
 import nl.wildlands.wildlandseducation.Activities.Kaart;
 import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.PageDisplay;
+import nl.wildlands.wildlandseducation.Pinpoint.Page;
+import nl.wildlands.wildlandseducation.Pinpoint.PageImage;
+import nl.wildlands.wildlandseducation.Pinpoint.Pinpoint;
 import nl.wildlands.wildlandseducation.R;
+import nl.wildlands.wildlandseducation.SQLite.PinpointsDataSource;
 
 public class GestureImageView extends ImageView{
 
@@ -80,7 +93,7 @@ public class GestureImageView extends ImageView{
 	private boolean layout = false;
 
 	private float scaleAdjust = 1.0f;
-	private float startingScale = -1.0f;
+	private float startingScale = 2.0f;
 
 	private float scale = 1.0f;
 	private float maxScale = 5.0f;
@@ -124,6 +137,8 @@ public class GestureImageView extends ImageView{
 	
 	private OnTouchListener customOnTouchListener;
 	private OnClickListener onClickListener;
+
+    private PinpointsDataSource pinpointsDataSource;
 
     private float totalDiffX;
     private float totalDiffY;
@@ -180,6 +195,7 @@ public class GestureImageView extends ImageView{
         totalDiffX = 0;
         totalDiffY = 0;
         switchBar = true;
+        pinpointsDataSource = new PinpointsDataSource(context);
 	}
 
 	public GestureImageView(Context context) {
@@ -313,38 +329,49 @@ public class GestureImageView extends ImageView{
 		fitScaleVertical = (float) measuredHeight / (float) imageHeight;
 	}
 
+    /**
+     * Voeg een nieuwe pinpoint toe
+     * @param x
+     * @param y
+     * @param id
+     * @param soort
+     */
     public void addButton(int x, int y, long id, String soort)
     {
         final long btnId = id;
         Log.d("soort die in kaart ", soort);
         ImageButton imageBtn = new ImageButton(context);
         imageBtn.setId(i+(int)id);
+        // Image afhankelijk van thema
         if(soort.equals("Energie")) {
-            imageBtn.setImageResource(R.drawable.pin);
+            imageBtn.setImageResource(R.drawable.pinpoint_energie);
         }
         else if(soort.equals("Water"))
         {
-            imageBtn.setImageResource(R.drawable.pin_water);
+            imageBtn.setImageResource(R.drawable.pinpoint_water);
         }
         else if(soort.equals("Bio Mimicry"))
         {
-            imageBtn.setImageResource(R.drawable.pin_bio);
+            imageBtn.setImageResource(R.drawable.pinpoint_bio);
         }
         else if(soort.equals("Materiaal")){
-            imageBtn.setImageResource(R.drawable.pin_warmte);
+            imageBtn.setImageResource(R.drawable.pinpoint_materiaal);
         }
         else{
-            imageBtn.setImageResource(R.drawable.pin);
+            imageBtn.setImageResource(R.drawable.pinpoint_dieren);
         }
+        // ImageButton aanpassen
         imageBtn.setBackgroundColor(Color.TRANSPARENT);
         imageBtn.setLayoutParams(lp);
+
         imageBtn.setTranslationX(x);
         imageBtn.setTranslationY(y);
+        // Bij klik start dialog
         imageBtn.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                startPopUp(btnId);
+                startAlertdialog(btnId);
 
 
             }
@@ -353,84 +380,201 @@ public class GestureImageView extends ImageView{
         imageButtons.add(imageBtn);
         RelativeLayout kaart = (RelativeLayout)getRootView().findViewById(R.id.kaartScreen);
         kaart.addView(imageBtn);
-
-
     }
 
-    public void addUnderbar()
+
+    /**
+     * Start een dialog voor de geklikte pinpint
+     * @param id
+     */
+
+    public void startAlertdialog(long id)
     {
-        underbar = new ImageView(context);
-        underbar.setLayoutParams(lp);
-        underbar.setImageResource(R.drawable.ice);
-        underbar.setTranslationY(1680);
+        pinpointsDataSource.open();
+        long pinpointId = -1;
+        int type = -1;
+        ArrayList<Pinpoint> pinpoints = pinpointsDataSource.getAllPinpoints();
+        ArrayList<Page> pages = new ArrayList<Page>();
+        String image;
+        // Haal het type op
+        for(Pinpoint pinpoint: pinpoints)
+        {
+           if(pinpoint.getPinpointId() == id)
+           {
+               pinpointId = id;
+               Log.d("pinpointid", String.valueOf(pinpointId));
+               if(pinpoint.getType().equals("Energie"))
+               {
+                   type = 1;
+               }
+               else if(pinpoint.getType().equals("Water"))
+               {
+                   type = 2;
+               }
+               else if(pinpoint.getType().equals("Materiaal"))
+               {
+                   type = 3;
+               }
+               else if(pinpoint.getType().equals("Bio Mimicry"))
+               {
+                   type = 4;
+               }
+               else
+               {
+                   type = 5;
+               }
+           }
+        }
+
+        for(Page page: pinpointsDataSource.getAllPages())
+        {
+            if(page.getPinpointid() == pinpointId)
+            {
+                // Voeg de pagina's toe aan arraylist
+                pages.add(page);
+            }
+        }
+
+
+
         RelativeLayout kaart = (RelativeLayout)getRootView().findViewById(R.id.kaartScreen);
-        kaart.addView(underbar);
-    }
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+        View resultsView = LayoutInflater.from(context).inflate(R.layout.customviewpager,
+                null);
+        ViewPager vp = (ViewPager)resultsView.findViewById(R.id.pager);
+        MainPagerAdapter pagerAdapter = new MainPagerAdapter();
+        vp.setAdapter(pagerAdapter);
+
+        // Maak 5 pagina's aan
+        View haha = LayoutInflater.from(context).inflate(R.layout.custom_popup,null);
+        View haha2 = LayoutInflater.from(context).inflate(R.layout.custom_popup,null);
+        View haha3 = LayoutInflater.from(context).inflate(R.layout.custom_popup,null);
+        View haha4 = LayoutInflater.from(context).inflate(R.layout.custom_popup,null);
+        View haha5 = LayoutInflater.from(context).inflate(R.layout.custom_popup,null);
+        ArrayList<View> views = new ArrayList<View>();
+
+        alertDialogBuilder
+                .setView(resultsView)
+                .setCancelable(true)
+        ;
 
 
-    public void startPopUp(long id)
-    {
-        /*
-        Intent h = new Intent(context, PageDisplay.class);
-        h.putExtra("BUTTON", id);
-        h.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(h);
-        */
+        final AlertDialog alertDialog = alertDialogBuilder.create();
 
-        //RelativeLayout rlTotal = new RelativeLayout(context);
-        /*
-        HorizontalScrollView hScroll = new HorizontalScrollView(context);
-        RelativeLayout rlHor = new RelativeLayout(context);
-        hScroll.addView(rlHor);
+        // Voeg pagina's toe aan de views en bouw deze afhankelijk van de waardes
+        for(int i =0; i < pages.size();i++) {
+            Page page = pages.get(i);
+            String path = "";
+            String name = "";
+            Bitmap b = null;
+            for(PageImage pageImage: pinpointsDataSource.getAllPageImages())
+            {
+                if(pageImage.getPageId() == page.getId())
+                {
+                    path = pageImage.getImagePath();
+                    name = pageImage.getName();
+                    Log.d("name", name);
+                }
+            }
+            try {
+                File f=new File(path, name);
+                b = BitmapFactory.decodeStream(new FileInputStream(f));
 
-        for(int i = 0; i < 2; i++) {
-            ScrollView sc = new ScrollView(context);
-            //sc.setTranslationY(650);
-            RelativeLayout rlScroll = new RelativeLayout(context);
-            sc.addView(rlScroll);
 
-            ImageButton closeButton = new ImageButton(context);
-            int j = 101;
-            closeButton.setId(j + 0);
-            closeButton.setImageResource(R.drawable.closebtn);
-            closeButton.setBackground(null);
-            closeButton.setTranslationY(100);
-            closeButton.setTranslationX(650);
-            closeButton.setLayoutParams(lp);
-            closeButton.setOnClickListener(new OnClickListener() {
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+                Log.d("File", "not found");
+            }
+            WebView tv = null;
+            ImageView img = null;
+            ImageButton imgBtn = null;
+
+            // Afhankelijk van het type pagina
+            if(i == 0) {
+                tv = (WebView) haha.findViewById(R.id.webview);
+                img=(ImageView)haha.findViewById(R.id.popupImg);
+                imgBtn = (ImageButton)haha.findViewById(R.id.closeBtn);
+                views.add(haha);
+            }
+            else if(i == 1)
+            {
+                tv = (WebView) haha2.findViewById(R.id.webview);
+                img=(ImageView)haha2.findViewById(R.id.popupImg);
+                imgBtn = (ImageButton)haha2.findViewById(R.id.closeBtn);
+                views.add(haha2);
+            }
+            else if(i == 2)
+            {
+                tv = (WebView) haha3.findViewById(R.id.webview);
+                img=(ImageView)haha3.findViewById(R.id.popupImg);
+                imgBtn = (ImageButton)haha3.findViewById(R.id.closeBtn);
+                views.add(haha3);
+            }
+            else if(i == 3)
+            {
+                tv = (WebView) haha4.findViewById(R.id.webview);
+                img=(ImageView)haha4.findViewById(R.id.popupImg);
+                imgBtn = (ImageButton)haha4.findViewById(R.id.closeBtn);
+                views.add(haha4);
+            }
+            else{
+                tv = (WebView) haha5.findViewById(R.id.webview);
+                img=(ImageView)haha5.findViewById(R.id.popupImg);
+                imgBtn = (ImageButton)haha5.findViewById(R.id.closeBtn);
+                views.add(haha5);
+            }
+            imgBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popupWindow.dismiss();
+                    alertDialog.dismiss();
                 }
             });
 
-
-            ImageView img = new ImageView(context);
-            img.setLayoutParams(lp);
-            img.setImageResource(R.drawable.duck2);
-            img.setTranslationY(50);
+            if(type == 1) {
+                imgBtn.setImageResource(R.drawable.close_energie);
 
 
-            TextView textView = new TextView(context);
-            textView.setText("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. ");
-            textView.setTranslationY(650);
-            rlScroll.addView(textView);
-            rlTotal.setBackgroundResource(R.drawable.background);
-           // sc.addView(imgView);
-            rlScroll.addView(img);
-            rlHor.addView(sc);
+            }
+            else if(type == 2)
+            {
+                imgBtn.setImageResource(R.drawable.close_water);
+            }
+            else if(type == 3)
+            {
+                imgBtn.setImageResource(R.drawable.close_materiaal);
+            }
+            else if(type == 4)
+            {
+                imgBtn.setImageResource(R.drawable.close_bio);
+            }
+            else if(type == 5)
+            {
+                imgBtn.setImageResource(R.drawable.close_dieren);
+            }
 
-            rlHor.addView(closeButton);
 
+            if(b != null) {
+                img.setImageBitmap(b);
+            }
 
+            tv.loadData(page.getText(), "text/html", HTTP.UTF_8);
+            tv.setBackgroundColor(Color.parseColor("#F5F2DC"));
         }
-        rlTotal.addView(hScroll);
 
-        //popupWindow.setContentView(layoutOfPopup);
-        popupWindow.showAtLocation(this, Gravity.NO_GRAVITY, 100, 50);
-        */
+        // Add view
+        for(View view: views)
+        {
+            pagerAdapter.addView(view);
+        }
+        pagerAdapter.notifyDataSetChanged();
+
+        alertDialog.show();
 
     }
+
 
 
 
@@ -503,6 +647,7 @@ public class GestureImageView extends ImageView{
 				}
 
 				drawable.draw(canvas);
+
 
 
 				canvas.restore();
@@ -616,10 +761,6 @@ public class GestureImageView extends ImageView{
 		return 0;
 	}
 
-    //public void addImageButton(ImageButton imgBtn)
-   // {
-   //     this.imageBtn = imgBtn;
-    //}
 
 	public void moveBy(float x, float y) {
 		this.x += x;
@@ -639,18 +780,14 @@ public class GestureImageView extends ImageView{
         tempY = diffY;
         totalDiffY += diffY;
         totalDiffX += diff;
-        if(totalDiffX > 600 && switchBar)
+
+        // Verplaats de buttons mee
+        for(ImageButton imageButton: imageButtons)
         {
-            switchBar = false;
-            new ChangeBar().execute();
-
-        }else if(totalDiffX < 600 && switchBar == false){
-            switchBar = true;
-            new ChangeBar().execute();
+            imageButton.setTranslationX(imageButton.getX() - tempX);
+            imageButton.setTranslationY(imageButton.getY() - tempY);
         }
-        new Move().execute();
 
-      // new UISwitch(MyActivity.instance).execute();
 
 	}
 
@@ -934,102 +1071,10 @@ public class GestureImageView extends ImageView{
 		return deviceOrientation;
 	}
 
-    class Move extends AsyncTask<String, String, String> implements View.OnClickListener {
-
-        boolean failure = false;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-
-            return "ja";
-
-        }
-
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product deleted
-            for(ImageButton imageButton: imageButtons)
-            {
-                float x = imageButton.getX();
-                float y = imageButton.getY();
-                imageButton.setTranslationX(x - tempX);
-                imageButton.setTranslationY(y - tempY);
-                redraw();
-            }
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
+    public ArrayList<ImageButton> getImages()
+    {
+        return imageButtons;
     }
-
-    class ChangeBar extends AsyncTask<String, String, String> implements View.OnClickListener {
-
-        boolean failure = false;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-
-            return "ja";
-
-        }
-
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product deleted
-            if(totalDiffX > 600){
-                underbar.setImageResource(R.drawable.desert);
-            }
-            else if(totalDiffX < 600){
-                underbar.setImageResource(R.drawable.ice);
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
-
-    class ZoomScale extends AsyncTask<String, String, String> implements View.OnClickListener {
-
-        boolean failure = false;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-
-            return "ja";
-
-        }
-
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product deleted
-           // imageBtn.draw(tempCanvas);
-
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
-
 
 
 

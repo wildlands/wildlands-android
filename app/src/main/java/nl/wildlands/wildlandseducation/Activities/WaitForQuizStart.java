@@ -23,6 +23,7 @@ public class WaitForQuizStart extends Activity implements View.OnClickListener{
 
     private Socket mSocket = null;
 
+    // Emitter als de quiz gestart wordt
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -57,7 +58,7 @@ public class WaitForQuizStart extends Activity implements View.OnClickListener{
         TextView tv2 = (TextView)findViewById(R.id.geduld);
         TextView tv3 = (TextView)findViewById(R.id.quizStart);
         TextView tv4 = (TextView)findViewById(R.id.tijdensQuiz);
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/thematext.ttf");
+        Typeface tf = DefaultApplication.tf2;
         tv.setTypeface(tf);
         tv2.setTypeface(tf);
         tv3.setTypeface(tf);
@@ -67,9 +68,6 @@ public class WaitForQuizStart extends Activity implements View.OnClickListener{
         mSocket.on("startTheQuiz", onNewMessage);
         ImageButton quitBtn = (ImageButton)findViewById(R.id.quitbutton);
         quitBtn.setOnClickListener(this);
-
-
-
     }
 
 
@@ -80,36 +78,6 @@ public class WaitForQuizStart extends Activity implements View.OnClickListener{
      */
     public void startQuiz(int level, int duration)
     {
-        /*
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("Quiz gestart")
-                        .setContentText("Begin nu");
-// Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, Quiz.class);
-
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-// Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(Home.class);
-// Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-// mId allows you to update the notification later on.
-        int mId = 0;
-        mNotificationManager.notify(mId, mBuilder.build());
-*/
 
         ((DefaultApplication)this.getApplication()).setQuizLevel(level);
         ((DefaultApplication)this.getApplication()).setDuration(duration);

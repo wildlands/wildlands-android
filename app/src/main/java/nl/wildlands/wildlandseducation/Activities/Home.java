@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -49,9 +48,14 @@ import java.util.List;
 import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.GlobalSettings.Values;
 import nl.wildlands.wildlandseducation.JSONParser;
+import nl.wildlands.wildlandseducation.Layer;
+import nl.wildlands.wildlandseducation.Level;
+import nl.wildlands.wildlandseducation.Pinpoint.Page;
 import nl.wildlands.wildlandseducation.Pinpoint.Pinpoint;
-import nl.wildlands.wildlandseducation.Pinpoint.PinpointType;
+
 import nl.wildlands.wildlandseducation.R;
+import nl.wildlands.wildlandseducation.SQLite.LayerDataSource;
+import nl.wildlands.wildlandseducation.SQLite.LevelDataSource;
 import nl.wildlands.wildlandseducation.SQLite.PinpointsDataSource;
 import nl.wildlands.wildlandseducation.quiz.Answer;
 import nl.wildlands.wildlandseducation.quiz.Question;
@@ -59,15 +63,15 @@ import nl.wildlands.wildlandseducation.SQLite.QuestionsDataSource;
 
 
 public class Home extends Activity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
-    private Button btnVerkenning, btnQuiz, btnCredits;
+    private Button btnVerkenning, btnQuiz, btnCredits;                  // De 3 buttons van het home menu
 
-    private ProgressBar spinner;
-    private TextView loadingTxt;
-    private ImageView logo;
+    private ProgressBar spinner;                                        // Loader
+    private TextView loadingTxt;                                        // "Inhoud laden" tekst
+    private ImageView logo;                                             // Eco app logo
 
     public static final String MyPREFERENCES = "MyPrefs" ;              // String to get sharedprefs
 
-    SharedPreferences sharedpreferences;
+    private SharedPreferences sharedpreferences;
     // Url to get JSON
     private static final String GET_QUESTION_URL = Values.BASE_URL + Values.GET_QUESTIONS;
 
@@ -89,33 +93,44 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
     private static final String TAG_XPOS = "xPos";
     private static final String TAG_YPOS = "yPos";
 
-    private ArrayList<Question> questions;
-
-    private Context context = this;
-
-    private QuestionsDataSource datasource;
-    private PinpointsDataSource pinpointsDataSource;
-
-    private JSONArray questionArray, pinpointArray;
-    private JSONArray jsonArray, jsonArrayPinpoint, jsonArrayLevels;
-
-    // JSONParser voor ophalen van data
-    JSONParser jsonParser = new JSONParser();
-
-    ArrayList<HashMap<String, String>> mQuestionList;
-
-    Spinner levels;
-    Button gaverder;
-    int selectedLevel;
     private static final String GET_LEVELS_URL = Values.BASE_URL + Values.GET_LEVELS;
     private static final String TAG_LEVEL_ID = "id";
     private static final String TAG_LEVEL_NAME = "name";
 
+    private static final String GET_LAYERS_URL = Values.BASE_URL + Values.GET_LAYERS;
+    private static final String TAG_THEMA_TYPE = "type";
+    private static final String TAG_THEMA_ID = "id";
+    private static final String TAG_IMAGE_ID = "image";
 
-    private boolean pinpointsSaved;
-    private MediaPlayer mp;
-    private static final int MSDELAY = 3000;            // Aantal ms voor het doorschakelen naar contentweergave
-    private static final int DISPLAY_DATA = 1;          // Checkwaarde voor Handler
+    private ArrayList<Question> questions;                              // Nieuwe arraylist met vraagobjecten
+
+    private Context context = this;
+
+    // SQLite Datasources voor de verschillende objecten
+    private QuestionsDataSource datasource;
+    private PinpointsDataSource pinpointsDataSource;
+    private LayerDataSource layerDataSource;
+    private LevelDataSource levelDataSource;
+
+    // Arrays voor het verwerken van de json
+    private JSONArray questionArray, pinpointArray;
+    private JSONArray jsonArray, jsonArrayPinpoint, jsonArrayLevels, jsonArrayLayers;
+
+    // JSONParser voor ophalen van data
+    private JSONParser jsonParser = new JSONParser();
+
+
+    private ArrayList<HashMap<String, String>> mQuestionList;
+
+    private Spinner levels;                                             // Niveau keuze
+    private Button gaverder;                                            // Knop na niveau keuze
+
+    int selectedLevel;                                                  // Geselecteerde niveau
+
+    private boolean pinpointsSaved;                                     // Check of pinpoints zijn opgeslagen
+
+    private static final int MSDELAY = 2000;                            // Aantal ms voor het doorschakelen naar contentweergave
+    private static final int DISPLAY_DATA = 1;                          // Checkwaarde voor Handler
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -127,18 +142,24 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         }
     };
 
-    private Typeface tf;
+    private Typeface tf;                                                // Typeface voor textviews/buttons
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.gc();
-        super.onCreate(savedInstanceState);
+        System.gc();                                                    // Onnodige data verwijderen
+        super.onCreate(savedInstanceState);                             // Zet layout
         setContentView(R.layout.home);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,// Fullscreen
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        datasource = new QuestionsDataSource(this.getApplicationContext());
-        pinpointsDataSource = new PinpointsDataSource(this.getApplicationContext());
+        // Maak nieuwe datasources voor alle objecten
+        datasource = new QuestionsDataSource(context);
+        pinpointsDataSource = new PinpointsDataSource(context);
+        layerDataSource = new LayerDataSource(context);
+        levelDataSource = new LevelDataSource(context);
 
+
+        // Haal de buttons + logo van de layout
         btnVerkenning = (Button)findViewById(R.id.verkenning);
         btnQuiz = (Button)findViewById(R.id.quiz);
         btnCredits = (Button)findViewById(R.id.credits);
@@ -147,70 +168,68 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         btnQuiz.setOnClickListener(this);
         btnCredits.setOnClickListener(this);
 
-        tf = DefaultApplication.tf;
+        tf = DefaultApplication.tf;                                         // Typeface uit DefaultApplication
 
+        // Verander lettertypes
         btnQuiz.setTypeface(tf);
         btnVerkenning.setTypeface(tf);
         btnCredits.setTypeface(tf);
 
+        pinpointsSaved = false;                                            // Nog niet opgeslagen
 
-        questionArray = new JSONArray();
-        jsonArray = new JSONArray();
-        pinpointsSaved = false;
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE); // Haal sharedprefs op
 
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);            // Laadspinner uit layout
+        loadingTxt = (TextView)findViewById(R.id.loading);                 // Laadtekst uit layout
+        loadingTxt.setTypeface(tf);                                        // Lettertype aanpassen
 
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
-        loadingTxt = (TextView)findViewById(R.id.loading);
-        loadingTxt.setTypeface(tf);
+        questions = new ArrayList<Question>();                             // Maak een lege arraylist aan
 
-        questions = new ArrayList<Question>();
+        levels = (Spinner)findViewById(R.id.levels_spinner);                // Niveau selectie uit layout
 
+        gaverder = (Button)findViewById(R.id.gaverder);                     // Ga verder knop uit layout
+        gaverder.setOnClickListener(this);                                  // Activeer click listener
+        gaverder.setTypeface(tf);                                           // Verander lettertype
 
-        levels = (Spinner)findViewById(R.id.levels_spinner);
-
-
-        gaverder = (Button)findViewById(R.id.gaverder);
-        gaverder.setOnClickListener(this);
-        gaverder.setTypeface(tf);
-
+        // Check of homescreen al afgerond is
         if(((DefaultApplication)this.getApplication()).isHomeFinished())
         {
-            logo.setVisibility(View.VISIBLE);
-            btnVerkenning.setVisibility(View.VISIBLE);
+            logo.setVisibility(View.VISIBLE);                               // Showlogo
+            btnVerkenning.setVisibility(View.VISIBLE);                      // Showbuttons
             btnQuiz.setVisibility(View.VISIBLE);
             btnCredits.setVisibility(View.VISIBLE);
-            animateFadeIn();
+            animateFadeIn();                                                // Fade alles in
         }
-        else {
+        else
+        {
+            spinner.setVisibility(View.VISIBLE);                            // Laad laadspinner
+            loadingTxt.setVisibility(View.VISIBLE);                         // en tekst zien
 
-
-            if (isNetworkAvailable()) {
-                spinner.setVisibility(View.VISIBLE);
-                loadingTxt.setVisibility(View.VISIBLE);
-                new CheckVersion().execute();
-            } else {
-                spinner.setVisibility(View.VISIBLE);
-                loadingTxt.setVisibility(View.VISIBLE);
-                makeToast("GEEN INTERNETVERBINDING");
-                mHandler.sendEmptyMessageDelayed(DISPLAY_DATA, MSDELAY);
+            if (isNetworkAvailable())
+            {                                                               // Als er netwerk is
+                new CheckVersion().execute();                               // Start met het checken van de versie
+            }
+            else
+            {
+                makeToast("GEEN INTERNETVERBINDING");                       // Geef aan dat er geen verbinding is
+                mHandler.sendEmptyMessageDelayed(DISPLAY_DATA, MSDELAY);    // Check elke 2 sec de verbinding
             }
         }
-
-
-
-
-
     }
 
+    /**
+     * Check of er beschikking is over een netwerk
+     */
     private void checkNetwork()
     {
-        if(isNetworkAvailable()) {
-            new CheckVersion().execute();
+        if(isNetworkAvailable())                                            // Als er een verbinding is
+        {
+            new CheckVersion().execute();                                   // Start met het checken van de versie
         }
-        else{
-            makeToast("GEEN INTERNETVERBINDING");
-            mHandler.sendEmptyMessageDelayed(DISPLAY_DATA, MSDELAY);
+        else
+        {
+            makeToast("GEEN INTERNETVERBINDING");                           // Geef aan dat er geen verbinding is
+            mHandler.sendEmptyMessageDelayed(DISPLAY_DATA, MSDELAY);        // Start na 2 sec weer opnieuw
         }
     }
     /**
@@ -232,81 +251,134 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         toast.show();                                                               // Laat de toast zien
     }
 
+    /**
+     * Vil de niveaus
+     */
+    public void fillSpinner()
+    {
+        levelDataSource.open();                                                     // Open datasource
+        ArrayList<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add("SELECTEER NIVEAU");                                       // Bovenste niveau
+        ArrayList<Level> levelObjects = levelDataSource.getAllLevels();
+        for(Level level: levelObjects)
+        {
+            spinnerArray.add(level.getName());                                      // Voeg alle niveaus toe
+        }
+
+        MySpinnerAdapter spinnerArrayAdapter = new MySpinnerAdapter(this, R.layout.spinner_dropdown_tv, spinnerArray); //selected item will look like a spinner set from XML
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Spinner vullen met items
+        levels.setAdapter(spinnerArrayAdapter);
+        levels.setOnItemSelectedListener(this);
+
+        // Verander de zichtbaarheid
+        spinner.setVisibility(View.INVISIBLE);
+        loadingTxt.setVisibility(View.INVISIBLE);
+        gaverder.setVisibility(View.VISIBLE);
+        levels.setVisibility(View.VISIBLE);
+        logo.setVisibility(View.VISIBLE);
+    }
 
 
+    /**
+     * Animeer de buttons
+     * Verander de alpha van 0 naar 1 in 1500
+     */
     public void animateFadeIn()
     {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1500);
+        Animation fadeIn = new AlphaAnimation(0, 1);                            // AlphaAnimatie
+        fadeIn.setInterpolator(new DecelerateInterpolator());
+        fadeIn.setDuration(1500);                                               // Duratie
+
+        // Buttons en logo infaden
         btnVerkenning.setAnimation(fadeIn);
         btnQuiz.setAnimation(fadeIn);
         btnCredits.setAnimation(fadeIn);
         logo.setAnimation(fadeIn);
-
     }
 
+    /**
+     * Update layers
+     */
+    public void updateLayerdata()
+    {
+        layerDataSource.open();
+        try{
+            JSONArray layerArray = jsonArrayLayers;                             // Json die opgehaald is
+            for(int i = 0; i < layerArray.length(); i++)
+            {
+                JSONObject c = layerArray.getJSONObject(i);                     // Elk object uit de array
+                JSONObject type = c.getJSONObject(TAG_THEMA_TYPE);              // type van het object
+                int typeID = type.getInt(TAG_THEMA_ID);                         // typeId van het object
+                String image = c.getString(TAG_IMAGE_ID);                       // imageString voor het ophalen van de image
+                layerDataSource.createLayer(typeID,image);                      // Voeg layer toe aan sqlite
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+        layerDataSource.close();                                                // Sluit de datasoruce
+        new LayerImageLoader().execute();                                       // Start de afbeeldinglader
+    }
+
+    /**
+     * Update level
+     */
     public void updateLeveldata(){
-        try {
-            JSONArray levelArray = jsonArrayLevels;
-            ArrayList<String> spinnerArray = new ArrayList<String>();
-            spinnerArray.add("SELECTEER NIVEAU");
+        levelDataSource.open();                                                 // Open datasource
+        try
+        {
+            JSONArray levelArray = jsonArrayLevels;                             // Opgehaalde json in array
+
             for (int i = 0; i < levelArray.length(); i++)
             {
-                JSONObject c = levelArray.getJSONObject(i);
-                String level = c.getString(TAG_NAME);
-                int levelid = c.getInt(TAG_ID);
-                String content = level.toUpperCase();
+                JSONObject c = levelArray.getJSONObject(i);                     // Haal het object uit de array
+                String level = c.getString(TAG_NAME);                           // Level naam
+                int levelid = c.getInt(TAG_ID);                                 // Level id
+
                 if(i == 0)
                 {
                     selectedLevel = levelid;
                 }
-                spinnerArray.add(content);
+                levelDataSource.createLevel(levelid, level);                    // Voeg level toe aan SQLite
+
             }
 
-            MySpinnerAdapter spinnerArrayAdapter = new MySpinnerAdapter(this, R.layout.spinner_dropdown_tv, spinnerArray); //selected item will look like a spinner set from XML
-            spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+           fillSpinner();                                                       // Vul de selectie met items
 
-
-            levels.setAdapter(spinnerArrayAdapter);
-            levels.setOnItemSelectedListener(this);
-
-        } catch (JSONException e) {
+        }
+        catch (JSONException e)
+        {
             e.printStackTrace();
         }
-
-        spinner.setVisibility(View.INVISIBLE);
-        loadingTxt.setVisibility(View.INVISIBLE);
-
-        gaverder.setVisibility(View.VISIBLE);
-        levels.setVisibility(View.VISIBLE);
-        logo.setVisibility(View.VISIBLE);
-        //startAlertdialog();
-
     }
 
+    /**
+     * Start de popup met een waarschuwing.
+     */
     public void startAlertdialog()
     {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = this.getLayoutInflater();
-        // set title
 
-        View resultsView = LayoutInflater.from(getBaseContext()).inflate(R.layout.custom_alert,
+        View resultsView = LayoutInflater.from(getBaseContext()).inflate(R.layout.custom_alert,     // Gebruik custom layout
                 null);
         TextView title = (TextView)resultsView.findViewById(R.id.titleAlert);
         resultsView.setBackgroundResource(R.drawable.alert_niveau);
-        title.setText("NIVEAU");
-        title.setTypeface(tf);
+        title.setText("NIVEAU");                                                                    // Verander tekst
+        title.setTypeface(tf);                                                                      // Verander lettertype
 
         alertDialogBuilder
                 .setView(resultsView)
                 .setCancelable(false)
         ;
 
+        final AlertDialog alertDialog = alertDialogBuilder.create();                                // Maak de alertdialog
 
-        final AlertDialog alertDialog = alertDialogBuilder.create();
         TextView tv = (TextView)resultsView.findViewById(R.id.alertTextDialog);
         Button dismiss = (Button)resultsView.findViewById(R.id.alertBtn);
+
         dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -314,86 +386,81 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             }
         });
         tv.setText("Je moet een niveau selecteren");
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");
-        TextView alertImage = (TextView)resultsView.findViewById(R.id.alertImage);
-        alertImage.setText(getString(R.string.user));
-        alertImage.setTypeface(font);
-        alertDialog.show();
 
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/fontawesome-webfont.ttf");     // Haal lettertype op
+        TextView alertImage = (TextView)resultsView.findViewById(R.id.alertImage);                  // Textview voor het plaatje
+        alertImage.setText(getString(R.string.user));                                                                     // FontAwesome string
+        alertImage.setTypeface(font);                                                               // Verander lettertype
+
+        alertDialog.show();                                                                         // Laat alertdialog zien
     }
-    public void updatePinpointdata() {
 
-
+    /**
+     * Update pinpoint
+     */
+        public void updatePinpointdata()
+        {
         mQuestionList = new ArrayList<HashMap<String, String>>();
 
-        try {
-            pinpointArray = jsonArrayPinpoint;
+        try
+        {
+            pinpointArray = jsonArrayPinpoint;                                          // JSON Array met data
 
-            // looping through all posts according to the json object returned
-            for (int i = 0; i < pinpointArray.length(); i++) {
-                JSONObject c = pinpointArray.getJSONObject(i);
-                Log.d("C object", c.toString());
+            for (int i = 0; i < pinpointArray.length(); i++)
+            {
+                JSONObject c = pinpointArray.getJSONObject(i);                          // JSONObject uit array
+
+                // Waardes uit objects
                 int id = c.getInt(TAG_ID);
                 String name = c.getString(TAG_NAME);
                 String description = c.getString(TAG_DESCRIPTION);
                 int xPos = c.getInt(TAG_XPOS);
                 int yPos = c.getInt(TAG_YPOS);
+
+                // Waardes van type
                 JSONObject typeJSON = c.getJSONObject("type");
-                int typeID = typeJSON.getInt("id");
-                String image = typeJSON.getString("image");
-                String unit = typeJSON.getString("unit");
                 String typeName = typeJSON.getString("name");
-                PinpointType type = new PinpointType(typeID, image, unit, typeName);
 
                 pinpointsDataSource.open();
                 JSONArray pages = c.getJSONArray("pages");
                 for(int j = 0; j< pages.length();j++)
                 {
-                    JSONObject onePage = pages.getJSONObject(j);
-                    JSONObject level = onePage.getJSONObject("level");
-                    int levelId = level.getInt("id");
-                    String title = onePage.getString("title");
-                    String pageImage = onePage.getString("image");
-                    String text = onePage.getString("text");
+                    JSONObject onePage = pages.getJSONObject(j);                    // Page object van pinpoint
+                    JSONObject level = onePage.getJSONObject("level");              // Level object
+                    int levelId = level.getInt("id");                               // LevelID
+                    String title = onePage.getString("title");                      // Level title
+                    String pageImage = onePage.getString("image");                  // Level image
+                    String text = onePage.getString("text");                        // Level text
 
-                    pinpointsDataSource.createPage(id, levelId, title, pageImage, text);
+                    pinpointsDataSource.createPage(id, levelId, title, pageImage, text); // Page aanmaken
                 }
 
-
-
-                Pinpoint addedPinpoint = pinpointsDataSource.createPinpoint(name, description, typeName, xPos, yPos);
+                pinpointsDataSource.createPinpoint(id,name, description, typeName, xPos, yPos); // Pinpoint aanmaken
                 pinpointsDataSource.close();
-
-                Log.d("pin", addedPinpoint.getDescription());
             }
 
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        new PageImageLoader().execute();                                            // Image Loader starten
 
-        if(pinpointsSaved) {
+        if(pinpointsSaved)
+        {
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putBoolean("questionsadded", true);
             editor.commit();
-
-          //  spinner.setVisibility(View.INVISIBLE);
-           // loadingTxt.setVisibility(View.INVISIBLE);
-            new GetLevels().execute();
-            /*
-            logo.setVisibility(View.VISIBLE);
-            btnVerkenning.setVisibility(View.VISIBLE);
-            btnQuiz.setVisibility(View.VISIBLE);
-            animateFadeIn();
-            */
-           // gaverder.setVisibility(View.VISIBLE);
-            //levels.setVisibility(View.VISIBLE);
         }
-        else{
+        else
+        {
             pinpointsSaved = true;
         }
     }
 
+    /**
+     * Update de vragen
+     * @param failure
+     */
     public void updateJSONdata(boolean failure){
 
         if(!failure) {
@@ -403,7 +470,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 questionArray = jsonArray;
                 String baseUrl = Values.BASE_URL + Values.IMAGE_BASE;
 
-                // looping through all posts according to the json object returned
+                // Alle questions toevoegen
                 for (int i = 0; i < questionArray.length(); i++) {
                     JSONObject c = questionArray.getJSONObject(i);
                     String bitImage = c.getString(TAG_IMAGE);
@@ -412,83 +479,61 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                     int levelid = level.getInt("id");
                     JSONObject typeObj = c.getJSONObject("type");
                     String type = typeObj.getString("name");
-                    Log.d("typenaam", type);
-                    Log.d("url", bitImage);
-                    String urlString = baseUrl + bitImage;
-                    Log.d("urlstring", urlString);
 
                     datasource.open();
-                    Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), bitImage, levelid, type);
+                    Question addedQuestion = datasource.createQuestion(c.getString(TAG_TEXT), bitImage, levelid, type); // Voeg toe aan SQLite
 
+                    JSONArray a = c.getJSONArray(TAG_ANSWERS);                                      // Antwoorden array
+                    for (int j = 0; j < a.length(); j++)
+                    {
+                        JSONObject ans = a.getJSONObject(j);                                        // Antwoord
+                        String answer = ans.getString(TAG_TEXT);                                    // antwoordtekst
+                        boolean good = ans.getBoolean(TAG_RIGHTWRONG);                              // goed of fout
+                        Answer newAnswer = new Answer(1, addedQuestion.getId(), answer, good);      // Voeg toe
+                        datasource.createAnswer(newAnswer);
+                     }
 
-                    JSONArray a = c.getJSONArray(TAG_ANSWERS);
-                    for (int j = 0; j < a.length(); j++) {
-                        JSONObject ans = a.getJSONObject(j);
-                        String answer = ans.getString(TAG_TEXT);
-                        boolean good = ans.getBoolean(TAG_RIGHTWRONG);
-                        Answer newAnswer = new Answer(1, addedQuestion.getId(), answer, good);
-                        Answer wut = datasource.createAnswer(newAnswer);
-                        Log.d("wut", wut.getAnswer());
-
-
-                    }
                     // creating new HashMap
                     HashMap<String, String> map = new HashMap<String, String>();
 
-
-
-                    //map.put(TAG_ID, text);
-                    // adding HashList to ArrayList
                     mQuestionList.add(map);
-
-                    // annndddd, our JSON data is up to date same with our array
-                    // list
                 }
-                new ImageLoader().execute();
-                // Log.d("Goed vraag 1", questions.get(0).getCorrectAnswer());
+
+                new ImageLoader().execute();                                                        // Image Loader aanroepen
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-
-            if (pinpointsSaved) {
+            if (pinpointsSaved)
+            {
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putBoolean("questionsadded", true);
                 editor.commit();
-               // spinner.setVisibility(View.INVISIBLE);
-                //loadingTxt.setVisibility(View.INVISIBLE);
-                //gaverder.setVisibility(View.VISIBLE);
-                //levels.setVisibility(View.VISIBLE);
-                new GetLevels().execute();
-            /*
-            logo.setVisibility(View.VISIBLE);
-            btnVerkenning.setVisibility(View.VISIBLE);
-            btnQuiz.setVisibility(View.VISIBLE);
-            animateFadeIn();
-            */
-
-
-            } else {
+            }
+            else
+            {
                 pinpointsSaved = true;
             }
 
         }
-        else{
-            if (pinpointsSaved) {
+        else
+        {
+            if (pinpointsSaved)
+            {
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putBoolean("questionsadded", true);
                 editor.commit();
-                spinner.setVisibility(View.INVISIBLE);
 
+                // Verander zichtbaarheid
+                spinner.setVisibility(View.INVISIBLE);
                 loadingTxt.setVisibility(View.INVISIBLE);
 
                 gaverder.setVisibility(View.VISIBLE);
                 levels.setVisibility(View.VISIBLE);
-
-
-
-            } else {
+            }
+            else
+            {
                 pinpointsSaved = true;
             }
         }
@@ -544,7 +589,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 this.finish();
                 break;
             case R.id.gaverder:
-                if(selectedLevel > 1) {
+                if(selectedLevel >= 1) {
                     ((DefaultApplication) this.getApplication()).setLevel(selectedLevel);
                     gaverder.setVisibility(View.INVISIBLE);
                     levels.setVisibility(View.INVISIBLE);
@@ -571,7 +616,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        selectedLevel = position+1;
+        selectedLevel = position;
         Log.d("level", String.valueOf(selectedLevel));
     }
 
@@ -583,7 +628,6 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
     class Search extends AsyncTask<String, String, String> implements View.OnClickListener {
 
         boolean failure = false;
-
 
         @Override
         protected void onPreExecute() {
@@ -622,6 +666,8 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         }
     }
 
+
+
     class PinpointSaver extends AsyncTask<String, String, String> implements View.OnClickListener {
         @Override
         protected void onPreExecute() {
@@ -630,7 +676,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         @Override
         protected String doInBackground(String... args) {
-         jsonArrayPinpoint = jsonParser.getJSONFromUrl(GET_PINPOINT_URL);
+            jsonArrayPinpoint = jsonParser.getJSONFromUrl(GET_PINPOINT_URL);
             return jsonArrayPinpoint.toString();
         }
 
@@ -643,6 +689,25 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         public void onClick(View v) {
 
         }
+    }
+
+    class GetLayers extends AsyncTask<String, String, String>  {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            jsonArrayLayers = jsonParser.getJSONFromUrl(GET_LAYERS_URL);
+            return jsonArrayLayers.toString();
+        }
+
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once product deleted
+            updateLayerdata();
+        }
+
     }
 
     class GetLevels extends AsyncTask<String, String, String>  {
@@ -706,28 +771,23 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             if (versionObj != null) {
                 if (appVersion == sharedpreferences.getLong("version", 0)) {
                     Log.d("versie", "Versies komen overeen");
-                    //logo.setVisibility(View.VISIBLE);
-                    // btnVerkenning.setVisibility(View.VISIBLE);
-
-                    //btnQuiz.setVisibility(View.VISIBLE);
-
-
-                    //  animateFadeIn();
-                    new GetLevels().execute();
-                    //gaverder.setVisibility(View.VISIBLE);
-                  //  levels.setVisibility(View.VISIBLE);
+                    fillSpinner();
 
                 } else {
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putLong("version", appVersion);
                     editor.commit();
                     Log.d("Check version", String.valueOf(appVersion));
+                    new GetLevels().execute();
                     new Search().execute();
                     new PinpointSaver().execute();
+                    new GetLayers().execute();
                 }
             }
         }
     }
+
+
 
     /**
      * Class to load the images from the right urls
@@ -781,6 +841,109 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         public void onClick(View v) {
 
         }
+    }
+
+    /**
+     * Class to load the images from the right urls
+     */
+    class LayerImageLoader extends  AsyncTask<String, String, String>  {
+        boolean failure = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            /**
+             * Get the image for each question
+             */
+            layerDataSource.open();
+            for(Layer layer: layerDataSource.getAllLayers()){
+
+                    String urlString = layer.getImage();
+                    Log.d("id", String.valueOf(layer.getThemaId()));
+                    Log.d("urlstring", urlString);
+                    Bitmap bitmap = null;
+                    try {
+                        URL url = new URL(urlString);
+                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+                    } catch (Exception e) {
+                        Log.d(e.toString(), e.toString());
+                    }
+                    ;
+                    String name = String.valueOf(layer.getThemaId()) + "layer.png";
+                    String path = saveToInternalStorage(bitmap, name);
+                    //question.setImagePath(path);
+                    layerDataSource.createLayerImage(layer.getThemaId(), path, name);
+                    //datasource.createImage(path,name,question.getId());
+                    Log.d("path", path);
+
+            }
+
+
+            return "ja";
+        }
+
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once product deleted
+
+        }
+
+    }
+
+    /**
+     * Class to load the images from the right urls
+     */
+    class PageImageLoader extends  AsyncTask<String, String, String>  {
+        boolean failure = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            /**
+             * Get the image for each question
+             */
+            pinpointsDataSource.open();
+            for(Page page: pinpointsDataSource.getAllPages()){
+
+                String urlString = page.getImage();
+                long id = page.getId();
+                Log.d("urlstring", urlString);
+                Bitmap bitmap = null;
+                try {
+                    URL url = new URL(urlString);
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+                } catch (Exception e) {
+                    Log.d(e.toString(), e.toString());
+                }
+                ;
+                String name = String.valueOf(id) + "page.png";
+                String path = saveToInternalStorage(bitmap, name);
+
+                pinpointsDataSource.createPageImage(id,path,name);
+              //  layerDataSource.createLayerImage(layer.getThemaId(), path, name);
+
+                Log.d("path", path);
+
+            }
+
+
+            return "ja";
+        }
+
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once product deleted
+
+        }
+
     }
 
     private static class MySpinnerAdapter extends ArrayAdapter<String> {

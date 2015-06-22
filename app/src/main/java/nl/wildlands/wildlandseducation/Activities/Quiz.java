@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -32,13 +31,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
-import nl.wildlands.wildlandseducation.GlobalSettings.Values;
 import nl.wildlands.wildlandseducation.JSONParser;
 import nl.wildlands.wildlandseducation.R;
 import nl.wildlands.wildlandseducation.quiz.Answer;
@@ -177,6 +174,7 @@ public class Quiz extends Activity implements OnClickListener {
         questionAll = datasource.getAllQuestions();
         int level = ((DefaultApplication)this.getApplication()).getQuizLevel();
 
+        // Als ze van het goede niveau zijn, voeg ze aan lijst toe
         for(Question question1: questionAll)
         {
             if(question1.getLevel() == level)
@@ -184,6 +182,8 @@ public class Quiz extends Activity implements OnClickListener {
                 questions.add(question1);
             }
         }
+
+        // Zet de antwoorden in de lijst
         answers = new ArrayList<Answer>();
         answerAll = datasource.getAllAnswers();
         for(Answer answer: answerAll)
@@ -204,18 +204,18 @@ public class Quiz extends Activity implements OnClickListener {
         beantwoordevragen = new HashMap<Question, Boolean>();
 
 
-        display(questionNumber);
+        display(questionNumber);        // Display de vraag
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(0);
 
         socket.on("quizAborted", onNewMessage);
-
-       // new CheckVersion().execute();
-
     }
 
+    /**
+     * Abort de quiz
+     */
 
     public void abortQuiz()
     {
@@ -224,10 +224,15 @@ public class Quiz extends Activity implements OnClickListener {
         this.finish();
     }
 
+    /**
+     * Display de vraag adhv vraagnummer
+     * @param i
+     */
     public void display(int i){
         int searchId = i + 1;
 
         if(questions.size() <= i){
+            // Tel alle scores op
             int energieCorrect = 0, energieTotaal = 0;
             int waterCorrect = 0, waterTotaal = 0;
             int materialenCorrect = 0, materialenTotaal = 0;
@@ -239,6 +244,7 @@ public class Quiz extends Activity implements OnClickListener {
             {
                 boolean correct = beantwoordevragen.get(q);
                 String type = q.getType();
+                // Kijk welk type het is en tel dan op
                 if(type.equals("Water"))
                 {
                     waterTotaal += 1;
@@ -280,18 +286,22 @@ public class Quiz extends Activity implements OnClickListener {
                     }
                 }
             }
+            // Bereken de resultaten
             calcResults(waterCorrect,waterTotaal, "Water");
             calcResults(energieCorrect,energieTotaal, "Energie");
             calcResults(materialenCorrect, materialenTotaal, "Materiaal");
             calcResults(bioCorrect, bioTotaal, "Bio Mimicry");
             calcResults(dierenCorrect, dierenTotaal, "Dierenwelzijn");
+
+            // Start de quizend activity
             Intent quizEnd = new Intent(this, uitslag_venster.class);
             startActivity(quizEnd);
             this.finish();
             socket.disconnect();
-
+            // Sluit de connectie
         }
         else {
+            // Geef vraag weer
             Question qActual = questions.get(i);
             String path = qActual.getImagePath();
             ArrayList<QuestionImage> images = datasource.getAllImages();
@@ -303,6 +313,7 @@ public class Quiz extends Activity implements OnClickListener {
                     loadImageFromStorage(questionImage.getImagePath(),questionImage.getImageName());
                 }
             }
+
 
             long id = qActual.getId();
             ArrayList<Answer> answers1 = new ArrayList<Answer>();
@@ -317,23 +328,25 @@ public class Quiz extends Activity implements OnClickListener {
                     }
                 }
             }
+
+            // Zet de layouts afhankelijk van de inhoud
             ImageView bush = (ImageView)findViewById(R.id.bush);
             RelativeLayout rl = (RelativeLayout)findViewById(R.id.content);
 
             String type = questions.get(i).getType();
             if(type.equals("Water"))
             {
-                bush.setImageResource(R.drawable.element_03);
+                bush.setImageResource(R.drawable.bush_blue);
                 rl.setBackgroundResource(R.drawable.quiz_gradient_blauw);
             }
             else if(type.equals("Bio Mimicry"))
             {
-                bush.setImageResource(R.drawable.element_05);
+                bush.setImageResource(R.drawable.bush_purple);
                 rl.setBackgroundResource(R.drawable.quiz_gradient_magenta);
             }
             else if(type.equals("Materiaal"))
             {
-                bush.setImageResource(R.drawable.element_06);
+                bush.setImageResource(R.drawable.bush_brown);
                 rl.setBackgroundResource(R.drawable.quiz_gradient_bruin);
             }
             else if(type.equals("Dierenwelzijn"))
@@ -342,9 +355,10 @@ public class Quiz extends Activity implements OnClickListener {
                 rl.setBackgroundResource(R.drawable.quiz_gradient_red);
             }
             else{
-                bush.setImageResource(R.drawable.element_04);
+                bush.setImageResource(R.drawable.bush_orange);
                 rl.setBackgroundResource(R.drawable.quiz_gradient_oranje);
             }
+            // Zet alle antwoorden zichtbaar
             answer1.setVisibility(View.VISIBLE);
             answer2.setVisibility(View.VISIBLE);
             answer3.setVisibility(View.VISIBLE);
@@ -353,17 +367,15 @@ public class Quiz extends Activity implements OnClickListener {
             answer6.setVisibility(View.VISIBLE);
             answer7.setVisibility(View.VISIBLE);
             answer8.setVisibility(View.VISIBLE);
-            //if(datasource.getAllQuestions().get(i).getQuestion() != null){
-           //     question.setText(datasource.getAllQuestions().get(i).getQuestion());
-          //  }
-           // else {
+
                 question.setText(questions.get(i).getQuestion());
-          //  }
+
             if(questions.get(i).getImagePath() != "") {
-               // img1.setImageBitmap(questions.get(i).getBmp());
+
 
                 loadImageFromStorage(questions.get(i).getImagePath(), String.valueOf(questions.get(i).getId()));
             }
+            // Krijg de antwoorden
             if(answers1.size() > 0) {
                 if (answers1.size() == 3) {
                     answer1.setText(answers1.get(0).getAnswer());
@@ -376,6 +388,8 @@ public class Quiz extends Activity implements OnClickListener {
                     answer4.setText(answers1.get(3).getAnswer());
                 }
             }
+
+            // Verberg lege antwoorden
             if(answers1.size() <= 7){answer8.setVisibility(View.GONE);}
             if(answers1.size() <= 6){answer7.setVisibility(View.GONE);}
             if(answers1.size() <= 5){answer6.setVisibility(View.GONE);}
@@ -387,6 +401,10 @@ public class Quiz extends Activity implements OnClickListener {
         }
     }
 
+    /**
+     * Als de focus veranderd, verander
+     * @param hasFocus
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if(hasFocus == false)
@@ -424,6 +442,12 @@ public class Quiz extends Activity implements OnClickListener {
         return directory.getAbsolutePath();
     }
 
+    /**
+     * Bereken resultaten aan de hand van waardes
+     * @param aantalGoed
+     * @param totaal
+     * @param thema
+     */
     public void calcResults(int aantalGoed, int totaal, String thema)
     {
         Log.d("aantalgoed", String.valueOf(aantalGoed));
@@ -485,8 +509,7 @@ public class Quiz extends Activity implements OnClickListener {
     {
         int code = ((DefaultApplication)this.getApplication()).getSocketcode();
         String naam = ((DefaultApplication)this.getApplication()).getSocketnaam();
-  //      Log.d("Ans en ques", answer + questionNumber);
-//        Log.d("Correct",  questions.get(questionNumber).getCorrectAnswer());
+
         boolean correct = false;
         if(answer == actualAnswer.getAnswer())
         {
@@ -501,6 +524,7 @@ public class Quiz extends Activity implements OnClickListener {
         }
         beantwoordevragen.put(questions.get(questionNumber), correct);
 
+        // Maak een nieuw object aan
         JSONObject message = new JSONObject();
 
         try {
@@ -511,16 +535,18 @@ public class Quiz extends Activity implements OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        socket.emit("sendAnswer", message);
+        socket.emit("sendAnswer", message); // Stuur object
     }
 
 
+    /**
+     * Switch naar de volgende vraag als er een knop in wordt gedrukt
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button:
-                //Intent h = new Intent(this, Kaart.class);
-               // this.startActivity(h);
                 checkAnswer(answer1.getText().toString());
                 questionNumber += 1;
                 display(questionNumber);
@@ -543,76 +569,7 @@ public class Quiz extends Activity implements OnClickListener {
         }
     }
 
-    /**
-     * Class to load the images from the right urls
-     */
-    class ImageLoader extends  AsyncTask<String, String, String> implements  OnClickListener{
-        boolean failure = false;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-            /**
-             * Get the image for each question
-             */
-            for(Question question: questions){
-                if(question.getImage() != "http://doornbosagrait.no-ip.org/wildlandsBackend/app/images/") {
-                    String urlString = question.getImage();
-                    Bitmap bitmap = null;
-                    try {
-
-                        URL url = new URL(urlString);
-
-                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
-
-                    } catch (Exception e) {
-                        Log.d(e.toString(), e.toString());
-                    }
-                    ;
-                    String path = saveToInternalStorage(bitmap, "picture.png");
-                    question.setImagePath(path);
-                    Log.d("path", path);
-                }
-            }
-
-            for(Question question: datasource.getAllQuestions()){
-                if(question.getImage() != "http://doornbosagrait.no-ip.org/wildlandsBackend/app/images/") {
-                    String urlString = question.getImage();
-                    Bitmap bitmap = null;
-                    try {
-
-                        URL url = new URL(urlString);
-
-                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
-
-                    } catch (Exception e) {
-                        Log.d(e.toString(), e.toString());
-                    }
-                    ;
-                    String path = saveToInternalStorage(bitmap, "picture.png");
-                    question.setImagePath(path);
-                }
-            }
-            return "ja";
-        }
-
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog once product deleted
-
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
 
 
 
