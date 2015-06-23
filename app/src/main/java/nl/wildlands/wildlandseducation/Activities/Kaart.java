@@ -16,7 +16,6 @@ import android.view.WindowManager;
 
 import android.view.View.OnClickListener;
 
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 
 import nl.wildlands.wildlandseducation.GPS.GPSNotEnabledException;
 import nl.wildlands.wildlandseducation.GPS.GPSTracker;
+import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.LayerImage;
 import nl.wildlands.wildlandseducation.MapAssets.GestureImageView;
 import nl.wildlands.wildlandseducation.Pinpoint.Pinpoint;
@@ -153,7 +153,7 @@ public class Kaart extends Activity implements OnClickListener {
 
     public void displayPoints(String thema)
     {
-
+        map.setLevel(((DefaultApplication)this.getApplication()).getLevel());
         for(Pinpoint pinpoint: pinpoints) {
 
             Log.d("Grootte", String.valueOf(pinpoints.size()));

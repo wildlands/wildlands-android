@@ -262,7 +262,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         ArrayList<Level> levelObjects = levelDataSource.getAllLevels();
         for(Level level: levelObjects)
         {
-            spinnerArray.add(level.getName());                                      // Voeg alle niveaus toe
+            spinnerArray.add(level.getName().toUpperCase());                                      // Voeg alle niveaus toe
         }
 
         MySpinnerAdapter spinnerArrayAdapter = new MySpinnerAdapter(this, R.layout.spinner_dropdown_tv, spinnerArray); //selected item will look like a spinner set from XML

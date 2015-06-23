@@ -27,8 +27,6 @@ public final class DefaultApplication extends android.app.Application {
 
     public int socketcode;                                                  // Quizid
 
-
-
     public String socketnaam;
     public ArrayList<Question> questions;
     public boolean loaded;

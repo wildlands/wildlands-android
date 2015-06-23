@@ -72,6 +72,13 @@ public class Filtermenu extends Activity implements View.OnClickListener {
         animateFadeIn();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent home = new Intent(this, Home.class);
+        startActivity(home);
+        this.finish();
+    }
+
     /**
      * Schuift de buttons van de zijkanten naar het midden, bij het starten van het scherm
      */

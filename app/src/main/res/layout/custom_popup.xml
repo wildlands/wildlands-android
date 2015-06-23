@@ -35,7 +35,7 @@
                 android:adjustViewBounds="true"/>
             <WebView
                 android:layout_width="fill_parent"
-                android:layout_height="250dp"
+                android:layout_height="450dp"
                 android:layout_below="@id/popupImg"
                 android:background="#F5F2DC"
                 android:id="@+id/webview">

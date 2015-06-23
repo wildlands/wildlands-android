@@ -66,7 +66,6 @@ import java.util.concurrent.TimeUnit;
 
 import nl.wildlands.wildlandseducation.Activities.Kaart;
 import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
-import nl.wildlands.wildlandseducation.PageDisplay;
 import nl.wildlands.wildlandseducation.Pinpoint.Page;
 import nl.wildlands.wildlandseducation.Pinpoint.PageImage;
 import nl.wildlands.wildlandseducation.Pinpoint.Pinpoint;
@@ -149,6 +148,7 @@ public class GestureImageView extends ImageView{
     private PopupWindow popupWindow;
     ViewPager mViewPager;
     //TabsAdapter mTabsAdapter;
+    private int level;
 
     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
     RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
@@ -382,7 +382,10 @@ public class GestureImageView extends ImageView{
         kaart.addView(imageBtn);
     }
 
-
+    public void setLevel(int level)
+    {
+        this.level = level;
+    }
     /**
      * Start een dialog voor de geklikte pinpint
      * @param id
@@ -428,7 +431,7 @@ public class GestureImageView extends ImageView{
 
         for(Page page: pinpointsDataSource.getAllPages())
         {
-            if(page.getPinpointid() == pinpointId)
+            if(page.getPinpointid() == pinpointId && page.getLevel() == level)
             {
                 // Voeg de pagina's toe aan arraylist
                 pages.add(page);
@@ -520,7 +523,7 @@ public class GestureImageView extends ImageView{
                 imgBtn = (ImageButton)haha4.findViewById(R.id.closeBtn);
                 views.add(haha4);
             }
-            else{
+            else if(i == 4){
                 tv = (WebView) haha5.findViewById(R.id.webview);
                 img=(ImageView)haha5.findViewById(R.id.popupImg);
                 imgBtn = (ImageButton)haha5.findViewById(R.id.closeBtn);
