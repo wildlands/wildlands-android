@@ -114,7 +114,6 @@ public class Kaart extends Activity implements OnClickListener {
             if(layerImage.getThemaId() == themaId)
             {
                 loadImageFromStorage(layerImage.getPath(),layerImage.getName());
-                Log.d("wait", "this shit works?");
             }
         }
 
@@ -164,6 +163,7 @@ public class Kaart extends Activity implements OnClickListener {
             String soort = pinpoint.getType();
             Log.d("soort", soort);
            if(soort.equals(thema)) {
+
                 map.addButton(x, y, id, soort);
                 buttonId++;
            }

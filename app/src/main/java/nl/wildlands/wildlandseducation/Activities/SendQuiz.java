@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.R;
+import nl.wildlands.wildlandseducation.Score;
 
 
 public class SendQuiz extends Activity implements View.OnClickListener {
@@ -22,6 +24,7 @@ public class SendQuiz extends Activity implements View.OnClickListener {
     private Button send;
     private ImageButton back;
     private HashMap<String, String> scores;
+    private HashMap<String, Score> scoresNew;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,8 @@ public class SendQuiz extends Activity implements View.OnClickListener {
 
 
         scores = ((DefaultApplication)this.getApplication()).getScores();       // Scores opvragen
+        scoresNew = ((DefaultApplication)this.getApplication()).getScoresNew();
+        Log.d("size2", String.valueOf(scoresNew.size()));
     }
 
 
@@ -60,10 +65,22 @@ public class SendQuiz extends Activity implements View.OnClickListener {
                 i.putExtra(Intent.EXTRA_SUBJECT, "Uitslag quiz");
                 String extraContent = "";
                 Set<String> keys = scores.keySet();
-                for(String key: keys)
+                //for(String key: keys)
+               // {
+                //    extraContent += key + newline;                  // Voeg content toe
+               //     extraContent += scores.get(key) + newline;
+             //   }
+                Set<String> keysNew = scoresNew.keySet();
+                for(String name: keysNew)
                 {
-                    extraContent += key + newline;                  // Voeg content toe
-                    extraContent += scores.get(key) + newline;
+                    Score sc = scoresNew.get(name);
+                    extraContent += name + newline;
+                    extraContent += "Energie " + sc.getEnergiescore() + "/" + sc.getEnergietotaal() + newline;
+                    extraContent += "Water " + sc.getWaterscore() + "/" + sc.getWatertotaal() + newline;
+                    extraContent += "Materialen " + sc.getMateriaalscore() + "/" + sc.getMateriaaltotaal() + newline;
+                    extraContent += "Bio Mimicry " + sc.getBioscore() + "/" + sc.getBiototaal() + newline;
+                    extraContent += "Dierenwelzijn " + sc.getDierenscore() + "/" + sc.getDierentotaal() + newline + newline;
+
                 }
                 i.putExtra(Intent.EXTRA_TEXT, extraContent);
                 try {

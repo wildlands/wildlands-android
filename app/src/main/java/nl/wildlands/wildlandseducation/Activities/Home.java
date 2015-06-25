@@ -106,6 +106,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
     private Context context = this;
 
+    int spinnerQueue;
     // SQLite Datasources voor de verschillende objecten
     private QuestionsDataSource datasource;
     private PinpointsDataSource pinpointsDataSource;
@@ -157,7 +158,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         pinpointsDataSource = new PinpointsDataSource(context);
         layerDataSource = new LayerDataSource(context);
         levelDataSource = new LevelDataSource(context);
-
+        spinnerQueue = 0;
 
         // Haal de buttons + logo van de layout
         btnVerkenning = (Button)findViewById(R.id.verkenning);
@@ -251,17 +252,27 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
         toast.show();                                                               // Laat de toast zien
     }
 
+    public void startSpinner()
+    {
+        spinnerQueue+= 1;
+        if(spinnerQueue == 3)
+        {
+            new GetLevels().execute();
+        }
+    }
     /**
      * Vil de niveaus
      */
     public void fillSpinner()
     {
+        levelDataSource = new LevelDataSource(context);
         levelDataSource.open();                                                     // Open datasource
         ArrayList<String> spinnerArray = new ArrayList<String>();
         spinnerArray.add("SELECTEER NIVEAU");                                       // Bovenste niveau
         ArrayList<Level> levelObjects = levelDataSource.getAllLevels();
         for(Level level: levelObjects)
         {
+            Log.d("level", level.getName());
             spinnerArray.add(level.getName().toUpperCase());                                      // Voeg alle niveaus toe
         }
 
@@ -337,7 +348,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                 JSONObject c = levelArray.getJSONObject(i);                     // Haal het object uit de array
                 String level = c.getString(TAG_NAME);                           // Level naam
                 int levelid = c.getInt(TAG_ID);                                 // Level id
-
+                Log.d(level, String.valueOf(levelid));
                 if(i == 0)
                 {
                     selectedLevel = levelid;
@@ -625,7 +636,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
     }
 
-    class Search extends AsyncTask<String, String, String> implements View.OnClickListener {
+    class Search extends AsyncTask<String, String, String>  {
 
         boolean failure = false;
 
@@ -660,15 +671,12 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         }
 
-        @Override
-        public void onClick(View v) {
 
-        }
     }
 
 
 
-    class PinpointSaver extends AsyncTask<String, String, String> implements View.OnClickListener {
+    class PinpointSaver extends AsyncTask<String, String, String>{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -685,10 +693,6 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
             updatePinpointdata();
         }
 
-        @Override
-        public void onClick(View v) {
-
-        }
     }
 
     class GetLayers extends AsyncTask<String, String, String>  {
@@ -778,7 +782,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
                     editor.putLong("version", appVersion);
                     editor.commit();
                     Log.d("Check version", String.valueOf(appVersion));
-                    new GetLevels().execute();
+
                     new Search().execute();
                     new PinpointSaver().execute();
                     new GetLayers().execute();
@@ -833,7 +837,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
-
+            startSpinner();
 
         }
 
@@ -889,7 +893,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
-
+            startSpinner();
         }
 
     }
@@ -941,7 +945,7 @@ public class Home extends Activity implements View.OnClickListener, AdapterView.
 
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
-
+            startSpinner();
         }
 
     }

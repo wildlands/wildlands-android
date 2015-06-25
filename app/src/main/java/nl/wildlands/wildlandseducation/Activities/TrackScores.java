@@ -34,6 +34,7 @@ import java.util.Set;
 import nl.wildlands.wildlandseducation.GlobalSettings.DefaultApplication;
 import nl.wildlands.wildlandseducation.R;
 import nl.wildlands.wildlandseducation.SQLite.QuestionsDataSource;
+import nl.wildlands.wildlandseducation.Score;
 import nl.wildlands.wildlandseducation.quiz.Question;
 
 
@@ -49,6 +50,7 @@ public class TrackScores extends Activity implements View.OnClickListener{
     private int aantalVragen;
     private HashMap<String, TextView> leerlingen;
     private HashMap<String, HashMap<Integer,Integer>> score;
+    private HashMap<String, Score> scoresNew;
     private ProgressBar pb;
     private int i = 0;
     private CountDownTimer mCountDownTimer;
@@ -98,7 +100,7 @@ public class TrackScores extends Activity implements View.OnClickListener{
         leerlingen = new HashMap<String, TextView>();
         scores = new HashMap<String, HashMap<String,HashMap<Integer, Integer>>>();
         score = new HashMap<String,HashMap<Integer, Integer>>();
-
+        scoresNew = new HashMap<String, Score>();
         questions = new ArrayList<Question>();
 
         questionsDataSource = new QuestionsDataSource(this.getApplicationContext());
@@ -107,10 +109,12 @@ public class TrackScores extends Activity implements View.OnClickListener{
         int level = ((DefaultApplication)this.getApplication()).getQuizLevel();
         level += 1;
 
+        Log.d("level", String.valueOf(level));
         for(Question question1: questionAll)
         {
             if(question1.getLevel() == level)
             {
+                Log.d("Vraagerbi", "ja");
                 questions.add(question1);
             }
         }
@@ -178,14 +182,34 @@ public class TrackScores extends Activity implements View.OnClickListener{
             TextView tvLeerling = leerlingen.get(naam);
             HashMap<Integer,Integer> totaalScore = score.get(naam);
             Set<Integer> keys = totaalScore.keySet();
+            int nieuwAantal = 0;
+            int nieuwTotaal = 0;
+            for(Integer aantalgoed: keys)
+            {
+                if(correct) {
+                    nieuwAantal = aantalgoed + 1;
+                }
+                else
+                {
+                    nieuwAantal = aantalgoed;
+                }
+                nieuwTotaal = totaalScore.get(aantalgoed) + 1;
+
+            }
+            totaalScore.clear();
+            totaalScore.put(nieuwAantal,nieuwTotaal);
             String content ="";
             for(Integer aantalgoed: keys)
             {
                 content = naam + "  " + String.valueOf(aantalgoed) + "/" + String.valueOf(totaalScore.get(aantalgoed));
             }
             tvLeerling.setText(content);            // Verander de score
+
+
+
         }
         else {
+            scoresNew.put(naam, new Score());
             TextView tvnew = new TextView(this.getApplicationContext());        // Nieuwe textview
             String goedStr = "0";
             if(correct)
@@ -229,6 +253,53 @@ public class TrackScores extends Activity implements View.OnClickListener{
             // Voeg view toe
             screen.addView(tvnew);
         }
+        Score sc = scoresNew.get(naam);
+        for(Question question: questions)
+        {
+            if(question.getId() == vraagNummer)
+            {
+                if(question.getType().equals("Energie"))
+                {
+                    sc.setEnergietotaal();
+                    if(correct)
+                    {
+                        sc.setEnergiescore();
+                    }
+                }
+                else if(question.getType().equals("Water"))
+                {
+                    sc.setWatertotaal();
+                    if(correct)
+                    {
+                        sc.setWaterscore();
+                    }
+                }
+                if(question.getType().equals("Bio Mimicry"))
+                {
+                    sc.setBiototaal();
+                    if(correct)
+                    {
+                        sc.setBioscore();
+                    }
+                }
+                if(question.getType().equals("Dierenwelzijn"))
+                {
+                    sc.setDierentotaal();
+                    if(correct)
+                    {
+                        sc.setDierenscore();
+                    }
+                }
+                if(question.getType().equals("Materiaal"))
+                {
+                    sc.setMateriaaltotaal();
+                    if(correct)
+                    {
+                        sc.setMateriaalscore();
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -239,9 +310,14 @@ public class TrackScores extends Activity implements View.OnClickListener{
         Set<String> keys = leerlingen.keySet();     // Haal namen op
         for(String name: keys)
         {
+            Score scoreObj = scoresNew.get(name);
             String score = leerlingen.get(name).getText().toString();       // Haal scores op en voeg toe
             ((DefaultApplication)this.getApplication()).addScore(score,name);
+            ((DefaultApplication)this.getApplication()).addNewScore(name, scoreObj);
+            Log.d("name", name);
+            Log.d("size",String.valueOf(((DefaultApplication) this.getApplication()).getScoresNew().size()));
         }
+        mCountDownTimer.cancel();
     }
 
     /**

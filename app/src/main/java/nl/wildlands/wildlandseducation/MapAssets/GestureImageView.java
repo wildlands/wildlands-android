@@ -331,12 +331,12 @@ public class GestureImageView extends ImageView{
 
     /**
      * Voeg een nieuwe pinpoint toe
-     * @param x
-     * @param y
+     * @param xNew
+     * @param yNew
      * @param id
      * @param soort
      */
-    public void addButton(int x, int y, long id, String soort)
+    public void addButton(int xNew, int yNew, long id, String soort)
     {
         final long btnId = id;
         Log.d("soort die in kaart ", soort);
@@ -364,8 +364,8 @@ public class GestureImageView extends ImageView{
         imageBtn.setBackgroundColor(Color.TRANSPARENT);
         imageBtn.setLayoutParams(lp);
 
-        imageBtn.setTranslationX(x);
-        imageBtn.setTranslationY(y);
+        imageBtn.setTranslationX(xNew/2);
+        imageBtn.setTranslationY(yNew/2);
         // Bij klik start dialog
         imageBtn.setOnClickListener(new OnClickListener() {
 
@@ -378,6 +378,7 @@ public class GestureImageView extends ImageView{
         });
         Log.d("imgid", String.valueOf(imageBtn.getId()));
         imageButtons.add(imageBtn);
+
         RelativeLayout kaart = (RelativeLayout)getRootView().findViewById(R.id.kaartScreen);
         kaart.addView(imageBtn);
     }

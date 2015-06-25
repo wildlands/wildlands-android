@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.wildlands.wildlandseducation.Score;
 import nl.wildlands.wildlandseducation.quiz.Question;
 
 public final class DefaultApplication extends android.app.Application {
@@ -26,7 +27,7 @@ public final class DefaultApplication extends android.app.Application {
     public static Typeface tf, tf2;                                         // Lettertypes
 
     public int socketcode;                                                  // Quizid
-
+    public HashMap<String, Score> scoresNew;
     public String socketnaam;
     public ArrayList<Question> questions;
     public boolean loaded;
@@ -68,6 +69,7 @@ public final class DefaultApplication extends android.app.Application {
         loaded = false;
 
         allScores = new HashMap<String, String>();
+        scoresNew = new HashMap<String, Score>();
     }
 
 
@@ -79,6 +81,14 @@ public final class DefaultApplication extends android.app.Application {
     public void setSocketcode(int socketcode) { this.socketcode = socketcode;}
     public int getSocketcode() { return socketcode;}
 
+    public void addNewScore(String name, Score score)
+    {
+        scoresNew.put(name,score);
+    }
+    public HashMap<String, Score> getScoresNew()
+    {
+        return scoresNew;
+    }
     public int getLevel() {
         return level;
     }

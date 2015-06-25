@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -51,6 +54,27 @@ public class uitslag_venster extends Activity implements View.OnClickListener {
         alertView = (RelativeLayout)findViewById(R.id.alertView);
         bush = (ImageView)findViewById(R.id.bush);
 
+        TextView tv1 = (TextView)findViewById(R.id.bio);
+        TextView tv2 = (TextView)findViewById(R.id.materiaal);
+        TextView tv3 = (TextView)findViewById(R.id.dieren);
+        TextView tv4 = (TextView)findViewById(R.id.water);
+        TextView tv5 = (TextView)findViewById(R.id.energie);
+        TextView totaalview = (TextView)findViewById(R.id.totaal);
+
+        Typeface tf = DefaultApplication.tf2;
+        tv1.setTypeface(tf);
+        tv2.setTypeface(tf);
+        tv3.setTypeface(tf);
+        tv4.setTypeface(tf);
+        tv5.setTypeface(tf);
+        totaalview.setTypeface(tf);
+        energieScore.setTypeface(tf);
+        waterScore.setTypeface(tf);
+        materiaalScore.setTypeface(tf);
+        bioScore.setTypeface(tf);
+        dierenScore.setTypeface(tf);
+        totaalScore.setTypeface(tf);
+
         backBtn = (ImageButton)findViewById(R.id.backbutton);
         backBtn.setOnClickListener(this);
 
@@ -59,6 +83,7 @@ public class uitslag_venster extends Activity implements View.OnClickListener {
 
         HashMap<String, HashMap<Integer, Integer>> scores = ((DefaultApplication)this.getApplication()).getThemaScores();
         Set<String> soorten = scores.keySet();
+        ArrayList<String> retryThemas = new ArrayList<String>();
 
         // Bereken de scores en geef de uitslag
         for(String string: soorten) {
@@ -76,26 +101,47 @@ public class uitslag_venster extends Activity implements View.OnClickListener {
                 beantwoord += totaal;
                 totaalGoed += goed;
             }
+            double percentageThema = (double)goed / (double)totaal * 100;
             // Per thema verander de tekst
             if (string.equals("Water"))
             {
                 waterScore.setText(goed + "/" + totaal);
+                if(percentageThema <= 50)
+                {
+                    retryThemas.add("Water");
+                }
             }
             else if(string.equals("Bio Mimicry"))
             {
                 bioScore.setText(goed + "/" + totaal);
+                if(percentageThema <= 50)
+                {
+                    retryThemas.add("Bio Mimicry");
+                }
             }
             else if(string.equals("Energie"))
             {
                 energieScore.setText(goed + "/" + totaal);
+                if(percentageThema <= 50)
+                {
+                    retryThemas.add("Energie");
+                }
             }
             else if(string.equals("Materiaal"))
             {
                 materiaalScore.setText(goed + "/" + totaal);
+                if(percentageThema <= 50)
+                {
+                    retryThemas.add("Materiaal");
+                }
             }
             else if(string.equals("Dierenwelzijn"))
             {
                 dierenScore.setText(goed + "/" + totaal);
+                if(percentageThema <= 50)
+                {
+                    retryThemas.add("Dierenwelzijn");
+                }
             }
             else if(string.equals("Totaal"))
             {
@@ -108,25 +154,45 @@ public class uitslag_venster extends Activity implements View.OnClickListener {
 
                 if(geheelPercentage < 30)
                 {
-                    info = "Oeij! Jouw uitslag is niet zo goed. Je kunt het beste nog een keer naar op verkenning gaan bij de thema's";
+                    if(retryThemas.size() >= 2) {
+                        info = "Oeij! Jouw uitslag is niet zo goed. Je kunt het beste nog een keer naar op verkenning gaan bij de thema's";
+
+                        info += ": " + retryThemas.get(0) + " en " + retryThemas.get(1);
+                    }
+                    else{
+                        info = "Oeij! Jouw uitslag is niet zo goed.";
+                    }
                     alertView.setBackgroundResource(R.drawable.alert_red);
                     scoreNiveau = 0;
                 }
                 else if(geheelPercentage >= 30 && geheelPercentage < 55)
                 {
-                    info = "Jammer, net niet! Jouw uitslag is net geen voldoende. Je kunt het beste nog een keer naar op verkenning gaan bij de volgende thema's";
+                    if(retryThemas.size() >= 2) {
+                        info = "Jammer, net niet! Jouw uitslag is net geen voldoende. Je kunt het beste nog een keer naar op verkenning gaan bij de volgende thema's";
+                        info += ": " + retryThemas.get(0) + " en " + retryThemas.get(1);
+
+                    }
+                    else{
+                        info = "Jammer, net niet! Jouw uitslag is net geen voldoende.";
+                    }
                     alertView.setBackgroundResource(R.drawable.alert_orange);
                     scoreNiveau = 1;
                 }
                 else if(geheelPercentage >= 55 && geheelPercentage < 80)
                 {
-                    info = "Yes, voldoende! Als je wilt kun je het beste nog een keer naar op verkenning gaan bij de volgende thema's";
+                    if(retryThemas.size() >= 2) {
+                        info = "Yes, voldoende! Als je wilt kun je het beste nog een keer naar op verkenning gaan bij de volgende thema's";
+                        info += ": " + retryThemas.get(0) + " en " + retryThemas.get(1);
+                    }
+                    else{
+                        info = "Yes, voldoende!";
+                    }
                     alertView.setBackgroundResource(R.drawable.alert_yellow);
                     scoreNiveau = 2;
                 }
                 else if(geheelPercentage >= 80 && geheelPercentage < 100)
                 {
-                    info ="Geweldig, jij hebt een goed! Bij de volgende thema's heb je misschien iets laten liggen:";
+                    info ="Geweldig, jij hebt een goed!";
                     alertView.setBackgroundResource(R.drawable.alert_green);
                     scoreNiveau = 3;
                 }

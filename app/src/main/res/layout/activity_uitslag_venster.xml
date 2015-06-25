@@ -56,9 +56,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/stripe1"
+            android:id="@+id/energie"
             android:layout_marginTop="30dp"
-            android:text="ENERGIE"
-            android:textColor="#FFFFFF"/>
+            android:text="ENERGIE  "
+            android:textColor="#FFFFFF" />
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -119,8 +120,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/stripe2"
+            android:id="@+id/water"
             android:layout_marginTop="90dp"
-            android:text="WATER"
+            android:text="WATER  "
             android:textColor="#FFFFFF"/>
         <ImageView
             android:layout_width="50dp"
@@ -143,7 +145,8 @@
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/stripe3"
             android:layout_marginTop="150dp"
-            android:text="MATERIALEN"
+            android:text="MATERIALEN  "
+            android:id="@+id/materiaal"
             android:textColor="#FFFFFF"/>
         <ImageView
             android:layout_width="50dp"
@@ -166,8 +169,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/stripe4"
+            android:id="@+id/bio"
             android:layout_marginTop="210dp"
-            android:text="BIO MIMICRY"
+            android:text="BIO MIMICRY  "
             android:textColor="#FFFFFF"/>
         <ImageView
             android:layout_width="50dp"
@@ -189,8 +193,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/stripe1"
+            android:id="@+id/dieren"
             android:layout_marginTop="270dp"
-            android:text="DIERENWELZIJN"
+            android:text="DIERENWELZIJN  "
             android:textColor="#FFFFFF"/>
         <TextView
             android:layout_width="wrap_content"
@@ -198,7 +203,7 @@
             android:layout_alignLeft="@id/icon5"
             android:id="@+id/totaal"
             android:layout_marginTop="350dp"
-            android:text="TOTAAL:"
+            android:text="TOTAAL:  "
             android:textColor="#FFFFFF"/>
         <TextView
             android:layout_width="100dp"
