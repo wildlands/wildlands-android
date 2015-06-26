@@ -5,7 +5,7 @@ package nl.wildlands.wildlandseducation.GlobalSettings;
  */
 public class Values {
     // Urls voor ophalen json en images
-    public static final String BASE_URL = "http://wildlands.doornbosagrait.tk/";
+    public static final String BASE_URL = "http://smrt-kvm37.spothost.nl/";
     public static final String GET_QUESTIONS = "api/api.php?c=GetAllQuestions";
     public static final String GET_PINPOINTS = "api/api.php?c=GetAllPinpoints";
     public static final String GET_LEVELS = "api/api.php?c=GetAllLevels";
@@ -14,7 +14,7 @@ public class Values {
     public static final String IMAGE_BASE = "app/images/";
 
     // Socket url
-    public static final String SOCKET_URL = "http://doornbosagrait.tk:2345";
+    public static final String SOCKET_URL = "http://smrt-kvm37.spothost.nl:2345";
 
     // De hoofdthema's
     public static final String THEMA_1 = "Energie";
